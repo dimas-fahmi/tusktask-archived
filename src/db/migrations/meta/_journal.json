@@ -8,6 +8,13 @@
       "when": 1758708796491,
       "tag": "0000_lovely_living_lightning",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758709959701,
+      "tag": "0001_familiar_stick",
+      "breakpoints": true
     }
   ]
 }
