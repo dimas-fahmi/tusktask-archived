@@ -5,8 +5,10 @@ import {
   authUsers,
   serviceRole,
 } from "drizzle-orm/supabase";
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { projects } from "./projects";
+import { tasks } from "./tasks";
 
 // Profiles Table
 export const profiles = userSchema
@@ -60,3 +62,9 @@ export type Profile = typeof profiles.$inferSelect;
 export type InsertProfile = typeof profiles.$inferInsert;
 export const ProfileSchema = createSelectSchema(profiles);
 export const ProfileInsertSchema = createInsertSchema(profiles);
+
+// Profiles relations
+export const profilesRelations = relations(profiles, ({ many }) => ({
+  projects: many(projects),
+  tasks: many(tasks),
+}));
