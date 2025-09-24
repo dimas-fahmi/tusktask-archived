@@ -33,7 +33,11 @@
     "drizzle-kit": "^0.31.4",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.4.0",
+    "jiti": "^2.6.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.44.1"
   }
 }
