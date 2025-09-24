@@ -1,11 +1,4 @@
-import {
-  index,
-  pgEnum,
-  pgPolicy,
-  text,
-  timestamp,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { index, pgPolicy, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { projectSchema } from "./configs";
 import { relations, sql } from "drizzle-orm";
 import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
@@ -14,7 +7,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { projects } from "./projects";
 
 // Tasks Enums
-export const taskStatusEnum = pgEnum("task_status", [
+export const taskStatusEnum = projectSchema.enum("task_status", [
   "pending",
   "archived",
   "on_process",
