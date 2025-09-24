@@ -32,7 +32,7 @@ export const tasks = projectSchema
       ownerId: uuid("owner_id")
         .references(() => profiles.userId, { onDelete: "cascade" })
         .notNull(),
-      projectId: text("project_id")
+      projectId: uuid("project_id")
         .references(() => projects.id, { onDelete: "cascade" })
         .notNull(),
       name: text("name").notNull().default("Untitled"),
