@@ -29,7 +29,7 @@ export const tasks = projectSchema
       id: uuid("id")
         .primaryKey()
         .$defaultFn(() => crypto.randomUUID()),
-      ownerId: text("owner_id")
+      ownerId: uuid("owner_id")
         .references(() => profiles.userId, { onDelete: "cascade" })
         .notNull(),
       projectId: text("project_id")

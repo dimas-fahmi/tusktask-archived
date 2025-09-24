@@ -14,7 +14,7 @@ export const projects = projectSchema
       id: uuid("id")
         .primaryKey()
         .$defaultFn(() => crypto.randomUUID()),
-      ownerId: text("owner_id").references(() => profiles.userId, {
+      ownerId: uuid("owner_id").references(() => profiles.userId, {
         onDelete: "cascade",
       }),
       name: text("name").notNull(),
