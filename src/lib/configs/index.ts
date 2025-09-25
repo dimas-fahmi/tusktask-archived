@@ -26,6 +26,35 @@ export const APP_KEYWORDS = [
   "ADHD Coping Platform",
 ];
 
+// NAVIGATIONS
+export const NAVIGATIONS = [
+  {
+    title: "About Us",
+    href: "/",
+    external: false,
+  },
+  {
+    title: "Use Cases",
+    href: "#UseCases",
+    external: false,
+  },
+  {
+    title: "Policy",
+    href: "/policy",
+    external: false,
+  },
+  {
+    title: "Repo",
+    href: "https://github.com/dimas-fahmi/tusktask",
+    external: true,
+  },
+  {
+    title: "Contact",
+    href: "#contact",
+    external: true,
+  },
+];
+
 // DEFAULTS
 export const DEFAULT_AVATARS = [
   "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/defaults/sam-the-siam.png",

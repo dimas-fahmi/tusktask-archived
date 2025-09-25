@@ -4,23 +4,23 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
+  --background: oklch(99.89% 0.00514 106.835);
   --foreground: oklch(0.141 0.005 285.823);
-  --radius: 0.625rem;
+  --radius: 2rem;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
+  --primary: oklch(31.508% 0.14662 262.354);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: oklch(73.688% 0.10393 238.658);
+  --secondary-foreground: oklch(100% 0.00011 271.152);
   --muted: oklch(0.967 0.001 286.375);
   --muted-foreground: oklch(0.552 0.016 285.938);
   --accent: oklch(0.967 0.001 286.375);
   --accent-foreground: oklch(0.21 0.006 285.885);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.004 286.32);
+  --border: oklch(80.152% 0.00009 271.152);
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.705 0.015 286.067);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -41,7 +41,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-header: var(--chonburi-font);
+  --font-header: var(--oswald-font);
   --font-body: var(--plus-jakarta-sans-font);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -116,7 +116,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground font-body;
+  }
+  .layout-width {
+    @apply max-w-7xl mx-auto;
   }
 }

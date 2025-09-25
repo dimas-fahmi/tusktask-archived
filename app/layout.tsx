@@ -2,7 +2,7 @@
 
 import React from "react";
 import "@/src/ui/css/globals.tailwind.css";
-import { chonburyFont, plusJakartaSansFont } from "@/src/ui/fonts";
+import { oswaldFont, plusJakartaSansFont } from "@/src/ui/fonts";
 
 export default function RootLayout({
   children,
@@ -12,7 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${chonburyFont.variable} ${plusJakartaSansFont.variable} antialiased`}
+        className={`${oswaldFont.variable} ${plusJakartaSansFont.variable} antialiased`}
       >
         {children}
       </body>
