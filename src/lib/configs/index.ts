@@ -26,6 +26,10 @@ export const APP_KEYWORDS = [
   "ADHD Coping Platform",
 ];
 
+// VERCEL BLOBS HOST
+export const VERCEL_BLOB_HOST =
+  "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask";
+
 // NAVIGATIONS
 export const NAVIGATIONS = [
   {

@@ -1,14 +1,14 @@
 import { generateMetadata } from "@/src/lib/utils/generateMetadata";
 import type { Metadata } from "next";
 import React from "react";
-import AuthPageIndex from "./AuthPageIndex";
+import RegisterPageIndex from "./RegisterPageIndex";
 
 export const metadata: Metadata = generateMetadata({
-  title: "Continue To TuskTask",
+  title: "Get TuskTask For Free",
 });
 
-const AuthPage = () => {
-  return <AuthPageIndex />;
+const RegisterPage = () => {
+  return <RegisterPageIndex />;
 };
 
-export default AuthPage;
+export default RegisterPage;
