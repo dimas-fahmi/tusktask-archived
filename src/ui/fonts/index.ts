@@ -1,15 +1,14 @@
-import { Oswald, Plus_Jakarta_Sans } from "next/font/google";
+import { Oswald, Space_Grotesk } from "next/font/google";
 
 export const oswaldFont = Oswald({
-  variable: "--oswald-font",
+  variable: "--font-oswald",
   weight: ["200", "300", "400", "500", "600", "700"],
   display: "swap",
   subsets: ["latin"],
 });
 
-export const plusJakartaSansFont = Plus_Jakarta_Sans({
-  variable: "--plus-jakarta-sans-font",
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
-  display: "swap",
+export const spaceGroteskFont = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });

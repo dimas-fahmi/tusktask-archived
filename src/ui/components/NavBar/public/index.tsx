@@ -6,7 +6,7 @@ import Navigations from "./Navigations";
 
 const PublicNavBar = () => {
   return (
-    <nav className="p-4 layout-width flex justify-between items-center">
+    <nav className="layout-width py-4 flex justify-between items-center">
       {/* Logo */}
       <div className="flex items-center gap-2">
         <Image
