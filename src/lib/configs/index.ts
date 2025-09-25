@@ -59,6 +59,12 @@ export const NAVIGATIONS = [
   },
 ];
 
+// REGEXs
+export const USERNAME_REGEX =
+  /^(?!.*[_-]{2})(?!.*[_-].*[_-])^[a-z](?:[a-z0-9]*[_-]?[a-z0-9]+)*$/;
+
+export const NAME_REGEX = /^[a-zA-Z ]*$/;
+
 // DEFAULTS
 export const DEFAULT_AVATARS = [
   "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/defaults/sam-the-siam.png",
@@ -66,6 +72,10 @@ export const DEFAULT_AVATARS = [
   "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/defaults/gerrard-the-ginger.png",
   "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/defaults/bernard-the-boxer.png",
 ];
+
+// OAuths Providers
+export const OAUTH_PROVIDERS = ["google", "discord", "github"] as const;
+export type AuthProvider = (typeof OAUTH_PROVIDERS)[number];
 
 // MIDDLEWARE
 export const PROTECTED_ROUTES = ["/dashboard"];
