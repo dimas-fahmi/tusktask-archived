@@ -1,31 +1,42 @@
 "use client";
 
 import { VERCEL_BLOB_HOST } from "@/src/lib/configs";
+import { useSignUp } from "@/src/lib/hooks/auth/useAuth";
+import { registrationSchema } from "@/src/lib/zod/schemas/authSchema";
 import Input from "@/src/ui/components/Inputs/Input";
 import NavLink from "@/src/ui/components/NavLink";
 import Discord from "@/src/ui/components/SVG/Logos/Discord";
 import Github from "@/src/ui/components/SVG/Logos/Github";
 import Google from "@/src/ui/components/SVG/Logos/Google";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const RegisterPageIndex = () => {
+  // Loading State
+  const [loading, setLoading] = useState(false);
+
   // Form
   const {
     control,
     handleSubmit,
     formState: { isValid },
   } = useForm({
+    resolver: zodResolver(registrationSchema),
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
-      confirmation: "",
+      passwordConfirmation: "",
     },
   });
+
+  // Action
+  const { mutate: signUp } = useSignUp();
 
   return (
     <div className="max-w-md p-4">
@@ -51,7 +62,20 @@ const RegisterPageIndex = () => {
         </p>
       </header>
 
-      <form className="mt-6 space-y-4" onSubmit={handleSubmit(() => {})}>
+      <form
+        className="mt-6 space-y-4"
+        onSubmit={handleSubmit((data) => {
+          if (!isValid) return;
+
+          // Trigger Loading
+          setLoading(true);
+
+          // Execute
+          signUp(data, {
+            onSettled: () => setLoading(false),
+          });
+        })}
+      >
         {/* Email */}
         <Input
           icon={Mail}
@@ -74,14 +98,14 @@ const RegisterPageIndex = () => {
         <Input
           icon={Lock}
           control={control}
-          name="confirmation"
+          name="passwordConfirmation"
           placeholder="Password Confirmation"
           type="password"
         />
 
         {/* Login button */}
-        <Button disabled={!isValid} className="w-full">
-          Sign Up
+        <Button disabled={!isValid || loading} className="w-full">
+          {loading ? <>Processing</> : <>Sign Up</>}
         </Button>
       </form>
 
