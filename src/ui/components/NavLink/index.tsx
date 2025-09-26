@@ -13,7 +13,7 @@ const NavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
         ref={ref}
         {...props}
         className={cn(
-          `text-primary hover:underline visited:text-secondary visited:text-underline`,
+          `text-primary hover:underline visited:text-secondary visited:underline`,
           className
         )}
       />
