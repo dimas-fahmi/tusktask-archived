@@ -21,7 +21,7 @@ const AuthAlert = ({
   const message = params.get("message");
 
   // Conditions
-  const isError = code?.includes("success") ? false : true;
+  const isError = code?.startsWith("success") ? false : true;
 
   // Initialize Router
   const router = useRouter();
