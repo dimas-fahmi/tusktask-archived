@@ -38,7 +38,7 @@ const HeroSection = () => {
           src={
             "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/landing/landing-01-hero.png"
           }
-          alt="N"
+          alt="TuskTask landing page hero illustration, a girl with a dying plant."
           className="hidden md:block"
         />
         <Image
@@ -47,7 +47,7 @@ const HeroSection = () => {
           src={
             "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/landing/beta-mockup-mobile-prototype.png"
           }
-          alt="N"
+          alt="TuskTask landing page hero illustration, a screenshot of dashboard page in smartphone frame."
           className="md:hidden opacity-fade-bottom"
           priority
           unoptimized

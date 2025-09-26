@@ -48,7 +48,7 @@ export async function usersEmailStatusGet(
       isFound ? 200 : 404,
       isFound ? "success" : "not_found",
       isFound ? "Record found" : "Record not found",
-      data[0]
+      isFound ? data[0] : undefined
     );
   } catch (error) {
     return createResponse(

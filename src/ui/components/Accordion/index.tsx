@@ -76,7 +76,7 @@ const AccordionItem = ({ content, title, index }: AccordionItemProps) => {
     <div
       className={`${
         open === id ? "bg-primary text-primary-foreground" : ""
-      } p-6 md:px-16 rounded-4xl border-[1px_1px_7px_1px] overflhi`}
+      } p-6 md:px-16 rounded-4xl border-[1px_1px_7px_1px] overflow-hidden`}
     >
       {/* Accordion Trigger */}
       <button

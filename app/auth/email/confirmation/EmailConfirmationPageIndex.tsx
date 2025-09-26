@@ -69,9 +69,11 @@ const EmailConfirmationPageIndex = ({
   const alreadyConfirmed = emailStatus?.email_confirmed_at ? true : false;
 
   // Force Redirect to /auth if already confirmed
-  if (alreadyConfirmed) {
-    router.replace("/auth");
-  }
+  useEffect(() => {
+    if (alreadyConfirmed) {
+      router.replace("/auth");
+    }
+  }, [alreadyConfirmed, router]);
 
   const isNotExist =
     !emailStatus && emailKey && isValid && isFetched ? true : false;
@@ -89,9 +91,10 @@ const EmailConfirmationPageIndex = ({
 
     if (confirmationSentAt) {
       const diff = present.getTime() - confirmationSentAt.getTime();
-      setIsCooldownPassed(diff >= DEFAULT_EMAIL_COOLDOWN);
+      const isPassed = diff >= DEFAULT_EMAIL_COOLDOWN;
+      setIsCooldownPassed(isPassed);
 
-      if (!isCooldownPassed) {
+      if (!isPassed) {
         const d = DEFAULT_EMAIL_COOLDOWN - diff;
         setTimeLeft(d);
       } else {
