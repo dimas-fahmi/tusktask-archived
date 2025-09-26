@@ -4,6 +4,7 @@ import {
   oAuthSignIn,
   signIn,
   signOut,
+  signup,
 } from "../../supabase/auth/actions";
 import { useEffect } from "react";
 import { createBrowserClient } from "../../supabase/instances/client";
@@ -112,6 +113,38 @@ export const useOAuth = () => {
   });
 };
 
+// SignUp
+export const useSignUp = () => {
+  // Init Router
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: async (req: {
+      email: string;
+      password: string;
+      passwordConfirmation: string;
+    }) => {
+      const response = await signup(req);
+
+      if (!response?.success) {
+        throw response;
+      }
+
+      return response;
+    },
+    onError: (error: AuthResponse) => {
+      router.push(
+        `/auth/register?code=${error?.code ?? "unknown_error"}&message=${encodeURIComponent(error?.message ?? "Unknown error")}`
+      );
+    },
+    onSuccess: (_data, request) => {
+      router.push(
+        `/auth/email/confirmation?code=success&message=${encodeURIComponent("Welcome to TuskTask")}&email=${request.email}`
+      );
+    },
+  });
+};
+
 // SignOut
 export const useSignOut = () => {
   // Init Query client
@@ -130,7 +163,7 @@ export const useSignOut = () => {
 
 // Bundle
 const useAuth = () => {
-  return { useSession, useSignIn, useSignOut, useOAuth };
+  return { useSession, useSignIn, useSignOut, useOAuth, useSignUp };
 };
 
 export default useAuth;
