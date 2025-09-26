@@ -107,11 +107,15 @@ export async function oAuthSignIn(
   };
 }
 
-export async function signup(
-  email: string,
-  password: string,
-  passwordConfirmation: string
-): Promise<AuthResponse> {
+export async function signup({
+  email,
+  password,
+  passwordConfirmation,
+}: {
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+}): Promise<AuthResponse> {
   // Create Supabase Client
   const supabase = await createServerClient();
 
