@@ -2,19 +2,20 @@
 
 import React from "react";
 import { cn } from "../../shadcn/lib/utils";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  ReadonlyURLSearchParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { CircleAlert, X } from "lucide-react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-export const removeAlert = () => {
-  // Extract Params;
-  const params = useSearchParams();
-
-  // Initialize Router
-  const router = useRouter();
-
-  // Extract Pathname
-  const pathname = usePathname();
-
+export const removeAlert = (
+  params: ReadonlyURLSearchParams,
+  router: AppRouterInstance,
+  pathname: string
+) => {
   const nextParams = new URLSearchParams(params.toString());
   nextParams.delete("code");
   nextParams.delete("message");
@@ -30,8 +31,12 @@ const AuthAlert = ({
   className?: string;
   children?: React.ReactNode;
 }) => {
-  // Extract Params
+  // Initalize Params, Router and Pathname
   const params = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Extract Params
   const code = params.get("code");
   const message = params.get("message");
 
@@ -62,7 +67,7 @@ const AuthAlert = ({
         <button
           className="cursor-pointer"
           onClick={() => {
-            removeAlert();
+            removeAlert(params, router, pathname);
           }}
         >
           <X />
