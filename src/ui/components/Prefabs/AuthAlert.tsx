@@ -5,6 +5,24 @@ import { cn } from "../../shadcn/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CircleAlert, X } from "lucide-react";
 
+export const removeAlert = () => {
+  // Extract Params;
+  const params = useSearchParams();
+
+  // Initialize Router
+  const router = useRouter();
+
+  // Extract Pathname
+  const pathname = usePathname();
+
+  const nextParams = new URLSearchParams(params.toString());
+  nextParams.delete("code");
+  nextParams.delete("message");
+
+  const nextSearch = nextParams.toString();
+  router.replace(nextSearch ? `${pathname}?${nextSearch}` : pathname);
+};
+
 const AuthAlert = ({
   className,
   children,
@@ -12,9 +30,6 @@ const AuthAlert = ({
   className?: string;
   children?: React.ReactNode;
 }) => {
-  // Extract Pathname
-  const pathname = usePathname();
-
   // Extract Params
   const params = useSearchParams();
   const code = params.get("code");
@@ -22,9 +37,6 @@ const AuthAlert = ({
 
   // Conditions
   const isError = code?.startsWith("success") ? false : true;
-
-  // Initialize Router
-  const router = useRouter();
 
   return (
     <div
@@ -50,7 +62,7 @@ const AuthAlert = ({
         <button
           className="cursor-pointer"
           onClick={() => {
-            router.replace(pathname);
+            removeAlert();
           }}
         >
           <X />
