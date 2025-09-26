@@ -76,20 +76,20 @@ const EmailConfirmationPageIndex = ({
   const isNotExist =
     !emailStatus && emailKey && isValid && isFetched ? true : false;
 
-  // Timestamp
-  const present = new Date();
-  const confirmationSentAt = emailStatus?.confirmation_sent_at
-    ? new Date(emailStatus?.confirmation_sent_at)
-    : null;
-
   // Cooldown Mechanism
   const [timeLeft, setTimeLeft] = useState(0);
-  let isCooldownPassed = true;
+  const [isCooldownPassed, setIsCooldownPassed] = useState(true);
 
   useEffect(() => {
+    // Timestamp
+    const present = new Date();
+    const confirmationSentAt = emailStatus?.confirmation_sent_at
+      ? new Date(emailStatus?.confirmation_sent_at)
+      : null;
+
     if (confirmationSentAt) {
       const diff = present.getTime() - confirmationSentAt.getTime();
-      isCooldownPassed = diff >= DEFAULT_EMAIL_COOLDOWN;
+      setIsCooldownPassed(diff >= DEFAULT_EMAIL_COOLDOWN);
 
       if (!isCooldownPassed) {
         const d = DEFAULT_EMAIL_COOLDOWN - diff;
@@ -98,7 +98,12 @@ const EmailConfirmationPageIndex = ({
         setTimeLeft(0);
       }
     }
-  }, [data, setTimeLeft]);
+  }, [
+    emailStatus?.confirmation_sent_at,
+    setTimeLeft,
+    setIsCooldownPassed,
+    isCooldownPassed,
+  ]);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
