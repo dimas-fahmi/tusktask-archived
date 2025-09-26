@@ -5,6 +5,20 @@ export async function GET(req: NextRequest) {
   const url = req.nextUrl;
   const { token, type, email } = Object.fromEntries(url.searchParams.entries());
 
+  // Validate required environment variables
+  if (!process.env.NEXT_PUBLIC_APP_URL) {
+    return NextResponse.redirect(
+      "/auth?code=server_error&message=" +
+        encodeURIComponent("Missing app URL configuration")
+    );
+  }
+
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_APP_URL}/auth?code=server_error&message=${encodeURIComponent("Missing Supabase URL configuration")}`
+    );
+  }
+
   if (!token) {
     return NextResponse.redirect(
       `/auth?code=bad_request&message=${encodeURIComponent("Missing token parameter")}`
