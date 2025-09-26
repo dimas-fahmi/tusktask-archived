@@ -10,21 +10,43 @@ import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Lock, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { signInSchema } from "@/src/lib/zod/schemas/authSchema";
+import { useOAuth, useSignIn } from "@/src/lib/hooks/auth/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
+import { useSearchParams } from "next/navigation";
 
 const AuthPageIndex = () => {
+  // Params
+  const params = useSearchParams();
+  const code = params.get("code");
+
+  // Loading State
+  const [loading, setLoading] = useState(false);
+
   // Form
   const {
     control,
+    watch,
     handleSubmit,
     formState: { isValid },
   } = useForm({
+    resolver: zodResolver(signInSchema),
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
     },
   });
+
+  // Watch
+  const email = watch("email");
+
+  // useAuth
+  const { mutate: signIn } = useSignIn();
+  const { mutate: _oAuth } = useOAuth();
 
   return (
     <div className="max-w-md p-4">
@@ -50,7 +72,38 @@ const AuthPageIndex = () => {
         </p>
       </header>
 
-      <form className="mt-6 space-y-4" onSubmit={handleSubmit(() => {})}>
+      {/* Alert */}
+      <AuthAlert className="mt-6">
+        {code === "email_not_confirmed" && (
+          <Button
+            variant={"outline"}
+            className="bg-transparent hover:bg-transparent mt-4 w-full"
+            asChild
+          >
+            <Link href={`/auth/email/confirmation?email=${email}`}>
+              Confirm My Email
+            </Link>
+          </Button>
+        )}
+      </AuthAlert>
+
+      {/* Form */}
+      <form
+        className="mt-6 space-y-4"
+        onSubmit={handleSubmit((data) => {
+          if (!isValid) return;
+
+          // Trigger Loading
+          setLoading(true);
+
+          // Mutate
+          signIn(data, {
+            onSettled: () => {
+              setLoading(false);
+            },
+          });
+        })}
+      >
         {/* Email */}
         <Input
           icon={Mail}
@@ -70,8 +123,8 @@ const AuthPageIndex = () => {
         />
 
         {/* Login button */}
-        <Button disabled={!isValid} className="w-full">
-          Sign In
+        <Button disabled={!isValid || loading} className="w-full">
+          {loading ? <>Processing</> : <>Sign In</>}
         </Button>
       </form>
 
