@@ -69,9 +69,11 @@ const EmailConfirmationPageIndex = ({
   const alreadyConfirmed = emailStatus?.email_confirmed_at ? true : false;
 
   // Force Redirect to /auth if already confirmed
-  if (alreadyConfirmed) {
-    router.replace("/auth");
-  }
+  useEffect(() => {
+    if (alreadyConfirmed) {
+      router.replace("/auth");
+    }
+  }, [alreadyConfirmed, router]);
 
   const isNotExist =
     !emailStatus && emailKey && isValid && isFetched ? true : false;
