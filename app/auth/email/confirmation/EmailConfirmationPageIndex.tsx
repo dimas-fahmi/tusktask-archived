@@ -91,9 +91,10 @@ const EmailConfirmationPageIndex = ({
 
     if (confirmationSentAt) {
       const diff = present.getTime() - confirmationSentAt.getTime();
-      setIsCooldownPassed(diff >= DEFAULT_EMAIL_COOLDOWN);
+      const isPassed = diff >= DEFAULT_EMAIL_COOLDOWN;
+      setIsCooldownPassed(isPassed);
 
-      if (!isCooldownPassed) {
+      if (!isPassed) {
         const d = DEFAULT_EMAIL_COOLDOWN - diff;
         setTimeLeft(d);
       } else {
