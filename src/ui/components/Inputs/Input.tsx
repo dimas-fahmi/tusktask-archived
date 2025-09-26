@@ -58,10 +58,13 @@ const Input = <T extends FieldValues>({
               {...props}
               {...field}
               className={cn("flex-1 py-2 px-1 outline-0", classes?.input)}
-              onFocus={() => {
+              onFocus={(e) => {
+                props?.onFocus?.(e);
                 setFocus(true);
               }}
-              onBlur={() => {
+              onBlur={(e) => {
+                field.onBlur();
+                props?.onBlur?.(e);
                 setFocus(false);
               }}
               placeholder={placeholder}
