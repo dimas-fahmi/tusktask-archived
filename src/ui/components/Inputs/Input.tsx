@@ -50,10 +50,11 @@ const Input = <T extends FieldValues>({
             )}
           >
             {/* Icon */}
-            <div className="p-2">
+            <label htmlFor={name as Path<T>} className="p-2">
               <Icon className="opacity-50" />
-            </div>
+            </label>
             <input
+              id={name as Path<T>}
               {...props}
               {...field}
               className={cn("flex-1 py-2 px-1 outline-0", classes?.input)}
@@ -71,7 +72,7 @@ const Input = <T extends FieldValues>({
               <button
                 type="button"
                 onClick={() => setHide((prev) => !prev)}
-                className="p-2"
+                className="p-2 cursor-pointer"
               >
                 <HideIcon className="w-4 h-4" />
               </button>
