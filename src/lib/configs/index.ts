@@ -72,6 +72,7 @@ export const DEFAULT_AVATARS = [
   "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/defaults/gerrard-the-ginger.png",
   "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/defaults/bernard-the-boxer.png",
 ];
+export const DEFAULT_EMAIL_COOLDOWN = 1000 * 60 * 5;
 
 // OAuths Providers
 export const OAUTH_PROVIDERS = ["google", "discord", "github"] as const;
