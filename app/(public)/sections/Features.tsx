@@ -6,7 +6,7 @@ import React from "react";
 
 const Features = () => {
   return (
-    <section id="services" className="layout-width mt-6">
+    <section id="features" className="layout-width mt-6">
       {/* Header */}
       <SectionHeader
         header="Features"
