@@ -1,9 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
 import { generateMetadata } from "@/src/lib/utils/generateMetadata";
+import LandingPageIndex from "./LandingPageIndex";
 
 export const metadata: Metadata = generateMetadata();
 
-export default function Home() {
-  return <>Hello World</>;
+export default function LandingPage() {
+  return <LandingPageIndex />;
 }

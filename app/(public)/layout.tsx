@@ -1,3 +1,5 @@
+import PublicNavBar from "@/src/ui/components/NavBar/public";
+import PublicSidebar from "@/src/ui/components/NavBar/public/Sidebar";
 import React from "react";
 
 const PublicLayout = ({
@@ -8,13 +10,16 @@ const PublicLayout = ({
   return (
     <>
       {/* Public NavBar */}
-      <nav>Navbar</nav>
+      <PublicNavBar />
 
       {/* Children */}
       <main>{children}</main>
 
       {/* Public Footer */}
       <footer>Footer</footer>
+
+      {/* Sidebars */}
+      <PublicSidebar />
     </>
   );
 };
