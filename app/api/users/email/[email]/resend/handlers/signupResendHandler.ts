@@ -2,7 +2,7 @@ import { createServiceClient } from "@/src/lib/supabase/instances/service";
 import { EmailStatus } from "@/src/lib/types/supabase";
 import { PostgresError } from "postgres";
 import { createResponse } from "@/src/lib/utils/createResponse";
-import { DEFAULT_EMAIL_COOLDOWN } from "@/src/lib/configs";
+import { APP_URL, DEFAULT_EMAIL_COOLDOWN } from "@/src/lib/configs";
 import { AuthError } from "@supabase/supabase-js";
 
 export async function signupResendHandler(email: string, PATH: string) {
@@ -67,7 +67,7 @@ export async function signupResendHandler(email: string, PATH: string) {
     if (!isPassedCooldown) {
       return createResponse(
         429,
-        "to_many_request",
+        "too_many_request",
         "Not yet passed cooldown",
         undefined
       );
@@ -80,7 +80,7 @@ export async function signupResendHandler(email: string, PATH: string) {
       type: "signup",
       email,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLI_APP_URL}/auth/email/confirmed?email=${encodeURIComponent(email)}`,
+        emailRedirectTo: `${APP_URL}/auth/email/confirmed?email=${encodeURIComponent(email)}`,
       },
     });
 
