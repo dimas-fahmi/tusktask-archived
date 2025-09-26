@@ -7,8 +7,13 @@ export const metadata: Metadata = generateMetadata({
   title: "Email Confirmation",
 });
 
-const EmailConfirmationPage = () => {
-  return <EmailConfirmationPageIndex />;
+const EmailConfirmationPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ email: string }>;
+}) => {
+  const { email } = await searchParams;
+  return <EmailConfirmationPageIndex paramsEmail={email} />;
 };
 
 export default EmailConfirmationPage;

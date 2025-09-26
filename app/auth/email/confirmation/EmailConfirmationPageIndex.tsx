@@ -17,16 +17,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const EmailConfirmationPageIndex = () => {
-  // Params
-  const params = useSearchParams();
-  const paramsEmail = params.get("email");
-
+const EmailConfirmationPageIndex = ({
+  paramsEmail,
+}: {
+  paramsEmail: string;
+}) => {
   // Router
   const router = useRouter();
 

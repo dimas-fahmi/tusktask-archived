@@ -16,13 +16,8 @@ import { signInSchema } from "@/src/lib/zod/schemas/authSchema";
 import { useOAuth, useSignIn } from "@/src/lib/hooks/auth/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
-import { useSearchParams } from "next/navigation";
 
-const AuthPageIndex = () => {
-  // Params
-  const params = useSearchParams();
-  const code = params.get("code");
-
+const AuthPageIndex = ({ code }: { code: string }) => {
   // Loading State
   const [loading, setLoading] = useState(false);
 
