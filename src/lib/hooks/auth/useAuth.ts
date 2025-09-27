@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AuthResponse,
-  oAuthSignIn,
   signIn,
   signOut,
   signup,
@@ -9,6 +8,8 @@ import {
 import { useEffect } from "react";
 import { createBrowserClient } from "../../supabase/instances/client";
 import { useRouter } from "next/navigation";
+import { AuthProvider, OAUTH_PROVIDERS } from "../../configs";
+import { parseAuthError } from "../../utils/parseAuthError";
 
 // Session
 export const useSession = () => {
@@ -19,7 +20,17 @@ export const useSession = () => {
   // Query session
   const sessionQuery = useQuery({
     queryKey: ["auth", "session"],
-    queryFn: () => supabase.auth.getSession(),
+    queryFn: async () => {
+      const { data, error } = await supabase.auth.getSession();
+
+      if (error) {
+        throw error;
+      }
+
+      return data?.session;
+    },
+    staleTime: 1000 * 60 * 60 * 5,
+    gcTime: 1000 * 60 * 60 * 5,
     refetchOnWindowFocus: false,
   });
 
@@ -40,7 +51,7 @@ export const useSession = () => {
 // SignIn With Email & Password
 export const useSignIn = () => {
   // Init Query Client
-  const queryClient = useQueryClient();
+  const { refetch } = useSession();
 
   // Init Router
   const router = useRouter();
@@ -79,9 +90,7 @@ export const useSignIn = () => {
     },
     onSettled: () => {
       // Invalidate Session
-      queryClient.invalidateQueries({
-        queryKey: ["auth", "session"],
-      });
+      refetch();
     },
   });
 
@@ -91,13 +100,49 @@ export const useSignIn = () => {
 // SignIn with oAuth
 export const useOAuth = () => {
   // Init Query Client
-  const queryClient = useQueryClient();
+  const { refetch } = useSession();
 
   // Init router
   const router = useRouter();
 
   return useMutation({
-    mutationFn: oAuthSignIn,
+    mutationFn: async ({
+      provider,
+      params,
+    }: {
+      provider: AuthProvider;
+      params?: string;
+    }): Promise<AuthResponse> => {
+      // Create Client
+      const supabase = createBrowserClient();
+
+      // Validate
+      if (!OAUTH_PROVIDERS.includes(provider)) {
+        return {
+          success: false,
+          code: "bad_request",
+          message: "Invalid oAuth provider",
+        };
+      }
+
+      // Request
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback/oauth${params ? `?${params}` : ""}`,
+        },
+      });
+
+      if (error) {
+        return parseAuthError(error);
+      }
+
+      return {
+        success: true,
+        code: "success",
+        message: "Successfully signed in",
+      };
+    },
     onError: (error: AuthResponse) => {
       // Sent error to auth page
       router.replace(
@@ -106,9 +151,7 @@ export const useOAuth = () => {
     },
     onSettled: () => {
       // Invalidate session
-      queryClient.invalidateQueries({
-        queryKey: ["auth", "session"],
-      });
+      refetch();
     },
   });
 };
@@ -147,16 +190,20 @@ export const useSignUp = () => {
 
 // SignOut
 export const useSignOut = () => {
-  // Init Query client
-  const queryClient = useQueryClient();
+  // Session
+  const { refetch } = useSession();
+
+  // Router
+  const router = useRouter();
 
   return useMutation({
     mutationFn: signOut,
     onSettled: () => {
-      // Invalidate session
-      queryClient.invalidateQueries({
-        queryKey: ["auth", "session"],
-      });
+      // Refetch Session
+      refetch();
+
+      // Refresh
+      router.refresh();
     },
   });
 };

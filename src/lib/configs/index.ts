@@ -78,5 +78,5 @@ export const DEFAULT_EMAIL_COOLDOWN = 1000 * 60 * 5;
 export const OAUTH_PROVIDERS = ["google", "discord", "github"] as const;
 export type AuthProvider = (typeof OAUTH_PROVIDERS)[number];
 
-// MIDDLEWARE
-export const PROTECTED_ROUTES = ["/dashboard"];
+// ROUTES
+export const PROTECTED_ROUTES = ["/dashboard", "/auth/registration"];
