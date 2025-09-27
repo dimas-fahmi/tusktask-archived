@@ -2,10 +2,11 @@ import { createResponse } from "@/src/lib/utils/createResponse";
 import { emailSchema } from "@/src/lib/zod/schemas/authSchema";
 import { NextRequest } from "next/server";
 import { signupResendHandler } from "./handlers/signupResendHandler";
+import { resetPasswordResendHandler } from "./handlers/resetPasswordResendHandler";
 
 const PATH = "API_USERS_EMAIL_RESEND_POST";
 
-export const RESEND_TYPES = ["signup", "otp"] as const;
+export const RESEND_TYPES = ["signup", "otp", "reset_password"] as const;
 
 export interface UsersEmailResendPostRequest {
   type: (typeof RESEND_TYPES)[number];
@@ -71,6 +72,8 @@ export async function usersEmailResendPost(
       );
     case "signup":
       return signupResendHandler(email, PATH);
+    case "reset_password":
+      return resetPasswordResendHandler(email, PATH);
     default:
       return createResponse(
         400,

@@ -20,7 +20,9 @@
   --accent: oklch(0.967 0.001 286.375);
   --accent-foreground: oklch(0.21 0.006 285.885);
   --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(100% 0.00011 271.152);
   --positive: oklch(47.881% 0.16211 142.298);
+  --positive-foreground: oklch(100% 0.00011 271.152);
   --border: oklch(80.152% 0.00009 271.152);
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(31.508% 0.14662 262.354);
@@ -61,7 +63,9 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-positive: var(--positive);
+  --color-positive-foreground: var(--positive-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -96,7 +100,9 @@
   --accent: oklch(0.274 0.006 286.033);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.274 0.006 286.033);
   --positive: oklch(0.696 0.17 162.48);
+  --positive-foreground: oklch(0.274 0.006 286.033);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.552 0.016 285.938);
@@ -129,7 +135,7 @@
   }
 
   .navlink {
-    @apply text-primary hover:underline visited:text-secondary visited:underline cursor-pointer;
+    @apply text-primary hover:underline visited:italic visited:underline cursor-pointer;
   }
 }
 

@@ -68,11 +68,23 @@ const AuthPageIndex = ({ code }: { code: string }) => {
         {code === "email_not_confirmed" && (
           <Button
             variant={"outline"}
-            className="bg-transparent hover:bg-transparent mt-4 w-full"
+            className="bg-destructive/50 text-destructive-foreground border-0 outline-0 hover:bg-destructive/60 hover:text-destructive-foreground mt-4 w-full"
             asChild
           >
             <Link href={`/auth/email/confirmation?email=${email}`}>
               Confirm My Email
+            </Link>
+          </Button>
+        )}
+
+        {code === "invalid_credentials" && (
+          <Button
+            variant={"outline"}
+            className="bg-destructive/50 text-destructive-foreground border-0 outline-0 hover:bg-destructive/60 hover:text-destructive-foreground mt-4 w-full"
+            asChild
+          >
+            <Link href={`/auth/recovery?email=${email}`}>
+              I forgot my password
             </Link>
           </Button>
         )}

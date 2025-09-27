@@ -129,7 +129,7 @@ export const useOAuth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback/oauth${params ? `?${params}` : ""}`,
+          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback${params ? `?${params}` : ""}`,
         },
       });
 

@@ -1,13 +1,10 @@
 "use client";
 
-import { useSession, useSignOut } from "@/src/lib/hooks/auth/useAuth";
+import { useSignOut } from "@/src/lib/hooks/auth/useAuth";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
 import React, { Suspense } from "react";
 
 const RegistrationPageIndex = () => {
-  // Get Session
-  const { data: session } = useSession();
-
   // SignOut
   const { mutate: signOut } = useSignOut();
 
