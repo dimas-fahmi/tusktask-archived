@@ -75,12 +75,19 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Redirect Users to auth page if they're not logged in and trying to visit protected routes
-  if (
-    !user &&
-    PROTECTED_ROUTES.includes(pathname) &&
-    !pathname.startsWith("/auth")
-  ) {
+  console.log(pathname);
+  if (!user && PROTECTED_ROUTES.includes(pathname) && pathname !== "/auth") {
     clonedUrl.pathname = "/auth";
+    return NextResponse.redirect(clonedUrl);
+  }
+
+  // Redirect user from auth routes if already logged in
+  if (
+    user &&
+    pathname.startsWith("/auth") &&
+    user?.user_metadata?.registration_phase === "completed"
+  ) {
+    clonedUrl.pathname = "/dashboard";
     return NextResponse.redirect(clonedUrl);
   }
 
