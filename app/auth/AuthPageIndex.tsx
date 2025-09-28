@@ -71,7 +71,9 @@ const AuthPageIndex = ({ code }: { code: string }) => {
             className="bg-destructive/50 text-destructive-foreground border-0 outline-0 hover:bg-destructive/60 hover:text-destructive-foreground mt-4 w-full"
             asChild
           >
-            <Link href={`/auth/email/confirmation?email=${email}`}>
+            <Link
+              href={`/auth/email/confirmation?email=${encodeURIComponent(email)}`}
+            >
               Confirm My Email
             </Link>
           </Button>
@@ -83,7 +85,7 @@ const AuthPageIndex = ({ code }: { code: string }) => {
             className="bg-destructive/50 text-destructive-foreground border-0 outline-0 hover:bg-destructive/60 hover:text-destructive-foreground mt-4 w-full"
             asChild
           >
-            <Link href={`/auth/recovery?email=${email}`}>
+            <Link href={`/auth/recovery?email=${encodeURIComponent(email)}`}>
               I forgot my password
             </Link>
           </Button>
