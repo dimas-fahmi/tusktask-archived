@@ -78,7 +78,6 @@ export async function GET(request: NextRequest) {
       }
 
       clonedURL.pathname = "/auth/recovery/reset";
-      clonedURL.search = `?rt=${data.session?.refresh_token}`;
       return NextResponse.redirect(clonedURL);
     } catch (error) {
       clonedURL.pathname = `/auth/recovery/reset`;
