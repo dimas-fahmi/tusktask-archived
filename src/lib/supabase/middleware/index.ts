@@ -85,7 +85,8 @@ export async function updateSession(request: NextRequest) {
   if (
     user &&
     pathname.startsWith("/auth") &&
-    user?.user_metadata?.registration_phase === "completed"
+    user?.user_metadata?.registration_phase === "completed" &&
+    !pathname.startsWith("/auth/recovery/reset")
   ) {
     clonedUrl.pathname = "/dashboard";
     return NextResponse.redirect(clonedUrl);
