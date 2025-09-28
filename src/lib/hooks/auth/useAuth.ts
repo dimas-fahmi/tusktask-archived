@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AuthResponse,
   signIn,
@@ -15,7 +15,6 @@ import { parseAuthError } from "../../utils/parseAuthError";
 export const useSession = () => {
   // Create Supabase Client
   const supabase = createBrowserClient();
-  const queryClient = useQueryClient();
 
   // Query session
   const sessionQuery = useQuery({
@@ -43,7 +42,7 @@ export const useSession = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [queryClient, supabase, sessionQuery]);
+  }, [supabase, sessionQuery.refetch]);
 
   return sessionQuery;
 };

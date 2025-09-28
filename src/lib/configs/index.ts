@@ -74,6 +74,12 @@ export const DEFAULT_AVATARS = [
   "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/defaults/bernard-the-boxer.png",
 ];
 export const DEFAULT_EMAIL_COOLDOWN = 1000 * 60 * 5;
+export const DEFAULT_NO_IMAGE_SQUARE = "/no-image-square.jpg";
+export const DEFAULT_NO_IMAGE_WIDE = "/no-image-wide.jpg";
+
+// IMAGES CONFIGURATIONS
+export const ALLOWED_MEME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+export const ALLOWED_MEME_SIZE = 1024 * 1024 * 5;
 
 // OAuths Providers
 export const OAUTH_PROVIDERS = ["google", "discord", "github"] as const;
@@ -81,3 +87,12 @@ export type AuthProvider = (typeof OAUTH_PROVIDERS)[number];
 
 // ROUTES
 export const PROTECTED_ROUTES = ["/dashboard", "/auth/registration"];
+
+// ONBOARDING STEPS
+export const ONBOARDING_STEPS = [
+  "name",
+  "username",
+  "avatar",
+  "confirmation",
+  "completed",
+] as const;
