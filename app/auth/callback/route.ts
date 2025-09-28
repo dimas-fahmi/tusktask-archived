@@ -104,11 +104,11 @@ export async function GET(request: NextRequest) {
 
     // return the user to an error page with instructions
     return NextResponse.redirect(
-      `${origin}/auth/auth?code=${(error as AuthError)?.code ?? "unknown_error"}&message=${encodeURIComponent((error as AuthError)?.message ?? "Unknwon error")}`
+      `${origin}/auth?code=${(error as AuthError)?.code ?? "unknown_error"}&message=${encodeURIComponent((error as AuthError)?.message ?? "Unknwon error")}`
     );
   }
 
   return NextResponse.redirect(
-    `${origin}/auth/auth?code=${"code_unavailable"}&message=${encodeURIComponent("No code parameter is provided")}`
+    `${origin}/auth?code=${"code_unavailable"}&message=${encodeURIComponent("No code parameter is provided")}`
   );
 }
