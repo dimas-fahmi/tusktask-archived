@@ -76,8 +76,6 @@ export async function usersPasswordPath(req: NextRequest) {
     );
   }
 
-  console.log(password, passwordConfirmation);
-
   // Execute
   try {
     await supabase.auth.admin.updateUserById(user.id, {
@@ -94,7 +92,7 @@ export async function usersPasswordPath(req: NextRequest) {
     return createResponse(200, "success", "password updated", undefined);
   } catch (error) {
     return createResponse(
-      200,
+      500,
       (error as AuthError)?.code ?? "unknown_error",
       (error as AuthError)?.message ?? "Unknown error",
       undefined
