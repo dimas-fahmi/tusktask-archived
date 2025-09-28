@@ -18,7 +18,7 @@ export const useResendOtp = () => {
       }
 
       const response = await fetch(
-        `${origin}/api/users/email/${email}/resend`,
+        `${origin}/api/users/email/${encodeURIComponent(email)}/resend`,
         {
           method: "POST",
           headers: {
