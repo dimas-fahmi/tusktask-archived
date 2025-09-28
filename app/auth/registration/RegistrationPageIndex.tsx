@@ -1,10 +1,13 @@
 "use client";
 
-import NavLink from "@/src/ui/components/NavLink";
+import { useSignOut } from "@/src/lib/hooks/auth/useAuth";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
 import React, { Suspense } from "react";
 
 const RegistrationPageIndex = () => {
+  // SignOut
+  const { mutate: signOut } = useSignOut();
+
   return (
     <div>
       {/* Header */}
@@ -34,7 +37,14 @@ const RegistrationPageIndex = () => {
       {/* Helper Bar */}
       <div className="mt-4 text-sm font-light flex items-center justify-between">
         <span>{`It's not your account?`}</span>
-        <NavLink href="/auth">Sign Out</NavLink>
+        <button
+          className="navlink"
+          onClick={() => {
+            signOut();
+          }}
+        >
+          Sign Out
+        </button>
       </div>
     </div>
   );

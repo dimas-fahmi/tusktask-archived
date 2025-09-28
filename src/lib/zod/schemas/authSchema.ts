@@ -65,3 +65,14 @@ export const registrationSchema = z
     path: ["passwordConfirmation"],
     message: "Passwords do not match",
   });
+
+// Password reset schema
+export const passwordResetSchema = z
+  .object({
+    password: passwordSchema,
+    passwordConfirmation: passwordConfirmationSchema,
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    path: ["passwordConfirmation"],
+    message: "Passwords do not match",
+  });

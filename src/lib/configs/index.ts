@@ -26,9 +26,10 @@ export const APP_KEYWORDS = [
   "ADHD Coping Platform",
 ];
 
-// VERCEL BLOBS HOST
+// HOSTs
 export const VERCEL_BLOB_HOST =
   "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask";
+export const SUPABASE_AUTH_HOST = "https://xyjrsrcveoqyerxaaanp.supabase.co";
 
 // NAVIGATIONS
 export const NAVIGATIONS = [
@@ -78,5 +79,5 @@ export const DEFAULT_EMAIL_COOLDOWN = 1000 * 60 * 5;
 export const OAUTH_PROVIDERS = ["google", "discord", "github"] as const;
 export type AuthProvider = (typeof OAUTH_PROVIDERS)[number];
 
-// MIDDLEWARE
-export const PROTECTED_ROUTES = ["/dashboard"];
+// ROUTES
+export const PROTECTED_ROUTES = ["/dashboard", "/auth/registration"];

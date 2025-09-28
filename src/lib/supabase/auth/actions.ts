@@ -2,23 +2,15 @@
 
 import { createServerClient } from "../instances/server";
 import { registrationSchema, signInSchema } from "../../zod/schemas/authSchema";
-import { AuthError, Session } from "@supabase/supabase-js";
+import { Session } from "@supabase/supabase-js";
 import { prettifyError } from "zod";
-import { AuthProvider, OAUTH_PROVIDERS } from "../../configs";
+import { parseAuthError } from "../../utils/parseAuthError";
 
 export interface AuthResponse {
   success: boolean;
   code: string;
   message: string;
   session?: Session;
-}
-
-function parseAuthError(error: unknown) {
-  return {
-    success: false,
-    code: (error as AuthError)?.code ?? "unknown_error",
-    message: (error as AuthError)?.message ?? "Unknown error",
-  };
 }
 
 export async function getSession() {
@@ -73,37 +65,6 @@ export async function signIn(
     code: "success",
     message: "Successfully signed in user",
     session: data?.session,
-  };
-}
-
-export async function oAuthSignIn(
-  provider: AuthProvider
-): Promise<AuthResponse> {
-  // Create Client
-  const supabase = await createServerClient();
-
-  // Validate
-  if (!OAUTH_PROVIDERS.includes(provider)) {
-    return {
-      success: false,
-      code: "bad_request",
-      message: "Invalid oAuth provider",
-    };
-  }
-
-  // Request
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider,
-  });
-
-  if (error) {
-    return parseAuthError(error);
-  }
-
-  return {
-    success: true,
-    code: "success",
-    message: "Successfully signed in",
   };
 }
 

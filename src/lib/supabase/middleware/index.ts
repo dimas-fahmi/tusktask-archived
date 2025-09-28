@@ -67,7 +67,8 @@ export async function updateSession(request: NextRequest) {
     // Redirect user to registration page if they're not finished reigistration phase
     if (
       registrationPhase !== "completed" &&
-      !pathname.startsWith("/auth/registration")
+      !pathname.startsWith("/auth/registration") &&
+      !pathname.startsWith("/auth/recovery/reset")
     ) {
       clonedUrl.pathname = "/auth/registration";
       return NextResponse.redirect(clonedUrl);
@@ -75,12 +76,19 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Redirect Users to auth page if they're not logged in and trying to visit protected routes
-  if (
-    !user &&
-    PROTECTED_ROUTES.includes(pathname) &&
-    !pathname.startsWith("/auth")
-  ) {
+  if (!user && PROTECTED_ROUTES.includes(pathname) && pathname !== "/auth") {
     clonedUrl.pathname = "/auth";
+    return NextResponse.redirect(clonedUrl);
+  }
+
+  // Redirect user from auth routes if already logged in
+  if (
+    user &&
+    pathname.startsWith("/auth") &&
+    user?.user_metadata?.registration_phase === "completed" &&
+    !pathname.startsWith("/auth/recovery/reset")
+  ) {
+    clonedUrl.pathname = "/dashboard";
     return NextResponse.redirect(clonedUrl);
   }
 

@@ -3,9 +3,6 @@
 import { VERCEL_BLOB_HOST } from "@/src/lib/configs";
 import Input from "@/src/ui/components/Inputs/Input";
 import NavLink from "@/src/ui/components/NavLink";
-import Discord from "@/src/ui/components/SVG/Logos/Discord";
-import Github from "@/src/ui/components/SVG/Logos/Github";
-import Google from "@/src/ui/components/SVG/Logos/Google";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Lock, Mail } from "lucide-react";
 import Image from "next/image";
@@ -16,6 +13,7 @@ import { signInSchema } from "@/src/lib/zod/schemas/authSchema";
 import { useOAuth, useSignIn } from "@/src/lib/hooks/auth/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
+import OAuthBar from "@/src/ui/components/OAuthBar";
 
 const AuthPageIndex = ({ code }: { code: string }) => {
   // Loading State
@@ -55,7 +53,6 @@ const AuthPageIndex = ({ code }: { code: string }) => {
           className="w-16 h-16 block"
         />
       </Link>
-
       {/* Header */}
       <header className="mt-4">
         <h1 className="font-header font-bold text-2xl mb-2">
@@ -66,22 +63,34 @@ const AuthPageIndex = ({ code }: { code: string }) => {
           deadlines. For free!
         </p>
       </header>
-
       {/* Alert */}
       <AuthAlert className="mt-6">
         {code === "email_not_confirmed" && (
           <Button
             variant={"outline"}
-            className="bg-transparent hover:bg-transparent mt-4 w-full"
+            className="bg-destructive/50 text-destructive-foreground border-0 outline-0 hover:bg-destructive/60 hover:text-destructive-foreground mt-4 w-full"
             asChild
           >
-            <Link href={`/auth/email/confirmation?email=${email}`}>
+            <Link
+              href={`/auth/email/confirmation?email=${encodeURIComponent(email)}`}
+            >
               Confirm My Email
             </Link>
           </Button>
         )}
-      </AuthAlert>
 
+        {code === "invalid_credentials" && (
+          <Button
+            variant={"outline"}
+            className="bg-destructive/50 text-destructive-foreground border-0 outline-0 hover:bg-destructive/60 hover:text-destructive-foreground mt-4 w-full"
+            asChild
+          >
+            <Link href={`/auth/recovery?email=${encodeURIComponent(email)}`}>
+              I forgot my password
+            </Link>
+          </Button>
+        )}
+      </AuthAlert>
       {/* Form */}
       <form
         className="mt-6 space-y-4"
@@ -98,6 +107,7 @@ const AuthPageIndex = ({ code }: { code: string }) => {
             },
           });
         })}
+        suppressHydrationWarning
       >
         {/* Email */}
         <Input
@@ -122,25 +132,13 @@ const AuthPageIndex = ({ code }: { code: string }) => {
           {loading ? <>Processing</> : <>Sign In</>}
         </Button>
       </form>
-
       {/* Helper Bar */}
       <div className="mt-4 text-sm font-light flex items-center justify-between">
         <span>Or Continue With</span>
         <NavLink href="/auth/register">Sign Up</NavLink>
       </div>
-
       {/* OAuth Method */}
-      <div className="grid grid-cols-3 mt-6 gap-3">
-        <Button variant={"outline"}>
-          <Google />
-        </Button>
-        <Button variant={"outline"}>
-          <Github />
-        </Button>
-        <Button variant={"outline"}>
-          <Discord />
-        </Button>
-      </div>
+      <OAuthBar />
 
       {/* Policy */}
       <footer className="mt-6 text-xs">

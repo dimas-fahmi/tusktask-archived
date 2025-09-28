@@ -8,16 +8,7 @@ export interface NavLinkProps extends HTMLProps<HTMLAnchorElement> {
 
 const NavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
   ({ className, ...props }, ref) => {
-    return (
-      <Link
-        ref={ref}
-        {...props}
-        className={cn(
-          `text-primary hover:underline visited:text-secondary visited:underline`,
-          className
-        )}
-      />
-    );
+    return <Link ref={ref} {...props} className={cn(`navlink`, className)} />;
   }
 );
 
