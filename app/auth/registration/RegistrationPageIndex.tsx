@@ -20,7 +20,7 @@ const RegistrationPageIndex = () => {
 
   // Syncronize data
   useEffect(() => {
-    if (!isFetchingSession) return;
+    if (isFetchingSession) return;
 
     const user = session?.user;
     const userMetadata = user?.user_metadata as UserMetadata;
