@@ -1,3 +1,4 @@
+import { APP_URL } from "../../configs";
 import { EmailStatus } from "../../types/supabase";
 import { StandardizeResponse } from "../createResponse";
 
@@ -6,7 +7,7 @@ export const fetchEmailStatus = async (
 ): Promise<StandardizeResponse<EmailStatus> | undefined> => {
   if (!email) return undefined;
 
-  const origin = process.env.NEXT_PUBLIC_APP_URL;
+  const origin = APP_URL;
 
   if (!origin) {
     throw new Error("MISSING_ORIGIN_FROM_ENV");
