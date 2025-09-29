@@ -19,7 +19,7 @@ export interface UseOnboardingStore {
 }
 
 export const useOnboardingStore = create<UseOnboardingStore>((set) => ({
-  registrationPhase: undefined,
+  registrationPhase: "name",
   userMetadata: undefined,
   title: "",
   subtitle: "",

@@ -12,14 +12,18 @@ const RegistrationPageIndex = () => {
   const { title, subtitle, render, setter } = useOnboardingStore();
 
   // Session
-  const { data: session, isFetching, refetch: refetchSession } = useSession();
+  const {
+    data: session,
+    isFetching: isFetchingSession,
+    refetch: refetchSession,
+  } = useSession();
 
   // Retry
   const [retry, setRetry] = useState(0);
 
   // Syncronize data
   useEffect(() => {
-    if (!isFetching) return;
+    if (!isFetchingSession) return;
 
     const user = session?.user;
     const userMetadata = user?.user_metadata as UserMetadata;
@@ -35,6 +39,7 @@ const RegistrationPageIndex = () => {
         console.log(
           "USER_METADATA_NULL_RETRIED_TWICE_STILL_NULL_SETTING_PHASE_TO_NAME_ANYWAY"
         );
+        // Set Registration Phase to name
         setter({ registrationPhase: "name" });
 
         // Run Renderer
@@ -56,7 +61,7 @@ const RegistrationPageIndex = () => {
       // Run Renderer
       renderer(setter, userMetadata.registration_phase);
     }
-  }, [setter, session, isFetching, refetchSession, retry]);
+  }, [setter, session, isFetchingSession, refetchSession, retry]);
 
   // SignOut
   const { mutate: signOut } = useSignOut();
