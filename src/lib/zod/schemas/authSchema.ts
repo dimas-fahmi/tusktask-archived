@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { NAME_REGEX, USERNAME_REGEX } from "../../configs";
+import { urlSchema } from ".";
 
 // Name Schema
 export const nameSchema = z
@@ -47,6 +48,16 @@ export const passwordSchema = z
 export const passwordConfirmationSchema = z
   .string()
   .min(1, { message: "Password confirmation is required" });
+
+// -------------- OBJECT SCHEMA ---------------
+
+// Profile Schema
+export const profileSchema = z.object({
+  name: nameSchema,
+  username: usernameSchema,
+  avatar: urlSchema,
+  cover: urlSchema,
+});
 
 // Sign In Schema
 export const signInSchema = z.object({

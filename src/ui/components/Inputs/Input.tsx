@@ -1,7 +1,16 @@
 "use client";
 
-import { Eye, EyeClosed, LucideIcon } from "lucide-react";
-import React, { useState } from "react";
+import {
+  Eye,
+  EyeClosed,
+  LucideIcon,
+  TextCursorInput,
+  Mail,
+  Lock,
+  ArrowDown01,
+  Search,
+} from "lucide-react";
+import React, { HTMLInputTypeAttribute, useState } from "react";
 import { cn } from "../../shadcn/lib/utils";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
@@ -13,12 +22,21 @@ export interface InputClasses {
 
 export interface InputProps<T extends FieldValues>
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "name"> {
-  icon: LucideIcon;
+  icon?: LucideIcon;
   classes?: InputClasses;
   control: Control<T>;
   name: keyof T;
   placeholder: string;
+  status?: React.ReactNode;
 }
+
+const icons: Partial<Record<HTMLInputTypeAttribute, LucideIcon>> = {
+  text: TextCursorInput,
+  email: Mail,
+  password: Lock,
+  number: ArrowDown01,
+  search: Search,
+} as const;
 
 const Input = <T extends FieldValues>({
   icon,
@@ -26,6 +44,7 @@ const Input = <T extends FieldValues>({
   control,
   name,
   placeholder,
+  status,
   ...props
 }: InputProps<T>) => {
   // Focus State
@@ -33,7 +52,8 @@ const Input = <T extends FieldValues>({
   const [hide, setHide] = useState(true);
 
   // Icons
-  const Icon = icon;
+  const type = props?.type ?? "text";
+  const Icon = icon ? icon : icons[type] ? icons[type] : TextCursorInput;
   const HideIcon = hide ? EyeClosed : Eye;
 
   return (
@@ -57,7 +77,10 @@ const Input = <T extends FieldValues>({
               id={name as Path<T>}
               {...props}
               {...field}
-              className={cn("flex-1 py-2 px-1 outline-0", classes?.input)}
+              className={cn(
+                "flex-1 py-2 px-1 outline-0 cursor-pointer",
+                classes?.input
+              )}
               onFocus={(e) => {
                 props?.onFocus?.(e);
                 setFocus(true);
@@ -88,6 +111,9 @@ const Input = <T extends FieldValues>({
               {fieldState?.error?.message}
             </p>
           )}
+
+          {/* Status */}
+          <div className="mt-1.5 text-xs">{status}</div>
         </div>
       )}
     />

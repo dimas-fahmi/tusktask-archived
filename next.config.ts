@@ -4,7 +4,21 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     remotePatterns: [
-      new URL("https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/**"),
+      {
+        protocol: "https",
+        hostname: "zvgpixcwdvbogm3e.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
     ],
   },
 };

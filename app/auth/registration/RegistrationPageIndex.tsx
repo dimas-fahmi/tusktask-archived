@@ -1,10 +1,63 @@
 "use client";
 
-import { useSignOut } from "@/src/lib/hooks/auth/useAuth";
+import { useSession, useSignOut } from "@/src/lib/hooks/auth/useAuth";
+import { useOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
+import { UserMetadata } from "@/src/lib/types/supabase";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
+import { renderer } from "./renderer";
 
 const RegistrationPageIndex = () => {
+  // Pull states from onboarding store
+  const { title, subtitle, render, setter } = useOnboardingStore();
+
+  // Session
+  const { data: session, isFetching, refetch: refetchSession } = useSession();
+
+  // Retry
+  const [retry, setRetry] = useState(0);
+
+  // Syncronize data
+  useEffect(() => {
+    if (!isFetching) return;
+
+    const user = session?.user;
+    const userMetadata = user?.user_metadata as UserMetadata;
+
+    if (!userMetadata) {
+      if (retry <= 2) {
+        console.log(`USER_METADATA_NULL_RETRYING_${retry + 1}`);
+        refetchSession();
+        setRetry((prev) => prev + 1);
+      }
+
+      if (!userMetadata && retry >= 2) {
+        console.log(
+          "USER_METADATA_NULL_RETRIED_TWICE_STILL_NULL_SETTING_PHASE_TO_NAME_ANYWAY"
+        );
+        setter({ registrationPhase: "name" });
+
+        // Run Renderer
+        renderer(setter, "name");
+      }
+
+      return;
+    }
+
+    // Set UserMetadata
+    if (userMetadata) {
+      setter({ userMetadata: userMetadata });
+    }
+
+    // Set registration phase
+    if (userMetadata?.registration_phase) {
+      setter({ registrationPhase: userMetadata.registration_phase });
+
+      // Run Renderer
+      renderer(setter, userMetadata.registration_phase);
+    }
+  }, [setter, session, isFetching, refetchSession, retry]);
+
   // SignOut
   const { mutate: signOut } = useSignOut();
 
@@ -12,12 +65,8 @@ const RegistrationPageIndex = () => {
     <div>
       {/* Header */}
       <header className="mt-4">
-        <h1 className="font-header font-bold text-2xl mb-2">
-          Email Confirmation
-        </h1>
-        <p className="text-sm">
-          {`This action is intended to prevent you from being locked out of your account.`}
-        </p>
+        <h1 className="font-header font-bold text-2xl mb-2">{title}</h1>
+        <p className="text-sm">{subtitle}</p>
       </header>
 
       {/* Auth Alert */}
@@ -25,14 +74,7 @@ const RegistrationPageIndex = () => {
         <AuthAlert className="mt-6" />
       </Suspense>
 
-      <form className="mt-6 space-y-4">
-        {/* Email */}
-        {/* <Input
-          name="email"
-          aria-placeholder="Email"
-          placeholder="Email"
-        /> */}
-      </form>
+      <div className="mt-6">{render}</div>
 
       {/* Helper Bar */}
       <div className="mt-4 text-sm font-light flex items-center justify-between">

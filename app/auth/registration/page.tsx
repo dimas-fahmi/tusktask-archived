@@ -22,6 +22,7 @@ const RegistrationPage = () => {
           src={`${VERCEL_BLOB_HOST}/logo/tusktask.png`}
           alt="TuskTask Logo Symbolic"
           className="w-16 h-16 block"
+          priority
         />
       </Link>
 
