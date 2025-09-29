@@ -4,7 +4,7 @@ import { useSession, useSignOut } from "@/src/lib/hooks/auth/useAuth";
 import { useOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
 import { UserMetadata } from "@/src/lib/types/supabase";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect } from "react";
 import { renderer } from "./renderer";
 
 const RegistrationPageIndex = () => {
