@@ -1,12 +1,18 @@
 "use client";
 
 import {
-  ALLOWED_MEME_SIZE,
-  ALLOWED_MEME_TYPES,
+  ALLOWED_IMAGE_MAX_MIME_SIZE,
+  ALLOWED_IMAGE_MIME_TYPES,
   DEFAULT_AVATARS,
 } from "@/src/lib/configs";
+import { useMutateUserAvatar } from "@/src/lib/hooks/mutations/useMutateUserAvatar";
+import { useMutateUserMetadata } from "@/src/lib/hooks/mutations/useMutateUserMetadata";
+import { useMutateUserProfile } from "@/src/lib/hooks/mutations/useMutateUserProfile";
 import { useOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
+import { useCropperStore } from "@/src/lib/stores/ui/cropperStore";
 import { detectURLType } from "@/src/lib/utils/detectURLType";
+import { formatFileSize } from "@/src/lib/utils/formatFileSize";
+import ImageCropper from "@/src/ui/components/Cropper";
 import StaticAlert from "@/src/ui/components/StaticAlert";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Camera, XIcon } from "lucide-react";
@@ -29,13 +35,15 @@ const AvatarPhase = () => {
   // Pull state from onboarding store
   const { userMetadata } = useOnboardingStore();
 
-  // Preview State
-  const [preview, setPreview] = useState(() => {
-    return (
-      userMetadata?.avatar_url ??
-      DEFAULT_AVATARS[Math.floor(Math.random() * DEFAULT_AVATARS.length)]
-    );
-  });
+  // Cropper States
+  const { setCroppingImage, setFile, preview, setPreview, file } =
+    useCropperStore();
+
+  // PreviewHTTPURL
+  const [previewURL, setPreviewURL] = useState<string | null>(null);
+
+  // Loading State
+  const [loading, setLoading] = useState(false);
 
   // Revoke objectURL
   const previousPreviewRef = useRef<string | null>(null);
@@ -53,6 +61,13 @@ const AvatarPhase = () => {
     previousPreviewRef.current = preview;
   }, [preview]);
 
+  useEffect(() => {
+    if (userMetadata?.avatar_url) {
+      setPreview(userMetadata.avatar_url);
+      setPreviewURL(userMetadata.avatar_url);
+    }
+  }, [userMetadata, setPreview, setPreviewURL]);
+
   // Error State
   const [error, setError] = useState<AvatarPhaseErrorState>(
     defaultAvatarPhaseErrorSate
@@ -67,7 +82,7 @@ const AvatarPhase = () => {
 
     if (file) {
       // Validate MEME Types
-      if (!ALLOWED_MEME_TYPES.includes(file.type)) {
+      if (!ALLOWED_IMAGE_MIME_TYPES.includes(file.type)) {
         setError({
           error: true,
           title: "Invalid File Type",
@@ -79,7 +94,7 @@ const AvatarPhase = () => {
       }
 
       // Validate MEME Size
-      if (file.size > ALLOWED_MEME_SIZE) {
+      if (file.size > ALLOWED_IMAGE_MAX_MIME_SIZE) {
         setError({
           error: true,
           title: "Over Size Limit",
@@ -92,11 +107,24 @@ const AvatarPhase = () => {
 
       setError(defaultAvatarPhaseErrorSate);
       const url = URL.createObjectURL(file);
-      setPreview(url);
+      setFile(file);
+      setCroppingImage(url);
     }
 
     e.target.value = "";
   };
+
+  // Mutate User Avatar
+  const { mutate: mutateUserAvatar, isPending: isMutatingUserAvatar } =
+    useMutateUserAvatar();
+
+  // Mutate User Profile
+  const { mutate: mutateUserProfile, isPending: isMutatingUserProfile } =
+    useMutateUserProfile();
+
+  // Mutate User Metadata
+  const { mutate: mutateUserMetadata, isPending: isMutatingUserMetadata } =
+    useMutateUserMetadata();
 
   return (
     <div>
@@ -133,23 +161,55 @@ const AvatarPhase = () => {
           <p className="text-xs">
             {userMetadata?.avatar_url
               ? "You can choose to retain this avatar, or you can choose to upload a new one."
-              : "You can bypass this step; a random avatar will be assigned to you, or you can upload your own avatar."}
+              : "You can bypass this step; by picking default art below, or you can upload your own avatar."}
           </p>
 
           <div className="mt-4 grid grid-cols-1">
+            {file && file.size && (
+              <div className="mb-1.5 text-xs">
+                Compressed file size : {formatFileSize(file?.size)}
+              </div>
+            )}
             <Button
-              variant={"outline"}
+              variant={file ? "default" : "outline"}
               onClick={() => {
-                // TRY ERROR
-                setError({
-                  error: true,
-                  title: "Over Size Limit",
-                  description:
-                    "File is over size limit, can't be more than 5MB",
-                });
+                if (file) {
+                  mutateUserAvatar(file, {
+                    onSuccess: () => {
+                      mutateUserMetadata({
+                        registration_phase: "confirmation",
+                      });
+                    },
+                  });
+                  return;
+                }
+
+                if (previewURL) {
+                  mutateUserProfile(
+                    {
+                      newValues: {
+                        avatar: previewURL,
+                      },
+                    },
+                    {
+                      onSuccess: () => {
+                        mutateUserMetadata({
+                          registration_phase: "confirmation",
+                        });
+                      },
+                    }
+                  );
+                  return;
+                }
               }}
+              disabled={
+                isMutatingUserAvatar ||
+                isMutatingUserProfile ||
+                isMutatingUserMetadata ||
+                (!previewURL && !file)
+              }
             >
-              Continue
+              {file ? "Upload" : "Continue"}
             </Button>
           </div>
         </div>
@@ -170,7 +230,9 @@ const AvatarPhase = () => {
       {/* Defaults container */}
       <div className="mt-4">
         <h2 className="font-header text-lg">
-          Or pick this beatifull arts below
+          {userMetadata?.avatar_url
+            ? " Or pick this beatifull arts below"
+            : "Pick this beautifull arts below"}
         </h2>
         <div className="grid grid-cols-4 pb-4 mt-2 gap-4 scrollbar-none">
           {DEFAULT_AVATARS.map((item) => (
@@ -182,7 +244,11 @@ const AvatarPhase = () => {
               key={item}
               className="rounded-full min-w-18 max-w-18 min-h-18 max-h-18 md:min-w-24 md:min-h-24 md:max-w-24 md:max-h-24 drag-none select-none cursor-pointer active:scale-95 transition-all duration-300 shadow-xl"
               loading="eager"
-              onClick={() => setPreview(item)}
+              onClick={() => {
+                setPreviewURL(item);
+                setPreview(item);
+                setFile(null);
+              }}
             />
           ))}
         </div>
@@ -191,10 +257,23 @@ const AvatarPhase = () => {
       {/* Hidden Input */}
       <input
         type="file"
-        accept={ALLOWED_MEME_TYPES.join(",")}
+        accept={ALLOWED_IMAGE_MIME_TYPES.join(",")}
         className="hidden"
         onChange={(e) => handleInputChange(e)}
         ref={hiddenInputRef}
+      />
+
+      {/* Cropper Modal */}
+      <ImageCropper
+        aspect={1 / 1}
+        loading={loading}
+        setLoading={setLoading}
+        compressionOptions={{
+          compressionOptions: {
+            maxSizeMB: 0.1,
+            maxWidthOrHeight: 512,
+          },
+        }}
       />
     </div>
   );

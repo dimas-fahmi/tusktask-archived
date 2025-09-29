@@ -1,7 +1,7 @@
 import { UsersProfilesPatchRequest } from "@/app/api/users/profiles/patch";
 import { useMutation } from "@tanstack/react-query";
 
-export const useMutateProfile = () => {
+export const useMutateUserProfile = () => {
   return useMutation({
     mutationFn: async (req: UsersProfilesPatchRequest) => {
       const response = await fetch("/api/users/profiles", {

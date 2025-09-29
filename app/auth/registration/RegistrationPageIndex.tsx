@@ -12,7 +12,7 @@ const RegistrationPageIndex = () => {
   const { title, subtitle, render, setter } = useOnboardingStore();
 
   // Session
-  const { data: session, isFetching, refetch } = useSession();
+  const { data: session, isFetching, refetch: refetchSession } = useSession();
 
   // Retry
   const [retry, setRetry] = useState(0);
@@ -26,9 +26,21 @@ const RegistrationPageIndex = () => {
 
     if (!userMetadata) {
       if (retry <= 2) {
-        refetch();
+        console.log(`USER_METADATA_NULL_RETRYING_${retry + 1}`);
+        refetchSession();
         setRetry((prev) => prev + 1);
       }
+
+      if (!userMetadata && retry >= 2) {
+        console.log(
+          "USER_METADATA_NULL_RETRIED_TWICE_STILL_NULL_SETTING_PHASE_TO_NAME_ANYWAY"
+        );
+        setter({ registrationPhase: "name" });
+
+        // Run Renderer
+        renderer(setter, "name");
+      }
+
       return;
     }
 
@@ -42,9 +54,9 @@ const RegistrationPageIndex = () => {
       setter({ registrationPhase: userMetadata.registration_phase });
 
       // Run Renderer
-      renderer(setter, userMetadata?.registration_phase);
+      renderer(setter, userMetadata.registration_phase);
     }
-  }, [setter, session, isFetching, refetch]);
+  }, [setter, session, isFetching, refetchSession, retry]);
 
   // SignOut
   const { mutate: signOut } = useSignOut();

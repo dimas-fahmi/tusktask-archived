@@ -50,7 +50,7 @@ export const useSession = () => {
 // SignIn With Email & Password
 export const useSignIn = () => {
   // Init Query Client
-  const { refetch } = useSession();
+  const { refetch: refetchSession } = useSession();
 
   // Init Router
   const router = useRouter();
@@ -89,7 +89,7 @@ export const useSignIn = () => {
     },
     onSettled: () => {
       // Invalidate Session
-      refetch();
+      refetchSession();
     },
   });
 
@@ -99,7 +99,7 @@ export const useSignIn = () => {
 // SignIn with oAuth
 export const useOAuth = () => {
   // Init Query Client
-  const { refetch } = useSession();
+  const { refetch: refetchSession } = useSession();
 
   // Init router
   const router = useRouter();
@@ -150,7 +150,7 @@ export const useOAuth = () => {
     },
     onSettled: () => {
       // Invalidate session
-      refetch();
+      refetchSession();
     },
   });
 };
@@ -190,7 +190,7 @@ export const useSignUp = () => {
 // SignOut
 export const useSignOut = () => {
   // Session
-  const { refetch } = useSession();
+  const { refetch: refetchSession } = useSession();
 
   // Router
   const router = useRouter();
@@ -199,7 +199,7 @@ export const useSignOut = () => {
     mutationFn: signOut,
     onSettled: () => {
       // Refetch Session
-      refetch();
+      refetchSession();
 
       // Refresh
       router.refresh();

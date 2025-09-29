@@ -40,7 +40,7 @@ export function renderer(
       setter({
         title: "You're All Set!",
         subtitle:
-          "Everything looks good. Review your info and confirm to finish setting up your profile.",
+          "Glad to have you aboard, you can change any of this on profile settings later on.",
         render: <ConfirmationPhase />,
       });
       break;

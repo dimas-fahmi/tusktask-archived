@@ -1,8 +1,7 @@
 "use client";
 
-import { useSession } from "@/src/lib/hooks/auth/useAuth";
-import { useMutateProfile } from "@/src/lib/hooks/mutations/useMutateProfile";
 import { useMutateUserMetadata } from "@/src/lib/hooks/mutations/useMutateUserMetadata";
+import { useMutateUserProfile } from "@/src/lib/hooks/mutations/useMutateUserProfile";
 import { useFetchProfile } from "@/src/lib/hooks/queries/useFetchProfile";
 import { useOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
 import { usernameSchema } from "@/src/lib/zod/schemas/authSchema";
@@ -73,14 +72,11 @@ const UsernamePhase = () => {
 
   // Mutate Profile
   const { mutate: mutateProfile, isPending: isMutatingProfile } =
-    useMutateProfile();
+    useMutateUserProfile();
 
   // Mutate User Metadata
   const { mutate: mutateUserMetadata, isPending: isMutatatingUserMetadata } =
     useMutateUserMetadata();
-
-  // Session
-  const { refetch: refetchSession } = useSession();
 
   return (
     <div>
@@ -96,14 +92,7 @@ const UsernamePhase = () => {
             },
             {
               onSuccess: () => {
-                mutateUserMetadata(
-                  { registration_phase: "avatar" },
-                  {
-                    onSuccess: () => {
-                      refetchSession();
-                    },
-                  }
-                );
+                mutateUserMetadata({ registration_phase: "avatar" });
                 toast(`Changes Saved`, {
                   description: `Changed your username to ${data.username}`,
                 });
