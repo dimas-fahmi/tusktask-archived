@@ -4,7 +4,7 @@ import { useSession, useSignOut } from "@/src/lib/hooks/auth/useAuth";
 import { useOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
 import { UserMetadata } from "@/src/lib/types/supabase";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect } from "react";
 import { renderer } from "./renderer";
 
 const RegistrationPageIndex = () => {
@@ -12,37 +12,18 @@ const RegistrationPageIndex = () => {
   const { title, subtitle, render, setter } = useOnboardingStore();
 
   // Session
-  const { data: session, isFetching, refetch: refetchSession } = useSession();
-
-  // Retry
-  const [retry, setRetry] = useState(0);
+  const {
+    data: session,
+    isFetching: isFetchingSession,
+    refetch: refetchSession,
+  } = useSession();
 
   // Syncronize data
   useEffect(() => {
-    if (!isFetching) return;
+    if (isFetchingSession) return;
 
     const user = session?.user;
     const userMetadata = user?.user_metadata as UserMetadata;
-
-    if (!userMetadata) {
-      if (retry <= 2) {
-        console.log(`USER_METADATA_NULL_RETRYING_${retry + 1}`);
-        refetchSession();
-        setRetry((prev) => prev + 1);
-      }
-
-      if (!userMetadata && retry >= 2) {
-        console.log(
-          "USER_METADATA_NULL_RETRIED_TWICE_STILL_NULL_SETTING_PHASE_TO_NAME_ANYWAY"
-        );
-        setter({ registrationPhase: "name" });
-
-        // Run Renderer
-        renderer(setter, "name");
-      }
-
-      return;
-    }
 
     // Set UserMetadata
     if (userMetadata) {
@@ -56,7 +37,7 @@ const RegistrationPageIndex = () => {
       // Run Renderer
       renderer(setter, userMetadata.registration_phase);
     }
-  }, [setter, session, isFetching, refetchSession, retry]);
+  }, [setter, session, isFetchingSession, refetchSession]);
 
   // SignOut
   const { mutate: signOut } = useSignOut();
