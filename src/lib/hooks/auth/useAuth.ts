@@ -8,7 +8,7 @@ import {
 import { useEffect } from "react";
 import { createBrowserClient } from "../../supabase/instances/client";
 import { useRouter } from "next/navigation";
-import { AuthProvider, OAUTH_PROVIDERS } from "../../configs";
+import { APP_URL, AuthProvider, OAUTH_PROVIDERS } from "../../configs";
 import { parseAuthError } from "../../utils/parseAuthError";
 
 // Session
@@ -128,7 +128,7 @@ export const useOAuth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback${params ? `?${params}` : ""}`,
+          redirectTo: `${APP_URL}/auth/callback${params ? `?${params}` : ""}`,
         },
       });
 

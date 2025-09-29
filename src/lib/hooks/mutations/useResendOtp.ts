@@ -1,5 +1,6 @@
 import { UsersEmailResendPostRequest } from "@/app/api/users/email/[email]/resend/post";
 import { useMutation } from "@tanstack/react-query";
+import { APP_URL } from "../../configs";
 
 export const useResendOtp = () => {
   return useMutation({
@@ -11,7 +12,7 @@ export const useResendOtp = () => {
       type: UsersEmailResendPostRequest["type"];
     }) => {
       // Get Origin
-      const origin = process.env.NEXT_PUBLIC_APP_URL;
+      const origin = APP_URL;
 
       if (!origin) {
         throw new Error("MISSING_ORIGIN_VARIABLE_ON_ENV");

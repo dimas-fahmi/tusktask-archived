@@ -1,10 +1,11 @@
+import { APP_URL } from "@/src/lib/configs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   // Extract Parameters
   const url = req.nextUrl;
   const { token, type, email } = Object.fromEntries(url.searchParams.entries());
-  const origin = process.env.NEXT_PUBLIC_APP_URL;
+  const origin = APP_URL;
   const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
   // Validate required environment variables
