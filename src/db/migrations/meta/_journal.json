@@ -12,15 +12,15 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1759239186571,
-      "tag": "0001_chemical_menace",
+      "when": 1759240130734,
+      "tag": "0001_petite_nebula",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1759239542340,
-      "tag": "0002_far_hellion",
+      "when": 1759240774672,
+      "tag": "0002_good_wendigo",
       "breakpoints": true
     }
   ]

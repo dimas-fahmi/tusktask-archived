@@ -1,0 +1,1 @@
+ALTER TYPE "public"."project_Type" SET SCHEMA "project";

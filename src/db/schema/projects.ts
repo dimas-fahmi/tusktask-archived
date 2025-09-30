@@ -1,4 +1,4 @@
-import { index, pgEnum, pgPolicy, text, uuid } from "drizzle-orm/pg-core";
+import { index, pgPolicy, text, uuid } from "drizzle-orm/pg-core";
 import { projectSchema } from "./configs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { relations, sql } from "drizzle-orm";
@@ -7,7 +7,11 @@ import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
 import { tasks } from "./tasks";
 
 // Enums
-const projectTypeEnum = pgEnum("project_Type", ["primary", "generic", "co-op"]);
+export const projectTypeEnum = projectSchema.enum("project_Type", [
+  "primary",
+  "generic",
+  "co-op",
+]);
 
 // Project Schema
 export const projects = projectSchema
@@ -41,8 +45,8 @@ export const projects = projectSchema
         as: "permissive",
         to: authenticatedRole,
         for: "all",
-        using: sql`(select auth.id()) = ${t.ownerId}`,
-        withCheck: sql`(select auth.id()) = ${t.ownerId}`,
+        using: sql`(select auth.uid()) = ${t.ownerId}`,
+        withCheck: sql`(select auth.uid()) = ${t.ownerId}`,
       }),
       pgPolicy("PLC_PROJECT_PROJECTS_ALL_SERVICE", {
         as: "permissive",

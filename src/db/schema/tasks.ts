@@ -54,8 +54,8 @@ export const masterTasks = projectSchema
         as: "permissive",
         to: authenticatedRole,
         for: "all",
-        using: sql`(select auth.id()) = ${t.ownerId}`,
-        withCheck: sql`(select auth.id()) = ${t.ownerId}`,
+        using: sql`(select auth.uid()) = ${t.ownerId}`,
+        withCheck: sql`(select auth.uid()) = ${t.ownerId}`,
       }),
       pgPolicy("PLC_PROJECT_MASTER_TASKS_ALL_SERVICE", {
         as: "permissive",
@@ -133,8 +133,8 @@ export const tasks = projectSchema
         as: "permissive",
         to: authenticatedRole,
         for: "all",
-        using: sql`(select auth.id()) = ${t.ownerId}`,
-        withCheck: sql`(select auth.id()) = ${t.ownerId}`,
+        using: sql`(select auth.uid()) = ${t.ownerId}`,
+        withCheck: sql`(select auth.uid()) = ${t.ownerId}`,
       }),
       pgPolicy("PLC_PROJECT_TASKS_ALL_SERVICE", {
         as: "permissive",

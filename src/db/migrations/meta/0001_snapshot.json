@@ -1,5 +1,5 @@
 {
-  "id": "8324a283-91dd-4bb9-adb0-c50d98c9365b",
+  "id": "2590e0a6-a31c-4932-8575-6f66f9f94e3d",
   "prevId": "081a9f5d-3cab-4648-a973-ec86e0e9edab",
   "version": "7",
   "dialect": "postgresql",
@@ -106,8 +106,8 @@
           "to": [
             "authenticated"
           ],
-          "using": "(SELECT auth.id()) = \"user\".\"profiles\".\"user_id\"",
-          "withCheck": "(SELECT auth.id()) = \"user\".\"profiles\".\"user_id\""
+          "using": "(SELECT auth.uid()) = \"user\".\"profiles\".\"user_id\"",
+          "withCheck": "(SELECT auth.uid()) = \"user\".\"profiles\".\"user_id\""
         },
         "PLC_USER_PROFILES_ALL_SERVICE": {
           "name": "PLC_USER_PROFILES_ALL_SERVICE",
@@ -228,8 +228,8 @@
           "to": [
             "authenticated"
           ],
-          "using": "(select auth.id()) = \"project\".\"projects\".\"owner_id\"",
-          "withCheck": "(select auth.id()) = \"project\".\"projects\".\"owner_id\""
+          "using": "(select auth.uid()) = \"project\".\"projects\".\"owner_id\"",
+          "withCheck": "(select auth.uid()) = \"project\".\"projects\".\"owner_id\""
         },
         "PLC_PROJECT_PROJECTS_ALL_SERVICE": {
           "name": "PLC_PROJECT_PROJECTS_ALL_SERVICE",
@@ -345,8 +345,8 @@
           "to": [
             "authenticated"
           ],
-          "using": "(select auth.id()) = \"project\".\"master_tasks\".\"owner_id\"",
-          "withCheck": "(select auth.id()) = \"project\".\"master_tasks\".\"owner_id\""
+          "using": "(select auth.uid()) = \"project\".\"master_tasks\".\"owner_id\"",
+          "withCheck": "(select auth.uid()) = \"project\".\"master_tasks\".\"owner_id\""
         },
         "PLC_PROJECT_MASTER_TASKS_ALL_SERVICE": {
           "name": "PLC_PROJECT_MASTER_TASKS_ALL_SERVICE",
@@ -382,6 +382,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "master_task": {
+          "name": "master_task",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "parent_task": {
           "name": "parent_task",
@@ -571,6 +577,20 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+        "tasks_master_task_master_tasks_id_fk": {
+          "name": "tasks_master_task_master_tasks_id_fk",
+          "tableFrom": "tasks",
+          "tableTo": "master_tasks",
+          "schemaTo": "project",
+          "columnsFrom": [
+            "master_task"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "SR_PROJECT_TASKS_PARENT_TASK_ID": {
           "name": "SR_PROJECT_TASKS_PARENT_TASK_ID",
           "tableFrom": "tasks",
@@ -596,8 +616,8 @@
           "to": [
             "authenticated"
           ],
-          "using": "(select auth.id()) = \"project\".\"tasks\".\"owner_id\"",
-          "withCheck": "(select auth.id()) = \"project\".\"tasks\".\"owner_id\""
+          "using": "(select auth.uid()) = \"project\".\"tasks\".\"owner_id\"",
+          "withCheck": "(select auth.uid()) = \"project\".\"tasks\".\"owner_id\""
         },
         "PLC_PROJECT_TASKS_ALL_SERVICE": {
           "name": "PLC_PROJECT_TASKS_ALL_SERVICE",
@@ -614,6 +634,15 @@
     }
   },
   "enums": {
+    "public.project_Type": {
+      "name": "project_Type",
+      "schema": "public",
+      "values": [
+        "primary",
+        "generic",
+        "co-op"
+      ]
+    },
     "project.task_status": {
       "name": "task_status",
       "schema": "project",

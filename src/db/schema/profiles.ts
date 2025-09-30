@@ -44,8 +44,8 @@ export const profiles = userSchema
         as: "permissive",
         to: authenticatedRole,
         for: "update",
-        using: sql`(SELECT auth.id()) = ${t.userId}`,
-        withCheck: sql`(SELECT auth.id()) = ${t.userId}`,
+        using: sql`(SELECT auth.uid()) = ${t.userId}`,
+        withCheck: sql`(SELECT auth.uid()) = ${t.userId}`,
       }),
       pgPolicy("PLC_USER_PROFILES_ALL_SERVICE", {
         as: "permissive",
