@@ -8,7 +8,7 @@ import {
 import { relations, sql } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { projects } from "./projects";
-import { tasks } from "./tasks";
+import { masterTasks, tasks } from "./tasks";
 
 // Profiles Table
 export const profiles = userSchema
@@ -44,8 +44,8 @@ export const profiles = userSchema
         as: "permissive",
         to: authenticatedRole,
         for: "update",
-        using: sql`${t.userId} = auth.uid()`,
-        withCheck: sql`${t.userId} = auth.uid()`,
+        using: sql`(SELECT auth.uid()) = ${t.userId}`,
+        withCheck: sql`(SELECT auth.uid()) = ${t.userId}`,
       }),
       pgPolicy("PLC_USER_PROFILES_ALL_SERVICE", {
         as: "permissive",
@@ -67,4 +67,5 @@ export const ProfileInsertSchema = createInsertSchema(profiles);
 export const profilesRelations = relations(profiles, ({ many }) => ({
   projects: many(projects),
   tasks: many(tasks),
+  recurringTasks: many(masterTasks),
 }));

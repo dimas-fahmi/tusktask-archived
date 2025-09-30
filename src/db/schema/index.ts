@@ -5,7 +5,12 @@ import { profiles, profilesRelations } from "./profiles";
 
 // Projects Schema
 import { projects, projectsRelations } from "./projects";
-import { tasks, tasksRelations } from "./tasks";
+import {
+  masterTasks,
+  masterTasksRelations,
+  tasks,
+  tasksRelations,
+} from "./tasks";
 
 const schema = {
   // Profiles Table
@@ -19,6 +24,8 @@ const schema = {
   // Tasks Table
   tasks,
   tasksRelations,
+  masterTasks,
+  masterTasksRelations,
 };
 
 export default schema;
