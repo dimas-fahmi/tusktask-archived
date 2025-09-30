@@ -1,4 +1,11 @@
-import { index, pgPolicy, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  foreignKey,
+  index,
+  pgPolicy,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { projectSchema } from "./configs";
 import { relations, sql } from "drizzle-orm";
 import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
@@ -14,6 +21,63 @@ export const taskStatusEnum = projectSchema.enum("task_status", [
   "completed",
 ]);
 
+// MasterTasks Table (recurring mechanism)
+export const masterTasks = projectSchema
+  .table(
+    "master_tasks",
+    {
+      id: uuid("id")
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+      ownerId: uuid("owner_id")
+        .references(() => profiles.userId, { onDelete: "cascade" })
+        .notNull(),
+      name: text("name").notNull().default("Untitled"),
+      createdAt: timestamp("created_at", { withTimezone: true })
+        .notNull()
+        .defaultNow(),
+      dateStart: timestamp("date_start", { withTimezone: true }).notNull(),
+      rRule: text("r_rule").notNull(),
+    },
+    (t) => [
+      // Indexes
+      index("IDX_PROJECT_MASTER_TASKS_CREATED_AT").on(t.createdAt),
+
+      // Full Text Search
+      index("FTS_PROJECT_MASTER_TASKS_NAME").using(
+        "gin",
+        sql`to_tsvector('simple', ${t.name})`
+      ),
+
+      // Policies
+      pgPolicy("PLC_PROJECT_MASTER_TASKS_ALL_SELF", {
+        as: "permissive",
+        to: authenticatedRole,
+        for: "all",
+        using: sql`(select auth.id()) = ${t.ownerId}`,
+        withCheck: sql`(select auth.id()) = ${t.ownerId}`,
+      }),
+      pgPolicy("PLC_PROJECT_MASTER_TASKS_ALL_SERVICE", {
+        as: "permissive",
+        to: serviceRole,
+        for: "all",
+        using: sql``,
+      }),
+    ]
+  )
+  .enableRLS();
+
+// Recurring Relations
+export const masterTasksRelations = relations(masterTasks, ({ one, many }) => ({
+  owner: one(profiles, {
+    fields: [masterTasks.ownerId],
+    references: [profiles.userId],
+  }),
+  occurrences: many(tasks, {
+    relationName: "PROJECTS_TASKS_RECURRING",
+  }),
+}));
+
 // Tasks table
 export const tasks = projectSchema
   .table(
@@ -28,16 +92,28 @@ export const tasks = projectSchema
       projectId: uuid("project_id")
         .references(() => projects.id, { onDelete: "cascade" })
         .notNull(),
+      masterTasks: uuid("master_task").references(() => masterTasks.id, {
+        onDelete: "cascade",
+      }),
+      parentTask: uuid("parent_task"),
       name: text("name").notNull().default("Untitled"),
       description: text("description"),
       taskStatus: taskStatusEnum(),
       createdAt: timestamp("created_at", { withTimezone: true })
         .notNull()
         .defaultNow(),
+      completedAt: timestamp("completed_at", { withTimezone: true }),
       reminderAt: timestamp("reminder_at", { withTimezone: true }),
       deadlineAt: timestamp("deadline_at", { withTimezone: true }),
     },
     (t) => [
+      // Self References
+      foreignKey({
+        name: "SR_PROJECT_TASKS_PARENT_TASK_ID",
+        columns: [t.parentTask],
+        foreignColumns: [t.id],
+      }).onDelete("cascade"), // Subtasks
+
       // Indexes
       index("IDX_PROJECT_TASKS_OWNER_ID").on(t.ownerId),
       index("IDX_PROJECT_TASKS_PROJECT_ID").on(t.projectId),
@@ -53,12 +129,12 @@ export const tasks = projectSchema
       ),
 
       // Policies
-      pgPolicy("PLC_PROJECT_TASKS_ALL_AUTHENTICATED", {
+      pgPolicy("PLC_PROJECT_TASKS_ALL_SELF", {
         as: "permissive",
         to: authenticatedRole,
         for: "all",
-        using: sql`${t.ownerId} = auth.uid()`,
-        withCheck: sql`${t.ownerId} = auth.uid()`,
+        using: sql`(select auth.id()) = ${t.ownerId}`,
+        withCheck: sql`(select auth.id()) = ${t.ownerId}`,
       }),
       pgPolicy("PLC_PROJECT_TASKS_ALL_SERVICE", {
         as: "permissive",
@@ -77,7 +153,7 @@ export const TaskSchema = createSelectSchema(tasks);
 export const TaskInsertSchema = createInsertSchema(tasks);
 
 // Tasks Relations
-export const tasksRelations = relations(tasks, ({ one }) => ({
+export const tasksRelations = relations(tasks, ({ one, many }) => ({
   owner: one(profiles, {
     fields: [tasks.ownerId],
     references: [profiles.userId],
@@ -85,5 +161,18 @@ export const tasksRelations = relations(tasks, ({ one }) => ({
   project: one(projects, {
     fields: [tasks.projectId],
     references: [projects.id],
+  }),
+  parent: one(tasks, {
+    fields: [tasks.parentTask],
+    references: [tasks.id],
+    relationName: "PROJECTS_TASKS_SUBTASKS",
+  }),
+  subtasks: many(tasks, {
+    relationName: "PROJECTS_TASKS_SUBTASKS",
+  }),
+  masterTasks: one(masterTasks, {
+    fields: [tasks.masterTasks],
+    references: [masterTasks.id],
+    relationName: "PROJECTS_TASKS_RECURRING",
   }),
 }));

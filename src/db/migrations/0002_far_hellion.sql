@@ -1,0 +1,2 @@
+ALTER TABLE "project"."tasks" ADD COLUMN "master_task" uuid;--> statement-breakpoint
+ALTER TABLE "project"."tasks" ADD CONSTRAINT "tasks_master_task_master_tasks_id_fk" FOREIGN KEY ("master_task") REFERENCES "project"."master_tasks"("id") ON DELETE cascade ON UPDATE no action;

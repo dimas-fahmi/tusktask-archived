@@ -8,6 +8,20 @@
       "when": 1758710790050,
       "tag": "0000_soft_slipstream",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1759239186571,
+      "tag": "0001_chemical_menace",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759239542340,
+      "tag": "0002_far_hellion",
+      "breakpoints": true
     }
   ]
 }
