@@ -16,9 +16,11 @@ const DashboardLayout = ({
     <>
       <SidebarProvider>
         <DashboardSidebar />
-        <SidebarInset>
+        <SidebarInset className="w-full overflow-hidden">
           <DashboardNavbar />
-          <div className="py-2 px-4 md:px-6">{children}</div>
+          <div className="py-2 px-4 md:px-6 w-full overflow-hidden">
+            {children}
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </>
