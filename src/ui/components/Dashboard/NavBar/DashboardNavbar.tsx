@@ -15,21 +15,27 @@ const DashboardNavbar = () => {
   const { data: profile } = useFetchUserProfile();
 
   // Pull states from useSidebar
-  const { open, openMobile, setOpen, setOpenMobile } = useSidebar();
+  const { open, setOpen } = useSidebar();
 
   return (
     <div className="p-4 md:p-6 flex items-center justify-between">
       {/* Left Side */}
       <div>
         <button
-          className="button-reactivity opacity-70"
+          className="hidden md:block button-reactivity opacity-70"
           onClick={() => {
             setOpen(!open);
-            setOpenMobile(!openMobile);
           }}
         >
           <PanelLeft />
         </button>
+
+        <div className="md:hidden">
+          <h1 className="font-header text-xl">
+            Hi {profile?.name?.split(" ")[0]}
+          </h1>
+          <span className="text-sm opacity-70">03 tasks pending</span>
+        </div>
       </div>
 
       {/* Right Side */}
