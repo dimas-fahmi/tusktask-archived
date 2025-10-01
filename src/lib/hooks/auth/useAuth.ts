@@ -79,7 +79,7 @@ export const useSignIn = () => {
     onSuccess: () => {
       // Sent back to homepage
       //  TODO: Sent to last request pathname (low)
-      router.push("/");
+      router.push("/dashboard");
     },
     onError: (error: AuthResponse) => {
       // Sent error to auth page

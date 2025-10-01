@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   // Get URL instance
   const url = request.nextUrl;
   const clonedURL = url.clone();
-  const { searchParams, origin, pathname } = url;
+  const { searchParams, origin } = url;
 
   // Initialize supabase instance
   const supabase = await createServiceClient();
@@ -23,11 +23,11 @@ export async function GET(request: NextRequest) {
   );
 
   // Next Route
-  let nextRoute = "/";
+  let nextRoute = next;
 
-  if (!pathname.startsWith("/")) {
+  if (!next) {
     // if "next" is not a relative URL, use the default
-    nextRoute = "/";
+    nextRoute = "/dashboard";
   }
 
   // Recovery Handler
@@ -96,9 +96,9 @@ export async function GET(request: NextRequest) {
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${nextRoute}`);
       } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
+        return NextResponse.redirect(`https://${forwardedHost}${nextRoute}`);
       } else {
-        return NextResponse.redirect(`${origin}${next}`);
+        return NextResponse.redirect(`${origin}${nextRoute}`);
       }
     }
 
