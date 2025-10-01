@@ -17,7 +17,7 @@
   --popover-foreground: oklch(
     20% 0.02 270
   ); /* Consistent with card-foreground */
-  --primary: oklch(40.366% 0.15852 260.447); /* from #0149ac vibrant blue */
+  --primary: oklch(30.372% 0.12333 259.926); /* from #0149ac vibrant blue */
   --primary-foreground: oklch(
     98% 0.01 270
   ); /* Near-white for contrast on primary */
@@ -159,6 +159,10 @@
 
   .navlink {
     @apply text-primary hover:underline visited:italic visited:underline cursor-pointer;
+  }
+
+  .button-reactivity {
+    @apply cursor-pointer active:scale-95 transition-all duration-300;
   }
 }
 

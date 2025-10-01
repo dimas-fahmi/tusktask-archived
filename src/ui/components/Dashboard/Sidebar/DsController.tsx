@@ -1,0 +1,39 @@
+"use client";
+
+import { Button } from "@/src/ui/shadcn/components/ui/button";
+import { useSidebar } from "@/src/ui/shadcn/components/ui/sidebar";
+import { CirclePlus, PanelLeftClose, Settings } from "lucide-react";
+import React from "react";
+
+const DsController = () => {
+  // Pull setters from useSidebar
+  const { setOpen, setOpenMobile } = useSidebar();
+
+  return (
+    <div className="grid grid-cols-1 gap-2">
+      {/* New Task Button */}
+      <Button>
+        <CirclePlus /> New Task
+      </Button>
+
+      <div className="grid grid-cols-2 gap-2">
+        <Button variant={"outline"}>
+          <Settings />
+          Settings
+        </Button>
+        <Button
+          variant={"outline"}
+          onClick={() => {
+            setOpen(false);
+            setOpenMobile(false);
+          }}
+        >
+          <PanelLeftClose />
+          Hide Menu
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default DsController;
