@@ -7,6 +7,7 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarRail,
+  useSidebar,
 } from "@/src/ui/shadcn/components/ui/sidebar";
 import ProfileCard from "../../ProfileCard";
 import DsController from "./DsController";
@@ -36,6 +37,9 @@ const DsNavLink = ({
   // Render Icon
   const Icon = icon;
 
+  // Setter for mobile
+  const { setOpenMobile } = useSidebar();
+
   return (
     <Link
       href={href}
@@ -43,6 +47,9 @@ const DsNavLink = ({
         `${isActive ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-secondary-foreground"}  py-1 rounded-md flex px-4 gap-2 items-center`,
         className
       )}
+      onClick={() => {
+        setOpenMobile(false);
+      }}
     >
       {/* Icon */}
       <Icon className="w-4.5 h-4.5" />
