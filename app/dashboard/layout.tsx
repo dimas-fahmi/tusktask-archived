@@ -1,4 +1,5 @@
 import DashboardNavbar from "@/src/ui/components/Dashboard/NavBar/DashboardNavbar";
+import NewProjectDrawer from "@/src/ui/components/Dashboard/NewProjectDrawer";
 import { DashboardSidebar } from "@/src/ui/components/Dashboard/Sidebar/DashboardSidebar";
 
 import {
@@ -22,6 +23,9 @@ const DashboardLayout = ({
             {children}
           </div>
         </SidebarInset>
+
+        {/* Drawers */}
+        <NewProjectDrawer />
       </SidebarProvider>
     </>
   );
