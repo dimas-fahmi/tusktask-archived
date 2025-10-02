@@ -36,6 +36,12 @@ const RegistrationPageIndex = () => {
 
       // Run Renderer
       renderer(setter, userMetadata.registration_phase);
+    } else {
+      // Fallback if registrationPhase is not exist
+      setter({ registrationPhase: "name" });
+
+      // Run Renderer
+      renderer(setter, "name");
     }
   }, [setter, session, isFetchingSession, refetchSession]);
 
