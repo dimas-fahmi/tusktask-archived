@@ -17,8 +17,6 @@ const IconPicker = ({ setIconName }: IconPickerProps) => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
-  console.log(iconNames.length);
-
   // Filter icons based on search (default to "Folder" if empty)
   const filteredIcons = useMemo(() => {
     const searchTerm =
