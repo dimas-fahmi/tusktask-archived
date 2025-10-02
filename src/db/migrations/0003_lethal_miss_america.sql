@@ -1,0 +1,1 @@
+ALTER TABLE "project"."projects" RENAME COLUMN "logo" TO "icon";

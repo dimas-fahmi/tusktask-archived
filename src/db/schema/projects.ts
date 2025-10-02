@@ -27,7 +27,7 @@ export const projects = projectSchema
       projectType: projectTypeEnum(),
       name: text("name").notNull(),
       description: text("description"),
-      logo: text("logo"),
+      icon: text("icon"),
       cover: text("cover"),
     },
     (t) => [
