@@ -14,10 +14,10 @@ const iconNames = Object.keys(iconNodes).map((kebabName) =>
 const ICONS_PER_PAGE = 20;
 
 export interface IconPickerProps {
-  setIcon: (n: icons.LucideIcon) => void;
+  setIconName?: (n: string) => void;
 }
 
-const IconPicker = ({ setIcon }: IconPickerProps) => {
+const IconPicker = ({ setIconName }: IconPickerProps) => {
   const [search, setSearch] = useState("Folder");
   const [page, setPage] = useState(1);
 
@@ -75,7 +75,7 @@ const IconPicker = ({ setIcon }: IconPickerProps) => {
               className={`hover:bg-primary/30 hover:text-primary flex flex-col items-center justify-center p-3 rounded-lg  transition-colors duration-200 group cursor-pointer`}
               title={name}
               onClick={() => {
-                setIcon(Icon);
+                setIconName?.(name);
               }}
             >
               <Icon className="w-6 h-6" />
