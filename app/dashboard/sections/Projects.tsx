@@ -1,5 +1,6 @@
 "use client";
 
+import { useProjectStore } from "@/src/lib/stores/ui/projectStore";
 import {
   Accessibility,
   CircleFadingPlus,
@@ -39,6 +40,10 @@ export const ProjectCard = ({
 };
 
 const Projects = () => {
+  // Pull states and setter from projectStore
+  const { newProjectDrawerOpen, setNewProjectDrawerOpen } = useProjectStore();
+
+  // Drag To Scroll Mechanism
   const containerRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLInputElement>;
@@ -64,6 +69,10 @@ const Projects = () => {
           className="p-4 cursor-pointer hover:scale-[1.05] transition-all duration-300 border text-nowrap rounded-md group text-sm border-dashed flex items-center justify-center flex-col
          hover:bg-primary hover:text-primary-foreground hover:border-transparent
         "
+          disabled={newProjectDrawerOpen}
+          onClick={() => {
+            setNewProjectDrawerOpen(true);
+          }}
         >
           <div className="relative h-6 w-full">
             <CirclePlus
