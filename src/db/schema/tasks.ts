@@ -98,7 +98,7 @@ export const tasks = projectSchema
       parentTask: uuid("parent_task"),
       name: text("name").notNull().default("Untitled"),
       description: text("description"),
-      taskStatus: taskStatusEnum(),
+      taskStatus: taskStatusEnum("task_status"),
       createdAt: timestamp("created_at", { withTimezone: true })
         .notNull()
         .defaultNow(),
