@@ -4,6 +4,7 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
+  DrawerTitle,
 } from "@/src/ui/shadcn/components/ui/drawer";
 import React from "react";
 import IconPicker from "../../IconPicker";
@@ -17,9 +18,9 @@ const IconPickerDrawer = ({ onChange }: { onChange: (n: string) => void }) => {
     <Drawer open={iconPickerDrawerOpen} onOpenChange={setIconPickerDrawerOpen}>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerHeader className="font-header text-2xl leading-4">
+          <DrawerTitle className="font-header text-2xl mb-2">
             Pick Icon
-          </DrawerHeader>
+          </DrawerTitle>
           <DrawerDescription>{`Look up anything, whether it's code, burger, or even a cat. There are over 1.6k icons to choose from!`}</DrawerDescription>
         </DrawerHeader>
 
