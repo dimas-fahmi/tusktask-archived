@@ -18,9 +18,9 @@ export const metadata: Metadata = generateMetadata({
 const EmailConfirmedPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ email: string }>;
+  searchParams: Promise<{ email: string; code: string }>;
 }) => {
-  const { email } = await searchParams;
+  const { email, code } = await searchParams;
 
   return (
     <div className="max-w-md p-4">
@@ -54,7 +54,9 @@ const EmailConfirmedPage = async ({
 
       {/* Login button */}
       <Button className="w-full block text-center mt-6" asChild>
-        <Link href={"/auth"}>Sign In</Link>
+        <Link href={code ? `/auth/callback?code=${code}` : "/auth"}>
+          Sign In
+        </Link>
       </Button>
 
       {/* Helper Bar */}

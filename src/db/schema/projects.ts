@@ -1,4 +1,4 @@
-import { index, pgPolicy, text, uuid } from "drizzle-orm/pg-core";
+import { index, pgPolicy, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { projectSchema } from "./configs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { relations, sql } from "drizzle-orm";
@@ -21,14 +21,19 @@ export const projects = projectSchema
       id: uuid("id")
         .primaryKey()
         .$defaultFn(() => crypto.randomUUID()),
-      ownerId: uuid("owner_id").references(() => profiles.userId, {
-        onDelete: "cascade",
-      }),
+      ownerId: uuid("owner_id")
+        .references(() => profiles.userId, {
+          onDelete: "cascade",
+        })
+        .notNull(),
       projectType: projectTypeEnum(),
-      name: text("name").notNull(),
+      name: text("name").notNull().default("My Project"),
       description: text("description"),
-      icon: text("icon"),
+      icon: text("icon").default("File"),
       cover: text("cover"),
+      createdAt: timestamp("created_at", { withTimezone: true })
+        .notNull()
+        .defaultNow(),
     },
     (t) => [
       // Indexes

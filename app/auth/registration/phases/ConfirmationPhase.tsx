@@ -1,3 +1,5 @@
+"use client";
+
 import { DEFAULT_NO_IMAGE_SQUARE } from "@/src/lib/configs";
 import { useSession } from "@/src/lib/hooks/auth/useAuth";
 import { useMutateUserMetadata } from "@/src/lib/hooks/mutations/useMutateUserMetadata";
@@ -6,9 +8,12 @@ import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Skeleton } from "@/src/ui/shadcn/components/ui/skeleton";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const ConfirmationPhase = () => {
+  // Loading State
+  const [isLoading, setIsLoading] = useState(false);
+
   // Pull Session
   const { data: session } = useSession();
 
@@ -48,8 +53,9 @@ const ConfirmationPhase = () => {
             </div>
             <Button
               variant={"default"}
-              disabled={isMutatingUserMetadata}
+              disabled={isMutatingUserMetadata || isLoading}
               onClick={() => {
+                setIsLoading(true); // Doesn't need to set to false as user should've redirected to /dashboard
                 mutateUserMetadata(
                   {
                     registration_phase: "completed",
@@ -58,11 +64,14 @@ const ConfirmationPhase = () => {
                     onSuccess: () => {
                       router.refresh();
                     },
+                    onError: () => {
+                      setIsLoading(false); // Set false if somehing goes wrong
+                    },
                   }
                 );
               }}
             >
-              {isMutatingUserMetadata ? "Processing" : "Good Enough"}
+              {isLoading ? "Saving Your Changes" : "Good Enough"}
             </Button>
           </div>
         </div>
