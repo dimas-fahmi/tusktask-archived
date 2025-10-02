@@ -96,7 +96,7 @@ const IconPicker = ({ setIcon }: IconPickerProps) => {
       >
         <button
           onClick={goToPrevPage}
-          disabled={page === 1}
+          disabled={page === 1 || !filteredIcons.length}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -109,7 +109,7 @@ const IconPicker = ({ setIcon }: IconPickerProps) => {
 
         <button
           onClick={goToNextPage}
-          disabled={page === totalPages}
+          disabled={page === totalPages || !filteredIcons.length}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Next

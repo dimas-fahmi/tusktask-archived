@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 export type ProjectStoreSetter = Omit<
   ProjectStore,
-  "setNewProjectDrawerOpen" | "SetNewProjectIcon"
+  "setNewProjectDrawerOpen" | "setNewProjectIcon"
 >;
 
 export interface ProjectStore {
