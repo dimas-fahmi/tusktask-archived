@@ -11,7 +11,7 @@ import {
   DrawerTitle,
 } from "@/src/ui/shadcn/components/ui/drawer";
 import React from "react";
-import IconPicker from "./IconPicker";
+import IconPicker from "../IconPicker";
 
 const NewProjectDrawer = () => {
   // Pull states from projectStore
