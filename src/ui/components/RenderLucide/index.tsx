@@ -11,7 +11,11 @@ const RenderLucide = React.forwardRef<SVGSVGElement, RenderLucideProps>(
       iconName
     ];
 
-    return <Icon {...props} ref={ref} />;
+    return Icon ? (
+      <Icon {...props} ref={ref} />
+    ) : (
+      <icons.Pickaxe {...props} ref={ref} />
+    );
   }
 );
 
