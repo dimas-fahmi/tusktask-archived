@@ -50,6 +50,13 @@
       "when": 1759430677574,
       "tag": "0006_soft_the_hood",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1759483760716,
+      "tag": "0007_foamy_fixer",
+      "breakpoints": true
     }
   ]
 }
