@@ -217,14 +217,14 @@ input[type="password"]::-webkit-textfield-decoration-container {
   inherits: false;
 }
 
-.card {
+.glowing-card {
   position: relative;
   cursor: pointer;
   background-color: var(--glowing-color-card);
 }
 
-.card::after,
-.card::before {
+.glowing-card::after,
+.glowing-card::before {
   content: " ";
   position: absolute;
   z-index: -1;
@@ -243,7 +243,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   animation: rotate 2.5s linear infinite;
 }
 
-.card::after {
+.glowing-card::after {
   filter: blur(0.7rem);
 }
 

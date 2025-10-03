@@ -13,7 +13,7 @@ export async function fetchUserProjects(
   const result = await response.json();
 
   if (!response.ok) {
-    throw response;
+    throw result;
   }
 
   return result;
