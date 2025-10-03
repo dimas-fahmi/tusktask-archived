@@ -7,7 +7,7 @@ import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
 import { tasks } from "./tasks";
 
 // Enums
-export const projectTypeEnum = projectSchema.enum("project_Type", [
+export const projectTypeEnum = projectSchema.enum("project_type", [
   "primary",
   "generic",
   "co-op",
@@ -26,7 +26,7 @@ export const projects = projectSchema
           onDelete: "cascade",
         })
         .notNull(),
-      projectType: projectTypeEnum(),
+      projectType: projectTypeEnum("project_type"),
       name: text("name").notNull().default("My Project"),
       description: text("description"),
       icon: text("icon").default("File"),
