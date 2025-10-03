@@ -32,7 +32,7 @@ const ConfirmationPhase = () => {
     <div className="p-4">
       {profile?.avatar ? (
         // Membership Card
-        <div className="bg-card p-4 rounded-md shadow-2xl card">
+        <div className="bg-card p-4 rounded-md shadow-2xl glowing-card">
           {/* Avatar */}
           <Image
             width={80}
@@ -77,7 +77,7 @@ const ConfirmationPhase = () => {
         </div>
       ) : (
         // Membership Card
-        <Skeleton className="p-4 rounded-md shadow-2xl card">
+        <Skeleton className="p-4 rounded-md shadow-2xl glowing-card">
           {/* Avatar */}
           <Skeleton className="rounded-full w-20 h-20 drag-none block mx-auto" />
 
