@@ -1,6 +1,9 @@
 "use client";
 
-import { useProjectStore } from "@/src/lib/stores/ui/projectStore";
+import {
+  DEFAULT_PROJECT_STORE,
+  useProjectStore,
+} from "@/src/lib/stores/ui/projectStore";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
   Drawer,
@@ -29,6 +32,7 @@ const NewProjectDrawer = () => {
     setNewProjectDrawerOpen,
     newProjectIcon,
     setNewProjectIcon,
+    reset: resetStore,
   } = useProjectStore();
 
   // Pull states from iconPickerStore
@@ -39,6 +43,7 @@ const NewProjectDrawer = () => {
     control,
     handleSubmit,
     setValue,
+    reset: resetForm,
     formState: { isValid },
   } = useForm({
     resolver: zodResolver(
@@ -100,7 +105,12 @@ const NewProjectDrawer = () => {
                   },
                 });
 
-                setNewProjectDrawerOpen(false);
+                resetForm({
+                  icon: DEFAULT_PROJECT_STORE["newProjectIcon"],
+                  projectName: "",
+                  projectDescription: "",
+                });
+                resetStore();
               })}
               className="mt-6"
             >
