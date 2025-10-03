@@ -26,10 +26,10 @@ export const projects = projectSchema
           onDelete: "cascade",
         })
         .notNull(),
-      projectType: projectTypeEnum("project_type"),
+      projectType: projectTypeEnum("project_type").notNull().default("generic"),
       name: text("name").notNull().default("My Project"),
       description: text("description"),
-      icon: text("icon").default("File"),
+      icon: text("icon").notNull().default("Clock1"),
       cover: text("cover"),
       createdAt: timestamp("created_at", { withTimezone: true })
         .notNull()

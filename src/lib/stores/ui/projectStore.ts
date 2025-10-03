@@ -14,14 +14,24 @@ export interface ProjectStore {
 
   // Setter
   setter: (n: ProjectStoreSetter) => void;
+
+  // Resetter
+  reset: () => void;
 }
 
-export const useProjectStore = create<ProjectStore>((set) => ({
+export const DEFAULT_PROJECT_STORE = {
   newProjectDrawerOpen: false,
-  setNewProjectDrawerOpen: (n) => set({ newProjectDrawerOpen: n }),
-  newProjectIcon: "File",
-  setNewProjectIcon: (n) => set({ newProjectIcon: n }),
+  newProjectIcon: "Clock1",
+};
+
+export const useProjectStore = create<ProjectStore>((set) => ({
+  ...DEFAULT_PROJECT_STORE,
 
   // Setter
   setter: (n) => set({ ...n }),
+  setNewProjectDrawerOpen: (n) => set({ newProjectDrawerOpen: n }),
+  setNewProjectIcon: (n) => set({ newProjectIcon: n }),
+
+  // Reset
+  reset: () => set(DEFAULT_PROJECT_STORE),
 }));

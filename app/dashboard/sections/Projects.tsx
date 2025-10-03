@@ -21,8 +21,7 @@ const Projects = () => {
   const { events } = useDraggable(containerRef);
 
   // Projects query
-  const { data: userProjects, isFetching: isFetchingProjects } =
-    useFetchUserProject();
+  const { data: userProjects } = useFetchUserProject();
   const projects = userProjects?.result;
 
   return (
@@ -35,19 +34,10 @@ const Projects = () => {
         {...events}
         className="flex cursor-grab py-2 gap-4 overflow-hidden scrollbar-none select-none overflow-x-scroll"
       >
-        {isFetchingProjects ? (
+        {!projects && !Array.isArray(projects) ? (
           <ProjectCardSkeleton />
         ) : (
-          projects &&
-          Array.isArray(projects) &&
-          projects.map((item) => (
-            <ProjectCard
-              key={item.id}
-              title={item.name}
-              iconName={item?.icon}
-              label="07 Tasks"
-            />
-          ))
+          projects.map((item) => <ProjectCard key={item.id} project={item} />)
         )}
         <button
           className="p-4 cursor-pointer hover:scale-[1.05] transition-all duration-300 border text-nowrap rounded-md group text-sm border-dashed flex items-center justify-center flex-col

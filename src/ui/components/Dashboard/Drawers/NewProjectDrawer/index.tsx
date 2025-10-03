@@ -1,6 +1,9 @@
 "use client";
 
-import { useProjectStore } from "@/src/lib/stores/ui/projectStore";
+import {
+  DEFAULT_PROJECT_STORE,
+  useProjectStore,
+} from "@/src/lib/stores/ui/projectStore";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
   Drawer,
@@ -10,11 +13,17 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/src/ui/shadcn/components/ui/drawer";
-import React from "react";
+import React, { useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import IconPickerDrawer from "../IconPickerDrawer";
 import { useIconPickerStore } from "@/src/lib/stores/ui/iconPickerStore";
 import RenderLucide from "../../../RenderLucide";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+import { ProjectsPostRequest } from "@/app/api/projects/post";
+import { useCreateProject } from "@/src/lib/hooks/mutations/useCreateProject";
+import { useFetchUserProject } from "@/src/lib/hooks/queries/useFetchUserProjects";
 
 const NewProjectDrawer = () => {
   // Pull states from projectStore
@@ -23,10 +32,45 @@ const NewProjectDrawer = () => {
     setNewProjectDrawerOpen,
     newProjectIcon,
     setNewProjectIcon,
+    reset: resetStore,
   } = useProjectStore();
 
   // Pull states from iconPickerStore
   const { setIconPickerDrawerOpen } = useIconPickerStore();
+
+  // Form
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    reset: resetForm,
+    formState: { isValid },
+  } = useForm({
+    resolver: zodResolver(
+      z.object({
+        projectName: z.string().min(3).max(100),
+        projectDescription: z.string().optional(),
+        icon: z.string().min(1),
+      })
+    ),
+    mode: "onChange",
+    defaultValues: {
+      projectName: "",
+      projectDescription: "",
+      icon: newProjectIcon,
+    },
+  });
+
+  useEffect(() => {
+    setValue("icon", newProjectIcon);
+  }, [newProjectIcon]);
+
+  // Mutation
+  const { mutate: createProject, isPending: isCreatingProject } =
+    useCreateProject();
+
+  // Projects query
+  const { refetch: refetchProjects } = useFetchUserProject();
 
   return (
     <>
@@ -43,7 +87,33 @@ const NewProjectDrawer = () => {
             </DrawerHeader>
 
             {/* Body */}
-            <form action="" className="mt-6">
+            <form
+              onSubmit={handleSubmit((data) => {
+                if (!isValid) return;
+
+                const request: ProjectsPostRequest = {
+                  newProject: {
+                    name: data.projectName,
+                    description: data?.projectDescription || undefined,
+                    icon: data.icon,
+                  },
+                };
+
+                createProject(request, {
+                  onSettled: () => {
+                    refetchProjects();
+                  },
+                });
+
+                resetForm({
+                  icon: DEFAULT_PROJECT_STORE["newProjectIcon"],
+                  projectName: "",
+                  projectDescription: "",
+                });
+                resetStore();
+              })}
+              className="mt-6"
+            >
               {/* Input Containers */}
               <div className="grid grid-cols-1">
                 {/* Project Name Form */}
@@ -63,9 +133,17 @@ const NewProjectDrawer = () => {
                       />
                       <ChevronDown className="w-3 h-3" />
                     </div>
-                    <input
-                      className="text-4xl outline-0 capitalize border-0 font-header"
-                      placeholder="Project Name"
+                    <Controller
+                      control={control}
+                      name="projectName"
+                      render={({ field, fieldState }) => (
+                        <input
+                          {...field}
+                          className={`${fieldState?.error ? "text-destructive" : ""} text-4xl outline-0 capitalize border-0 font-header w-full`}
+                          placeholder="Project Name"
+                          autoComplete="off"
+                        />
+                      )}
                     />
                   </div>
                   <textarea
@@ -86,7 +164,7 @@ const NewProjectDrawer = () => {
                 >
                   Cancel
                 </Button>
-                <Button>Save</Button>
+                <Button disabled={!isValid || isCreatingProject}>Save</Button>
               </DrawerFooter>
             </form>
           </div>
