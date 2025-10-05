@@ -36,7 +36,10 @@ import { DatePicker } from "../../../DatePicker";
 import { Controller, useForm } from "react-hook-form";
 import RenderLucide from "../../../RenderLucide";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NewTaskSchema, newTaskSchema } from "@/src/lib/zod/schemas/taskSchema";
+import {
+  NewTaskFormSchema,
+  newTaskFormSchema,
+} from "@/src/lib/zod/schemas/taskSchema";
 
 const NewTaskDialog = () => {
   // Pull setters and states from store
@@ -70,15 +73,15 @@ const NewTaskDialog = () => {
     setValue,
     reset,
     formState: { isValid },
-  } = useForm<NewTaskSchema>({
-    resolver: zodResolver(newTaskSchema),
+  } = useForm<NewTaskFormSchema>({
+    resolver: zodResolver(newTaskFormSchema),
     mode: "onChange",
     defaultValues: formDefaultValues,
   });
 
   // Watch for deadline, reminder and priority
-  const deadline = watch("taskDeadline");
-  const reminder = watch("taskReminder");
+  const deadline = watch("deadlineAt");
+  const reminder = watch("completedAt");
   const priority = watch("taskPriority");
 
   // Check if reminder is valid
@@ -107,7 +110,7 @@ const NewTaskDialog = () => {
   // Sync task reminder with deadline, set it to undefined if deadline is resetted
   useEffect(() => {
     if (!deadline) {
-      setValue("taskReminder", undefined);
+      setValue("reminderAt", undefined);
     }
   }, [deadline, setValue]);
 
@@ -116,7 +119,7 @@ const NewTaskDialog = () => {
     if (projects) {
       const find = projects.find((item) => item.projectType === "primary");
       setActiveProject(find);
-      setValue("taskProjectId", find?.id || "");
+      setValue("projectId", find?.id || "");
     }
   }, [setValue, projects, setActiveProject]);
 
@@ -166,7 +169,7 @@ const NewTaskDialog = () => {
               <div>
                 <Controller
                   control={control}
-                  name="taskName"
+                  name="name"
                   render={({ field }) => (
                     <input
                       {...field}
@@ -181,10 +184,10 @@ const NewTaskDialog = () => {
               <div>
                 <Controller
                   control={control}
-                  name="taskDescription"
+                  name="description"
                   render={({ field }) => (
                     <textarea
-                      value={field.value}
+                      value={field.value || ""}
                       onChange={field.onChange}
                       className="text-sm opacity-70 field-sizing-content min-h-16 max-h-42 px-4 outline-0 border-0 resize-none w-full"
                       placeholder="Description (optional)"
@@ -213,7 +216,7 @@ const NewTaskDialog = () => {
                 {/* Container */}
                 <div className="grid grid-cols-4 gap-2">
                   <button
-                    className={`${priority.toLowerCase() === "low" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
+                    className={`${priority?.toLowerCase() === "low" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
                     onClick={() => {
                       setValue("taskPriority", "low");
                     }}
@@ -221,7 +224,7 @@ const NewTaskDialog = () => {
                     Low
                   </button>
                   <button
-                    className={`${priority.toLowerCase() === "medium" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
+                    className={`${priority?.toLowerCase() === "medium" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
                     onClick={() => {
                       setValue("taskPriority", "medium");
                     }}
@@ -229,7 +232,7 @@ const NewTaskDialog = () => {
                     Medium
                   </button>
                   <button
-                    className={`${priority.toLowerCase() === "high" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
+                    className={`${priority?.toLowerCase() === "high" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
                     onClick={() => {
                       setValue("taskPriority", "high");
                     }}
@@ -237,7 +240,7 @@ const NewTaskDialog = () => {
                     High
                   </button>
                   <button
-                    className={`${priority.toLowerCase() === "urgent" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
+                    className={`${priority?.toLowerCase() === "urgent" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
                     onClick={() => {
                       setValue("taskPriority", "urgent");
                     }}
@@ -258,10 +261,10 @@ const NewTaskDialog = () => {
                 <div>
                   <Controller
                     control={control}
-                    name="taskDeadline"
+                    name="deadlineAt"
                     render={({ field }) => (
                       <DatePicker
-                        value={field.value}
+                        value={field.value || undefined}
                         onChange={field.onChange}
                         classes={{ triggerClass: "w-full" }}
                         label="Set Deadline"
@@ -287,16 +290,16 @@ const NewTaskDialog = () => {
                 <div>
                   <Controller
                     control={control}
-                    name="taskReminder"
+                    name="reminderAt"
                     render={({ field }) => (
                       <DatePicker
-                        value={field.value}
+                        value={field.value || undefined}
                         onChange={field.onChange}
                         classes={{ triggerClass: "w-full" }}
                         label="Set Reminder"
                         calendarProps={{
                           modifiers: {
-                            deadline: deadline,
+                            deadline: deadline || undefined,
                           },
                           modifiersClassNames: {
                             deadline:
@@ -304,7 +307,7 @@ const NewTaskDialog = () => {
                           },
                           disabled: {
                             before: new Date(),
-                            after: deadline,
+                            after: deadline || undefined,
                           },
                         }}
                         disabled={!deadline}

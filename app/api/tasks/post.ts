@@ -4,7 +4,7 @@ import { InsertTask, tasks } from "@/src/db/schema/tasks";
 import { OperationError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
-import { newTaskSchema } from "@/src/lib/zod/schemas/taskSchema";
+import { newTaskFormSchema } from "@/src/lib/zod/schemas/taskSchema";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { prettifyError } from "zod";
@@ -57,7 +57,7 @@ export async function tasksPost(req: NextRequest) {
   }
 
   // Validate with zod
-  const validation = newTaskSchema.safeParse(newTaskRequest);
+  const validation = newTaskFormSchema.safeParse(newTaskRequest);
 
   if (!validation.success) {
     return createResponse(
@@ -72,16 +72,12 @@ export async function tasksPost(req: NextRequest) {
 
   // Create Request
   const newTask: InsertTask = {
+    // Spread request values
+    ...validation.data,
+
+    // Set ID & Ownership
     id: crypto.randomUUID(),
     ownerId: user.id,
-    projectId: validationData.taskProjectId,
-    name: validationData.taskName,
-    description: validationData.taskDescription,
-    taskPriority: validationData.taskPriority,
-    taskStatus: "on_process",
-    createdAt: new Date(),
-    deadlineAt: validationData.taskDeadline,
-    reminderAt: validationData.taskReminder,
   };
 
   // Execution
@@ -92,7 +88,7 @@ export async function tasksPost(req: NextRequest) {
 
       try {
         project = await tx.query.projects.findFirst({
-          where: eq(projects.id, validationData.taskProjectId),
+          where: eq(projects.id, validationData.projectId),
         });
       } catch (_error) {
         throw new OperationError(
