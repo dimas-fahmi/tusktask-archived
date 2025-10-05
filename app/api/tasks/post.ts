@@ -10,7 +10,7 @@ import {
 } from "@/src/lib/zod/schemas/taskSchema";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
-import { prettifyError } from "zod";
+import { z, prettifyError } from "zod";
 
 const PATH = "API_TASKS_POST";
 
@@ -60,7 +60,13 @@ export async function tasksPost(req: NextRequest) {
   }
 
   // Validate with zod
-  const validation = newTaskFormSchema.safeParse(newTaskRequest);
+  const validation = newTaskFormSchema
+    .extend({
+      completedAt: z.coerce.date().optional(),
+      deadlineAt: z.coerce.date().optional(),
+      reminderAt: z.coerce.date().optional(),
+    })
+    .safeParse(newTaskRequest);
 
   if (!validation.success) {
     return createResponse(
