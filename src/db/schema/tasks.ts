@@ -166,7 +166,7 @@ export const tasksRelations = relations(tasks, ({ one, many }) => ({
   subtasks: many(tasks, {
     relationName: "PROJECTS_TASKS_SUBTASKS",
   }),
-  masterTasks: one(masterTasks, {
+  masterTask: one(masterTasks, {
     fields: [tasks.masterTasks],
     references: [masterTasks.id],
     relationName: "PROJECTS_TASKS_RECURRING",
