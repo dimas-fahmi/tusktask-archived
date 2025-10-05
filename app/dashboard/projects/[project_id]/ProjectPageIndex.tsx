@@ -1,14 +1,26 @@
 "use client";
 
 import { Project } from "@/src/db/schema/projects";
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import InformationTable from "@/src/ui/components/Dashboard/InformationTable";
 import TaskAccordion from "@/src/ui/components/Dashboard/TaskAccordion";
 import RenderLucide from "@/src/ui/components/RenderLucide";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Archive, PlusCircle, Settings2, Tag } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 
 const ProjectPageIndex = ({ project }: { project: Project }) => {
+  // Pull states and setters from taskStore
+  const { activeProject, setActiveProject, setNewTaskDialogOpen } =
+    useTaskStore();
+
+  // Set Default Active Project On Mount
+  useEffect(() => {
+    if (activeProject?.id === project.id) return;
+
+    setActiveProject(project);
+  }, [setActiveProject]);
+
   return (
     <div className="dashboard-padding grid grid-cols-1">
       {/* Header */}
@@ -66,7 +78,12 @@ const ProjectPageIndex = ({ project }: { project: Project }) => {
             >
               <Archive /> Archive
             </Button>
-            <Button>
+            <Button
+              onClick={() => {
+                setActiveProject(project);
+                setNewTaskDialogOpen(true);
+              }}
+            >
               <PlusCircle /> New Task
             </Button>
           </div>

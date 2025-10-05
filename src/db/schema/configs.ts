@@ -5,9 +5,5 @@ export const userSchema = pgSchema("user");
 export const projectSchema = pgSchema("project");
 
 // enums
-export const priorityEnum = projectSchema.enum("priority_enum", [
-  "low",
-  "medium",
-  "high",
-  "urgent",
-]);
+export const PRIORITIES = ["low", "medium", "high", "urgent"] as const;
+export const priorityEnum = projectSchema.enum("priority_enum", PRIORITIES);
