@@ -1,12 +1,15 @@
 "use client";
 
 import { Project } from "@/src/db/schema/projects";
+import { Task } from "@/src/db/schema/tasks";
+import { useFetchTasks } from "@/src/lib/hooks/queries/useFetchTasks";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import { categorizeTasks } from "@/src/lib/utils/categorizedTasks";
 import InformationTable from "@/src/ui/components/Dashboard/InformationTable";
 import TaskAccordion from "@/src/ui/components/Dashboard/TaskAccordion";
 import RenderLucide from "@/src/ui/components/RenderLucide";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { Archive, PlusCircle, Settings2, Tag } from "lucide-react";
+import { Archive, CircleAlert, PlusCircle, Settings2, Tag } from "lucide-react";
 import React, { useEffect } from "react";
 
 const ProjectPageIndex = ({ project }: { project: Project }) => {
@@ -20,6 +23,18 @@ const ProjectPageIndex = ({ project }: { project: Project }) => {
 
     setActiveProject(project);
   }, [setActiveProject]);
+
+  // Query Tasks
+  const { data: tasksResult } = useFetchTasks<Task[]>(
+    ["tasks", `project-${project.id}`],
+    {
+      projectId: project.id,
+    }
+  );
+
+  const tasks = tasksResult?.result;
+  const { archived, completed, ongoing, overdue, overdueSoon, tomorrow } =
+    categorizeTasks(tasks);
 
   return (
     <div className="dashboard-padding grid grid-cols-1">
@@ -101,34 +116,108 @@ const ProjectPageIndex = ({ project }: { project: Project }) => {
         <TaskAccordion.root defaultOpen={true}>
           <TaskAccordion.trigger
             title="Overdue"
-            label="2 tasks"
+            label={`${!overdue.length ? "No" : overdue.length.toString().padStart(2, "0")} tasks`}
             variant="destructive"
           />
           <TaskAccordion.body>
-            <TaskAccordion.item />
-            <TaskAccordion.item />
+            {!overdue.length ? (
+              <div className="opacity-50 text-sm py-2 bg-muted text-muted-foreground rounded-md mx-auto flex items-center gap-2 justify-center">
+                <CircleAlert className="w-5 h-5" />
+                Good Job, No tasks passed their deadlines!
+              </div>
+            ) : (
+              overdue.map((item) => <TaskAccordion.item key={item.id} />)
+            )}
           </TaskAccordion.body>
         </TaskAccordion.root>
 
-        {/* Task Accordion - Ongoing - Today */}
+        {/* Task Accordion - Overdue Soon */}
         <TaskAccordion.root defaultOpen={true}>
-          <TaskAccordion.trigger title="Overdue Today" label="18 tasks" />
+          <TaskAccordion.trigger
+            title="Overdue Soon"
+            label={`${!overdueSoon.length ? "No" : overdueSoon.length.toString().padStart(2, "0")} tasks`}
+          />
           <TaskAccordion.body>
-            <TaskAccordion.item />
-            <TaskAccordion.item />
-            <TaskAccordion.item />
-            <TaskAccordion.item />
+            {!overdueSoon.length ? (
+              <div className="opacity-50 text-sm py-2 bg-muted text-muted-foreground rounded-md mx-auto flex items-center gap-2 justify-center">
+                <CircleAlert className="w-5 h-5" />
+                No tasks is going to overdue in the next 24H
+              </div>
+            ) : (
+              overdueSoon.map((item) => <TaskAccordion.item key={item.id} />)
+            )}
           </TaskAccordion.body>
         </TaskAccordion.root>
 
-        {/* Task Accordion - Ongoing - Upcoming */}
-        <TaskAccordion.root defaultOpen={false}>
-          <TaskAccordion.trigger title="Ongoing Tasks" label="18 tasks" />
+        {/* Task Accordion - Overdue Tomorrow */}
+        <TaskAccordion.root defaultOpen={true}>
+          <TaskAccordion.trigger
+            title="Overdue Tomorrow"
+            label={`${!tomorrow.length ? "No" : tomorrow.length.toString().padStart(2, "0")} tasks`}
+          />
           <TaskAccordion.body>
-            <TaskAccordion.item />
-            <TaskAccordion.item />
-            <TaskAccordion.item />
-            <TaskAccordion.item />
+            {!tomorrow.length ? (
+              <div className="opacity-50 text-sm py-2 bg-muted text-muted-foreground rounded-md mx-auto flex items-center gap-2 justify-center">
+                <CircleAlert className="w-5 h-5" />
+                No tasks is going to overdue in tomorrow
+              </div>
+            ) : (
+              tomorrow.map((item) => <TaskAccordion.item key={item.id} />)
+            )}
+          </TaskAccordion.body>
+        </TaskAccordion.root>
+
+        {/* Task Accordion - Ongoing */}
+        <TaskAccordion.root defaultOpen={true}>
+          <TaskAccordion.trigger
+            title="Ongoing Tasks"
+            label={`${!ongoing.length ? "No" : ongoing.length.toString().padStart(2, "0")} tasks`}
+          />
+          <TaskAccordion.body>
+            {!ongoing.length ? (
+              <div className="opacity-50 text-sm py-2 bg-muted text-muted-foreground rounded-md mx-auto flex items-center gap-2 justify-center">
+                <CircleAlert className="w-5 h-5" />
+                No ongoing tasks, create a new one!
+              </div>
+            ) : (
+              ongoing.map((item) => <TaskAccordion.item key={item.id} />)
+            )}
+          </TaskAccordion.body>
+        </TaskAccordion.root>
+
+        {/* Task Accordion - Archived */}
+        <TaskAccordion.root defaultOpen={false}>
+          <TaskAccordion.trigger
+            title="Archived Tasks"
+            label={`${!archived.length ? "No" : archived.length.toString().padStart(2, "0")} tasks`}
+          />
+          <TaskAccordion.body>
+            {!archived.length ? (
+              <div className="opacity-50 text-sm py-2 bg-muted text-muted-foreground rounded-md mx-auto flex items-center gap-2 justify-center">
+                <CircleAlert className="w-5 h-5" />
+                No archived tasks!
+              </div>
+            ) : (
+              archived.map((item) => <TaskAccordion.item key={item.id} />)
+            )}
+          </TaskAccordion.body>
+        </TaskAccordion.root>
+
+        {/* Task Accordion - Completed Tasks */}
+        <TaskAccordion.root defaultOpen={false}>
+          <TaskAccordion.trigger
+            title="Completed Tasks"
+            label={`${!completed.length ? "No" : completed.length.toString().padStart(2, "0")} tasks`}
+          />
+          <TaskAccordion.body>
+            {!completed.length ? (
+              <div className="opacity-50 text-sm py-2 bg-muted text-muted-foreground rounded-md mx-auto flex items-center gap-2 justify-center">
+                <CircleAlert className="w-5 h-5" />
+                You can do better than that!
+              </div>
+            ) : (
+              completed.map((item) => <TaskAccordion.item key={item.id} />)
+            )}
           </TaskAccordion.body>
         </TaskAccordion.root>
       </div>
