@@ -1,13 +1,10 @@
-import { PRIORITIES } from "@/src/db/schema/configs";
-import z from "zod";
+import { TaskInsertSchema } from "@/src/db/schema/tasks";
+import { z } from "zod";
 
-export const newTaskSchema = z.object({
-  taskName: z.string().min(3).max(100),
-  taskDescription: z.string().optional(),
-  taskPriority: z.enum(PRIORITIES),
-  taskDeadline: z.date().optional(),
-  taskReminder: z.date().optional(),
-  taskProjectId: z.uuid(),
+export const newTaskFormSchema = TaskInsertSchema.omit({
+  id: true,
+  ownerId: true,
+  createdAt: true,
 });
 
-export type NewTaskSchema = z.infer<typeof newTaskSchema>;
+export type NewTaskFormSchema = z.infer<typeof newTaskFormSchema>;
