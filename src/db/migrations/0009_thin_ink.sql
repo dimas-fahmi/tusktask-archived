@@ -1,0 +1,2 @@
+CREATE TYPE "project"."project_status" AS ENUM('on_process', 'completed', 'archived');--> statement-breakpoint
+ALTER TABLE "project"."projects" ADD COLUMN "project_status" "project"."project_status" DEFAULT 'on_process' NOT NULL;

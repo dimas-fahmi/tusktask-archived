@@ -11,12 +11,13 @@ const PATH = "API_PROJECTS_GET";
 export interface ProjectsGetRequest {
   id?: string;
   name?: string;
+  include?: string;
 }
 
 export async function projectsGet(req: NextRequest) {
   // Extract parameters
   const url = req.nextUrl;
-  const { id, name } = Object.fromEntries(
+  const { id, name, include } = Object.fromEntries(
     url.searchParams.entries()
   ) as ProjectsGetRequest;
 
@@ -48,10 +49,24 @@ export async function projectsGet(req: NextRequest) {
     query.push(ilike(projects.name, `%${name}%`));
   }
 
+  // Construct relations
+  const includeArray = include ? include.split(",") : [];
+  const withRelations: { owner?: true; tasks?: true } = {};
+  if (includeArray?.includes("owner")) {
+    withRelations.owner = true;
+  }
+
+  if (includeArray?.includes("tasks")) {
+    withRelations.tasks = true;
+  }
+
   // Executions
   try {
     const response = await db.query.projects.findMany({
       where: and(...query),
+      with: {
+        ...withRelations,
+      },
     });
 
     const isFound = response.length > 0;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { useSidebar } from "@/src/ui/shadcn/components/ui/sidebar";
 import { CirclePlus, PanelLeftClose, Settings } from "lucide-react";
@@ -9,10 +10,17 @@ const DsController = () => {
   // Pull setters from useSidebar
   const { setOpen, setOpenMobile } = useSidebar();
 
+  // Pull setters from task store
+  const { setNewTaskDialogOpen } = useTaskStore();
+
   return (
     <div className="grid grid-cols-1 gap-2">
       {/* New Task Button */}
-      <Button>
+      <Button
+        onClick={() => {
+          setNewTaskDialogOpen(true);
+        }}
+      >
         <CirclePlus /> New Task
       </Button>
 

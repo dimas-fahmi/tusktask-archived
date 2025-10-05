@@ -1,5 +1,5 @@
 import { index, pgPolicy, text, timestamp, uuid } from "drizzle-orm/pg-core";
-import { projectSchema } from "./configs";
+import { priorityEnum, projectSchema } from "./configs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { relations, sql } from "drizzle-orm";
 import { profiles } from "./profiles";
@@ -11,6 +11,12 @@ export const projectTypeEnum = projectSchema.enum("project_type", [
   "primary",
   "generic",
   "co-op",
+]);
+
+export const projectStatus = projectSchema.enum("project_status", [
+  "on_process",
+  "completed",
+  "archived",
 ]);
 
 // Project Schema
@@ -31,6 +37,11 @@ export const projects = projectSchema
       description: text("description"),
       icon: text("icon").notNull().default("Clock1"),
       cover: text("cover"),
+      deadlineAt: timestamp("deadline_at", { withTimezone: true }),
+      priority: priorityEnum("project_priority").notNull().default("low"),
+      projectStatus: projectStatus("project_status")
+        .notNull()
+        .default("on_process"),
       createdAt: timestamp("created_at", { withTimezone: true })
         .notNull()
         .defaultNow(),

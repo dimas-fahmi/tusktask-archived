@@ -1,3 +1,4 @@
+import NewTaskDialog from "@/src/ui/components/Dashboard/Dialogs/NewTaskDialog";
 import NewProjectDrawer from "@/src/ui/components/Dashboard/Drawers/NewProjectDrawer";
 import DashboardNavbar from "@/src/ui/components/Dashboard/NavBar/DashboardNavbar";
 import { DashboardSidebar } from "@/src/ui/components/Dashboard/Sidebar/DashboardSidebar";
@@ -19,13 +20,14 @@ const DashboardLayout = ({
         <DashboardSidebar />
         <SidebarInset className="w-full overflow-hidden">
           <DashboardNavbar />
-          <div className="py-2 px-4 md:px-6 w-full overflow-hidden">
-            {children}
-          </div>
+          <div className="w-full overflow-hidden">{children}</div>
         </SidebarInset>
 
         {/* Drawers */}
         <NewProjectDrawer />
+
+        {/* Dialogs */}
+        <NewTaskDialog />
       </SidebarProvider>
     </>
   );

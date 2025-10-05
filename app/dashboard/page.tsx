@@ -11,7 +11,7 @@ export const metadata: Metadata = generateMetadata({
 
 const DashboardPage = () => {
   return (
-    <div className="">
+    <div className="dashboard-padding">
       {/* Header */}
       <Header />
 
