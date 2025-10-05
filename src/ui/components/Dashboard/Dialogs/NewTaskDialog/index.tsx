@@ -25,6 +25,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import {
   AlarmClock,
+  CircleAlert,
   Clock1,
   ClockAlert,
   Save,
@@ -34,6 +35,8 @@ import {
 import { DatePicker } from "../../../DatePicker";
 import { Controller, useForm } from "react-hook-form";
 import RenderLucide from "../../../RenderLucide";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { NewTaskSchema, newTaskSchema } from "@/src/lib/zod/schemas/taskSchema";
 
 const NewTaskDialog = () => {
   // Pull setters and states from store
@@ -44,52 +47,80 @@ const NewTaskDialog = () => {
     setActiveProject,
   } = useTaskStore();
 
+  // Error state
+  const [error, setError] = useState<string | null>(null);
+
+  // Advance State
+  const [advance, setAdvance] = useState(false);
+
+  // Form
+  const formDefaultValues = {
+    taskProjectId: "",
+    taskName: "",
+    taskDescription: "",
+    taskPriority: "medium",
+    taskDeadline: undefined,
+    taskReminder: undefined,
+  } as const;
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { isValid },
+  } = useForm<NewTaskSchema>({
+    resolver: zodResolver(newTaskSchema),
+    mode: "onChange",
+    defaultValues: formDefaultValues,
+  });
+
+  // Watch for deadline, reminder and priority
+  const deadline = watch("taskDeadline");
+  const reminder = watch("taskReminder");
+  const priority = watch("taskPriority");
+
+  // Check if reminder is valid
+  const isReminderValid =
+    reminder && deadline
+      ? deadline?.getTime() < reminder?.getTime()
+        ? false
+        : true
+      : true;
+
+  // Listen to isReminderValid to set Error
+  useEffect(() => {
+    if (!isReminderValid) {
+      setError("Provide a valid reminder time prior to deadline date.");
+    } else {
+      setError(null);
+    }
+  }, [isReminderValid, setError]);
+
   // Projects query
   const { data: userProjects } = useFetchUserProject<
     Array<Project & { tasks: Task[] }>
   >({ include: "tasks" });
   const projects = userProjects?.result;
 
-  // Advance State
-  const [advance, setAdvance] = useState(false);
-
-  // Form
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { isValid },
-  } = useForm({
-    defaultValues: {
-      taskName: "",
-      taskDescription: "",
-      taskPriority: "low",
-      taskDeadline: undefined,
-      taskReminder: undefined,
-      taskProjectId: "",
-    },
-  });
-
-  const deadline = watch("taskDeadline");
-
+  // Sync task reminder with deadline, set it to undefined if deadline is resetted
   useEffect(() => {
     if (!deadline) {
       setValue("taskReminder", undefined);
     }
   }, [deadline, setValue]);
 
+  // Sync set default active project once projects is fetched
   useEffect(() => {
     if (projects) {
       const find = projects.find((item) => item.projectType === "primary");
       setActiveProject(find);
       setValue("taskProjectId", find?.id || "");
-      console.log(find);
     }
   }, [setValue, projects, setActiveProject]);
 
-  console.log(activeProject);
-
+  // Render the activeProject icon
   const ActiveProjectIcon = activeProject ? (
     <RenderLucide iconName={activeProject?.icon} />
   ) : (
@@ -97,7 +128,16 @@ const NewTaskDialog = () => {
   );
 
   return (
-    <Dialog open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>
+    <Dialog
+      open={newTaskDialogOpen}
+      onOpenChange={(e) => {
+        reset(formDefaultValues);
+        setTimeout(() => {
+          setAdvance(false);
+        }, 500);
+        setNewTaskDialogOpen(e);
+      }}
+    >
       <DialogContent className="p-0 overflow-hidden">
         {/* Header [hidden] */}
         <DialogHeader className="sr-only">
@@ -106,7 +146,11 @@ const NewTaskDialog = () => {
         </DialogHeader>
 
         {/* Content */}
-        <form onSubmit={handleSubmit(() => {})}>
+        <form
+          onSubmit={handleSubmit(() => {
+            // console.log(data);
+          })}
+        >
           {/* Forms Container */}
           <div className="py-4">
             {/* Task Name & Description Form */}
@@ -120,17 +164,32 @@ const NewTaskDialog = () => {
             >
               {/* Task Name */}
               <div>
-                <input
-                  className="text-4xl font-header outline-0 border-0 px-4 w-full h-full"
-                  placeholder="Task Name"
+                <Controller
+                  control={control}
+                  name="taskName"
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      className="text-4xl font-header outline-0 border-0 px-4 w-full h-full"
+                      placeholder="Task Name"
+                    />
+                  )}
                 />
               </div>
 
               {/* Task Description */}
               <div>
-                <textarea
-                  className="text-sm opacity-70 field-sizing-content min-h-16 max-h-42 px-4 outline-0 border-0 resize-none w-full"
-                  placeholder="Description (optional)"
+                <Controller
+                  control={control}
+                  name="taskDescription"
+                  render={({ field }) => (
+                    <textarea
+                      value={field.value}
+                      onChange={field.onChange}
+                      className="text-sm opacity-70 field-sizing-content min-h-16 max-h-42 px-4 outline-0 border-0 resize-none w-full"
+                      placeholder="Description (optional)"
+                    />
+                  )}
                 />
               </div>
             </motion.div>
@@ -153,16 +212,36 @@ const NewTaskDialog = () => {
 
                 {/* Container */}
                 <div className="grid grid-cols-4 gap-2">
-                  <button className="p-2 rounded-md border text-xs hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-pointer">
+                  <button
+                    className={`${priority.toLowerCase() === "low" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
+                    onClick={() => {
+                      setValue("taskPriority", "low");
+                    }}
+                  >
                     Low
                   </button>
-                  <button className="p-2 rounded-md border text-xs hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-pointer">
+                  <button
+                    className={`${priority.toLowerCase() === "medium" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
+                    onClick={() => {
+                      setValue("taskPriority", "medium");
+                    }}
+                  >
                     Medium
                   </button>
-                  <button className="p-2 rounded-md border text-xs hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-pointer">
+                  <button
+                    className={`${priority.toLowerCase() === "high" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
+                    onClick={() => {
+                      setValue("taskPriority", "high");
+                    }}
+                  >
                     High
                   </button>
-                  <button className="p-2 rounded-md border text-xs hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-pointer">
+                  <button
+                    className={`${priority.toLowerCase() === "urgent" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
+                    onClick={() => {
+                      setValue("taskPriority", "urgent");
+                    }}
+                  >
                     Urgent
                   </button>
                 </div>
@@ -186,6 +265,11 @@ const NewTaskDialog = () => {
                         onChange={field.onChange}
                         classes={{ triggerClass: "w-full" }}
                         label="Set Deadline"
+                        calendarProps={{
+                          disabled: {
+                            before: new Date(),
+                          },
+                        }}
                       />
                     )}
                   />
@@ -211,16 +295,40 @@ const NewTaskDialog = () => {
                         classes={{ triggerClass: "w-full" }}
                         label="Set Reminder"
                         calendarProps={{
-                          hidden: {
-                            after: deadline,
-                            before: new Date(),
+                          modifiers: {
+                            deadline: deadline,
                           },
-                          disableNavigation: true,
+                          modifiersClassNames: {
+                            deadline:
+                              "bg-destructive text-destructive-foreground rounded-md hover:bg-destructive",
+                          },
+                          disabled: {
+                            before: new Date(),
+                            after: deadline,
+                          },
                         }}
                         disabled={!deadline}
                       />
                     )}
                   />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Error */}
+            <motion.div
+              initial={{ height: 0 }}
+              animate={error ? { height: "auto" } : { height: 0 }}
+              transition={{
+                duration: 0.3,
+              }}
+              className="overflow-hidden"
+            >
+              {/* Wrapper */}
+              <div className="px-4 mt-4">
+                <div className="text-xs bg-destructive/20 flex items-center gap-2 p-2 rounded-md text-destructive">
+                  <CircleAlert />
+                  {error}
                 </div>
               </div>
             </motion.div>
@@ -274,12 +382,16 @@ const NewTaskDialog = () => {
                 type="button"
                 variant={"outline"}
                 onClick={() => {
+                  reset(formDefaultValues);
+                  setTimeout(() => {
+                    setAdvance(false);
+                  }, 500);
                   setNewTaskDialogOpen(false);
                 }}
               >
                 Cancel
               </Button>
-              <Button disabled={!isValid}>
+              <Button disabled={!isValid || !isReminderValid}>
                 <Save />
                 Save
               </Button>

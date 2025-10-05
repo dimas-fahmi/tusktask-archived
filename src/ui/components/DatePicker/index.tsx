@@ -11,7 +11,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -118,10 +117,10 @@ export function DatePicker({
     setMinute(newMinute);
   };
 
-  // Trigger time update when hour, minute, or meridiem changes
+  // Trigger time update when meridiem changes
   React.useEffect(() => {
     handleTimeChange();
-  }, [hour, minute, meridiem]);
+  }, [meridiem]);
 
   return (
     <Dialog>
@@ -178,7 +177,7 @@ export function DatePicker({
               value={hour.toString().padStart(2, "0")}
               onChange={handleHourChange}
               onBlur={handleTimeChange}
-              className="p-1 text-xl font-header appearance-none text-center border rounded-md max-w-14"
+              className="p-1 disable-appearance text-xl font-header appearance-none text-center border rounded-md min-w-14 max-w-14"
               placeholder="12"
             />
 
@@ -193,7 +192,7 @@ export function DatePicker({
               value={minute.toString().padStart(2, "0")}
               onChange={handleMinuteChange}
               onBlur={handleTimeChange}
-              className="p-1 disable-appearance text-xl font-header appearance-none text-center border rounded-md max-w-14"
+              className="p-1 disable-appearance text-xl font-header appearance-none text-center border rounded-md min-w-14 max-w-14"
               placeholder="00"
             />
           </div>
@@ -222,7 +221,7 @@ export function DatePicker({
         </div>
 
         {/* Footer */}
-        <DialogFooter className="flex gap-2 w-full border-t pt-4">
+        <div className="flex gap-2 w-full border-t pt-4">
           <motion.div
             initial={{ width: 0, flex: 0 }}
             animate={value ? { width: "auto", flex: 1 } : { width: 0, flex: 0 }}
@@ -241,11 +240,11 @@ export function DatePicker({
             </Button>
           </motion.div>
           <DialogClose asChild>
-            <Button className="flex-1" size={"sm"} variant={"outline"}>
+            <Button className="flex-1 p-0 m-0" size={"sm"} variant={"outline"}>
               Close
             </Button>
           </DialogClose>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

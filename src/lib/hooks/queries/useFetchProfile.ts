@@ -24,7 +24,6 @@ export const useFetchProfile = (
       // Do not retry if status is 404
       const standardError = error as unknown as StandardizeResponse<undefined>;
       if (standardError?.status === 404) {
-        console.log("status is 404, stop retrying");
         return false;
       }
 
