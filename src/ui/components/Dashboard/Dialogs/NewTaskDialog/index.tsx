@@ -81,7 +81,7 @@ const NewTaskDialog = () => {
 
   // Watch for deadline, reminder and priority
   const deadline = watch("deadlineAt");
-  const reminder = watch("completedAt");
+  const reminder = watch("reminderAt");
   const priority = watch("taskPriority");
 
   // Check if reminder is valid
