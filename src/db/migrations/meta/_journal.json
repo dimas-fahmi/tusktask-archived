@@ -85,6 +85,13 @@
       "when": 1759597703753,
       "tag": "0011_empty_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1759682081875,
+      "tag": "0012_plain_squirrel_girl",
+      "breakpoints": true
     }
   ]
 }

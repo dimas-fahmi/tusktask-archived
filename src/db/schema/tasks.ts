@@ -6,20 +6,12 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { priorityEnum, projectSchema } from "./configs";
+import { priorityEnum, projectSchema, statusEnum } from "./configs";
 import { relations, sql } from "drizzle-orm";
 import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
 import { profiles } from "./profiles";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { projects } from "./projects";
-
-// Tasks Enums
-export const taskStatusEnum = projectSchema.enum("task_status", [
-  "pending",
-  "archived",
-  "on_process",
-  "completed",
-]);
 
 // MasterTasks Table (recurring mechanism)
 export const masterTasks = projectSchema
@@ -36,7 +28,7 @@ export const masterTasks = projectSchema
       createdAt: timestamp("created_at", { withTimezone: true })
         .notNull()
         .defaultNow(),
-      taskStatus: taskStatusEnum("task_status").notNull().default("on_process"),
+      taskStatus: statusEnum("task_status").notNull().default("on_process"),
       taskPriority: priorityEnum("task_priority").notNull().default("medium"),
       dateStart: timestamp("date_start", { withTimezone: true }).notNull(),
       reminderAt: timestamp("reminder_at", { withTimezone: true }),
@@ -101,7 +93,7 @@ export const tasks = projectSchema
       parentTask: uuid("parent_task"),
       name: text("name").notNull().default("Untitled"),
       description: text("description"),
-      taskStatus: taskStatusEnum("task_status").notNull().default("on_process"),
+      taskStatus: statusEnum("task_status").notNull().default("on_process"),
       taskPriority: priorityEnum("task_priority").notNull().default("medium"),
       createdAt: timestamp("created_at", { withTimezone: true })
         .notNull()
