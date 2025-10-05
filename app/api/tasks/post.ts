@@ -4,7 +4,10 @@ import { InsertTask, tasks } from "@/src/db/schema/tasks";
 import { OperationError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
-import { newTaskFormSchema } from "@/src/lib/zod/schemas/taskSchema";
+import {
+  NewTaskFormSchema,
+  newTaskFormSchema,
+} from "@/src/lib/zod/schemas/taskSchema";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { prettifyError } from "zod";
@@ -12,7 +15,7 @@ import { prettifyError } from "zod";
 const PATH = "API_TASKS_POST";
 
 export interface TasksPostRequest {
-  newTaskRequest: Omit<InsertTask, "ownerId">;
+  newTaskRequest: NewTaskFormSchema;
 }
 
 export async function tasksPost(req: NextRequest) {
