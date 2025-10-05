@@ -1,0 +1,720 @@
+{
+  "id": "b22f9c4c-2152-4b4a-a810-cd9207e899d1",
+  "prevId": "c7467aba-cd1a-4990-9632-b02297cd735a",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "user.profiles": {
+      "name": "profiles",
+      "schema": "user",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cover": {
+          "name": "cover",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "UIDX_USER_PROFILES_USERNAME": {
+          "name": "UIDX_USER_PROFILES_USERNAME",
+          "columns": [
+            {
+              "expression": "username",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "FTS_USER_PROFILES_NAME": {
+          "name": "FTS_USER_PROFILES_NAME",
+          "columns": [
+            {
+              "expression": "to_tsvector('simple', \"name\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "profiles_user_id_users_id_fk": {
+          "name": "profiles_user_id_users_id_fk",
+          "tableFrom": "profiles",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "PLC_USER_PROFILES_SELECT_AUTHENTICATED": {
+          "name": "PLC_USER_PROFILES_SELECT_AUTHENTICATED",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": ""
+        },
+        "PLC_USER_PROFILES_UPDATE_SELF": {
+          "name": "PLC_USER_PROFILES_UPDATE_SELF",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(SELECT auth.uid()) = \"user\".\"profiles\".\"user_id\"",
+          "withCheck": "(SELECT auth.uid()) = \"user\".\"profiles\".\"user_id\""
+        },
+        "PLC_USER_PROFILES_ALL_SERVICE": {
+          "name": "PLC_USER_PROFILES_ALL_SERVICE",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "service_role"
+          ],
+          "using": ""
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "project.projects": {
+      "name": "projects",
+      "schema": "project",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_type": {
+          "name": "project_type",
+          "type": "project_type",
+          "typeSchema": "project",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'generic'"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'My Project'"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon": {
+          "name": "icon",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Clock1'"
+        },
+        "cover": {
+          "name": "cover",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deadline_at": {
+          "name": "deadline_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "project_priority": {
+          "name": "project_priority",
+          "type": "priority_enum",
+          "typeSchema": "project",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'low'"
+        },
+        "project_status": {
+          "name": "project_status",
+          "type": "project_status",
+          "typeSchema": "project",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'on_process'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "IDX_PROJECT_PROJECTS_OWNER_ID": {
+          "name": "IDX_PROJECT_PROJECTS_OWNER_ID",
+          "columns": [
+            {
+              "expression": "owner_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "FTS_PROJECT_PROJECTS_NAME": {
+          "name": "FTS_PROJECT_PROJECTS_NAME",
+          "columns": [
+            {
+              "expression": "to_tsvector('simple', \"name\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "projects_owner_id_profiles_user_id_fk": {
+          "name": "projects_owner_id_profiles_user_id_fk",
+          "tableFrom": "projects",
+          "tableTo": "profiles",
+          "schemaTo": "user",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "PLC_PROJECT_PROJECTS_ALL_SELF": {
+          "name": "PLC_PROJECT_PROJECTS_ALL_SELF",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"project\".\"projects\".\"owner_id\"",
+          "withCheck": "(select auth.uid()) = \"project\".\"projects\".\"owner_id\""
+        },
+        "PLC_PROJECT_PROJECTS_ALL_SERVICE": {
+          "name": "PLC_PROJECT_PROJECTS_ALL_SERVICE",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "service_role"
+          ],
+          "using": ""
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "project.master_tasks": {
+      "name": "master_tasks",
+      "schema": "project",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Untitled'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "date_start": {
+          "name": "date_start",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "r_rule": {
+          "name": "r_rule",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IDX_PROJECT_MASTER_TASKS_CREATED_AT": {
+          "name": "IDX_PROJECT_MASTER_TASKS_CREATED_AT",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "FTS_PROJECT_MASTER_TASKS_NAME": {
+          "name": "FTS_PROJECT_MASTER_TASKS_NAME",
+          "columns": [
+            {
+              "expression": "to_tsvector('simple', \"name\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "master_tasks_owner_id_profiles_user_id_fk": {
+          "name": "master_tasks_owner_id_profiles_user_id_fk",
+          "tableFrom": "master_tasks",
+          "tableTo": "profiles",
+          "schemaTo": "user",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "PLC_PROJECT_MASTER_TASKS_ALL_SELF": {
+          "name": "PLC_PROJECT_MASTER_TASKS_ALL_SELF",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"project\".\"master_tasks\".\"owner_id\"",
+          "withCheck": "(select auth.uid()) = \"project\".\"master_tasks\".\"owner_id\""
+        },
+        "PLC_PROJECT_MASTER_TASKS_ALL_SERVICE": {
+          "name": "PLC_PROJECT_MASTER_TASKS_ALL_SERVICE",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "service_role"
+          ],
+          "using": ""
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "project.tasks": {
+      "name": "tasks",
+      "schema": "project",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "master_task": {
+          "name": "master_task",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_task": {
+          "name": "parent_task",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Untitled'"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "task_status": {
+          "name": "task_status",
+          "type": "task_status",
+          "typeSchema": "project",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reminder_at": {
+          "name": "reminder_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deadline_at": {
+          "name": "deadline_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "IDX_PROJECT_TASKS_OWNER_ID": {
+          "name": "IDX_PROJECT_TASKS_OWNER_ID",
+          "columns": [
+            {
+              "expression": "owner_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IDX_PROJECT_TASKS_PROJECT_ID": {
+          "name": "IDX_PROJECT_TASKS_PROJECT_ID",
+          "columns": [
+            {
+              "expression": "project_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IDX_PROJECT_TASKS_TASK_STATUS": {
+          "name": "IDX_PROJECT_TASKS_TASK_STATUS",
+          "columns": [
+            {
+              "expression": "task_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IDX_PROJECT_TASKS_CREATED_AT": {
+          "name": "IDX_PROJECT_TASKS_CREATED_AT",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IDX_PROJECT_TASKS_REMINDER_AT": {
+          "name": "IDX_PROJECT_TASKS_REMINDER_AT",
+          "columns": [
+            {
+              "expression": "reminder_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IDX_PROJECT_TASKS_DEADLINE_AT": {
+          "name": "IDX_PROJECT_TASKS_DEADLINE_AT",
+          "columns": [
+            {
+              "expression": "deadline_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "FTS_PROJECT_TASKS_NAME": {
+          "name": "FTS_PROJECT_TASKS_NAME",
+          "columns": [
+            {
+              "expression": "to_tsVector('simple', \"name\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "tasks_owner_id_profiles_user_id_fk": {
+          "name": "tasks_owner_id_profiles_user_id_fk",
+          "tableFrom": "tasks",
+          "tableTo": "profiles",
+          "schemaTo": "user",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tasks_project_id_projects_id_fk": {
+          "name": "tasks_project_id_projects_id_fk",
+          "tableFrom": "tasks",
+          "tableTo": "projects",
+          "schemaTo": "project",
+          "columnsFrom": [
+            "project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tasks_master_task_master_tasks_id_fk": {
+          "name": "tasks_master_task_master_tasks_id_fk",
+          "tableFrom": "tasks",
+          "tableTo": "master_tasks",
+          "schemaTo": "project",
+          "columnsFrom": [
+            "master_task"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "SR_PROJECT_TASKS_PARENT_TASK_ID": {
+          "name": "SR_PROJECT_TASKS_PARENT_TASK_ID",
+          "tableFrom": "tasks",
+          "tableTo": "tasks",
+          "schemaTo": "project",
+          "columnsFrom": [
+            "parent_task"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "PLC_PROJECT_TASKS_ALL_SELF": {
+          "name": "PLC_PROJECT_TASKS_ALL_SELF",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"project\".\"tasks\".\"owner_id\"",
+          "withCheck": "(select auth.uid()) = \"project\".\"tasks\".\"owner_id\""
+        },
+        "PLC_PROJECT_TASKS_ALL_SERVICE": {
+          "name": "PLC_PROJECT_TASKS_ALL_SERVICE",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "service_role"
+          ],
+          "using": ""
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    }
+  },
+  "enums": {
+    "project.priority_enum": {
+      "name": "priority_enum",
+      "schema": "project",
+      "values": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "project.project_status": {
+      "name": "project_status",
+      "schema": "project",
+      "values": [
+        "on_process",
+        "completed",
+        "archived"
+      ]
+    },
+    "project.project_type": {
+      "name": "project_type",
+      "schema": "project",
+      "values": [
+        "primary",
+        "generic",
+        "co-op"
+      ]
+    },
+    "project.task_status": {
+      "name": "task_status",
+      "schema": "project",
+      "values": [
+        "pending",
+        "archived",
+        "on_process",
+        "completed"
+      ]
+    }
+  },
+  "schemas": {
+    "project": "project",
+    "user": "user"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

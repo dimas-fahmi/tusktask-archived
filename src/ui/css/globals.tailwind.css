@@ -24,7 +24,9 @@
   --secondary: oklch(85% 0.06 250); /* Softer blue, analogous to primary */
   --secondary-foreground: oklch(25% 0.03 270); /* Darker shade for contrast */
   --muted: oklch(90% 0.02 270); /* Subtle gray for muted backgrounds */
-  --muted-foreground: oklch(50% 0.03 270); /* Mid-gray for muted text */
+  --muted-foreground: oklch(
+    43.861% 0.00005 271.152
+  ); /* Mid-gray for muted text */
   --accent: oklch(80% 0.08 280); /* Slightly lighter, cooler blue for accents */
   --accent-foreground: oklch(
     20% 0.02 270
@@ -164,6 +166,10 @@
   .button-reactivity {
     @apply cursor-pointer active:scale-95 transition-all duration-300;
   }
+
+  .dashboard-padding {
+    @apply py-2 px-4 md:px-6;
+  }
 }
 
 .opacity-fade-bottom {
@@ -265,4 +271,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   50% {
     opacity: 0;
   }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input.disable-appearance::-webkit-outer-spin-button,
+input.disable-appearance::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

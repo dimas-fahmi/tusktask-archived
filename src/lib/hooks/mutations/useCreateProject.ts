@@ -25,6 +25,7 @@ export const useCreateProject = () => {
     onMutate: (request) => {
       queryClient.cancelQueries({
         queryKey: ["projects"],
+        exact: false,
       });
 
       const oldData = queryClient.getQueryData([
@@ -32,27 +33,33 @@ export const useCreateProject = () => {
       ]) as StandardizeResponse<Project[]>;
 
       if (oldData) {
-        queryClient.setQueryData(["projects"], () => {
-          const newProject: ProjectApp = {
-            id: crypto.randomUUID(),
-            ownerId: crypto.randomUUID(),
-            name: request?.newProject?.name || "Untitled",
-            cover: request?.newProject?.cover || null,
-            description: request?.newProject?.description || null,
-            icon: request?.newProject?.icon || "Clock1",
-            projectType: "generic",
-            ...request?.newProject,
-            createdAt: new Date(),
-            isPending: true,
-          };
+        queryClient.setQueryData(
+          ["projects", JSON.stringify({ include: "tasks" })],
+          () => {
+            const newProject: ProjectApp = {
+              id: crypto.randomUUID(),
+              ownerId: crypto.randomUUID(),
+              name: request?.newProject?.name || "Untitled",
+              cover: request?.newProject?.cover || null,
+              description: request?.newProject?.description || null,
+              icon: request?.newProject?.icon || "Clock1",
+              priority: request?.newProject?.priority || "medium",
+              projectStatus: request?.newProject?.projectStatus || "on_process",
+              projectType: "generic",
+              deadlineAt: request?.newProject?.deadlineAt || null,
+              ...request?.newProject,
+              createdAt: new Date(),
+              isPending: true,
+            };
 
-          const newData: StandardizeResponse<ProjectApp[]> = {
-            ...oldData,
-            result: [...(oldData?.result ?? []), newProject],
-          };
+            const newData: StandardizeResponse<ProjectApp[]> = {
+              ...oldData,
+              result: [...(oldData?.result ?? []), newProject],
+            };
 
-          return newData;
-        });
+            return newData;
+          }
+        );
       }
 
       return { oldData };
@@ -61,6 +68,12 @@ export const useCreateProject = () => {
       if (context?.oldData) {
         queryClient.setQueryData(["projects"], context.oldData);
       }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["projects"],
+        exact: false,
+      });
     },
   });
 };

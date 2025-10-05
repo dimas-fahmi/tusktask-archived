@@ -1,3 +1,4 @@
+import { useDeleteProject } from "@/src/lib/hooks/mutations/useDeleteProject";
 import { ProjectApp } from "@/src/lib/types/projects";
 import {
   ContextMenuGroup,
@@ -16,6 +17,9 @@ import Link from "next/link";
 import React from "react";
 
 const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
+  // Delete Mutation
+  const { mutate: deleteProject } = useDeleteProject();
+
   return (
     <div>
       <ContextMenuGroup>
@@ -49,7 +53,18 @@ const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
           <Archive />
           Archive
         </ContextMenuItem>
-        <ContextMenuItem variant="destructive" disabled={project?.isPending}>
+        <ContextMenuItem
+          variant="destructive"
+          disabled={project?.isPending || project.projectType === "primary"}
+          onClick={() => {
+            deleteProject(project.id);
+          }}
+          title={
+            project?.projectType === "primary"
+              ? "Can't delete your primary project"
+              : "Click to delete this project"
+          }
+        >
           <Trash />
           Delete
         </ContextMenuItem>
