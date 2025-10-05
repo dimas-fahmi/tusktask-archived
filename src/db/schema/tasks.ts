@@ -172,3 +172,5 @@ export const tasksRelations = relations(tasks, ({ one, many }) => ({
     relationName: "PROJECTS_TASKS_RECURRING",
   }),
 }));
+
+export type TasksRelations = typeof tasksRelations.table.$inferSelect;
