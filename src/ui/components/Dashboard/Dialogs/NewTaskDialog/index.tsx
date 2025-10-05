@@ -84,11 +84,8 @@ const NewTaskDialog = () => {
       const find = projects.find((item) => item.projectType === "primary");
       setActiveProject(find);
       setValue("taskProjectId", find?.id || "");
-      console.log(find);
     }
   }, [setValue, projects, setActiveProject]);
-
-  console.log(activeProject);
 
   const ActiveProjectIcon = activeProject ? (
     <RenderLucide iconName={activeProject?.icon} />
@@ -186,6 +183,11 @@ const NewTaskDialog = () => {
                         onChange={field.onChange}
                         classes={{ triggerClass: "w-full" }}
                         label="Set Deadline"
+                        calendarProps={{
+                          hidden: {
+                            before: new Date(),
+                          },
+                        }}
                       />
                     )}
                   />

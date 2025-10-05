@@ -37,8 +37,8 @@ export async function generateMetadata({
   let response: StandardizeResponse<Project[]> | undefined;
   try {
     response = await getProject(project_id);
-  } catch (error) {
-    console.log(error);
+  } catch (_error) {
+    response = undefined;
   }
 
   const project = response?.result?.[0];
