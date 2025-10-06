@@ -28,6 +28,7 @@ import {
   CircleAlert,
   Clock1,
   ClockAlert,
+  Loader2Icon,
   Save,
   Settings2,
   Zap,
@@ -40,6 +41,8 @@ import {
   NewTaskFormSchema,
   newTaskFormSchema,
 } from "@/src/lib/zod/schemas/taskSchema";
+import { useCreateTask } from "@/src/lib/hooks/mutations/useCreateTask";
+import { TasksPostRequest } from "@/app/api/tasks/post";
 
 const NewTaskDialog = () => {
   // Pull setters and states from store
@@ -58,12 +61,12 @@ const NewTaskDialog = () => {
 
   // Form
   const formDefaultValues = {
-    taskProjectId: "",
-    taskName: "",
-    taskDescription: "",
-    taskPriority: "medium",
-    taskDeadline: undefined,
-    taskReminder: undefined,
+    projectId: "",
+    name: "",
+    description: "",
+    priority: "low",
+    deadlineAt: undefined,
+    reminderAt: undefined,
   } as const;
 
   const {
@@ -114,6 +117,13 @@ const NewTaskDialog = () => {
     }
   }, [deadline, setValue]);
 
+  // Sync activeProject with form value
+  useEffect(() => {
+    if (activeProject) {
+      setValue("projectId", activeProject?.id);
+    }
+  }, [activeProject, setValue]);
+
   // Sync set default active project once projects is fetched
   useEffect(() => {
     if (projects) {
@@ -130,15 +140,30 @@ const NewTaskDialog = () => {
     <Clock1 />
   );
 
+  // Mutation
+  const { mutate: createTask, isPending: isCreatingTask } = useCreateTask([
+    "create",
+    "task",
+  ]);
+
+  // Reset Handler
+  const resetHandler = () => {
+    reset(formDefaultValues);
+    setTimeout(() => {
+      setAdvance(false);
+    }, 500);
+    setNewTaskDialogOpen(false);
+  };
+
   return (
     <Dialog
       open={newTaskDialogOpen}
       onOpenChange={(e) => {
-        reset(formDefaultValues);
-        setTimeout(() => {
-          setAdvance(false);
-        }, 500);
-        setNewTaskDialogOpen(e);
+        if (!e) {
+          resetHandler();
+        }
+
+        return e;
       }}
     >
       <DialogContent className="p-0 overflow-hidden">
@@ -150,8 +175,19 @@ const NewTaskDialog = () => {
 
         {/* Content */}
         <form
-          onSubmit={handleSubmit(() => {
-            // console.log(data);
+          onSubmit={handleSubmit((data) => {
+            const request: TasksPostRequest = {
+              newTaskRequest: {
+                ...data,
+                description: data?.description || undefined,
+              },
+            };
+
+            createTask(request, {
+              onSuccess: () => {
+                resetHandler();
+              },
+            });
           })}
         >
           {/* Forms Container */}
@@ -385,18 +421,23 @@ const NewTaskDialog = () => {
                 type="button"
                 variant={"outline"}
                 onClick={() => {
-                  reset(formDefaultValues);
-                  setTimeout(() => {
-                    setAdvance(false);
-                  }, 500);
-                  setNewTaskDialogOpen(false);
+                  resetHandler();
                 }}
               >
                 Cancel
               </Button>
-              <Button disabled={!isValid || !isReminderValid}>
-                <Save />
-                Save
+              <Button disabled={!isValid || !isReminderValid || isCreatingTask}>
+                {isCreatingTask ? (
+                  <>
+                    <Loader2Icon className="animate-spin" />
+                    Saving
+                  </>
+                ) : (
+                  <>
+                    <Save />
+                    Save
+                  </>
+                )}
               </Button>
             </div>
           </footer>

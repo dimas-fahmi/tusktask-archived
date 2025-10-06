@@ -1,14 +1,15 @@
 import { Circle, Clock } from "lucide-react";
 import React from "react";
 import CircularProgress from "../CircularProgress";
+import { Task } from "@/src/db/schema/tasks";
 
-const TaskCard = () => {
+const TaskCard = ({ task }: { task: Task }) => {
   return (
     <div className="group/card border p-4 rounded-md cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-200">
       {/* Header */}
       <div className="flex items-center justify-between">
         {/* Task Name */}
-        <h2 className="text-sm font-semibold">Wallet App Design</h2>
+        <h2 className="text-sm font-semibold">{task?.name}</h2>
 
         {/* Complete Button */}
         <button
@@ -25,7 +26,7 @@ const TaskCard = () => {
         <div className="flex-1">
           {/* Description */}
           <p className="min-h-16 max-h-16 overflow-hidden opacity-80">
-            No description
+            {task?.description || "No description"}
           </p>
 
           {/* Deadline */}

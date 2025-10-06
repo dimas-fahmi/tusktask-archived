@@ -1,4 +1,5 @@
 import { useDeleteProject } from "@/src/lib/hooks/mutations/useDeleteProject";
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import { ProjectApp } from "@/src/lib/types/projects";
 import {
   ContextMenuGroup,
@@ -6,11 +7,13 @@ import {
   ContextMenuLabel,
   ContextMenuSeparator,
 } from "@/src/ui/shadcn/components/ui/context-menu";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Archive,
   CirclePlus,
   ExternalLink,
   LoaderCircle,
+  RefreshCcw,
   Trash,
 } from "lucide-react";
 import Link from "next/link";
@@ -19,6 +22,12 @@ import React from "react";
 const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
   // Delete Mutation
   const { mutate: deleteProject } = useDeleteProject();
+
+  // QueryClient
+  const queryClient = useQueryClient();
+
+  // Pull states from tasks store
+  const { setNewTaskDialogOpen, setActiveProject } = useTaskStore();
 
   return (
     <div>
@@ -44,9 +53,27 @@ const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
             Open Project
           </Link>
         </ContextMenuItem>
-        <ContextMenuItem disabled={project?.isPending}>
+        <ContextMenuItem
+          disabled={project?.isPending}
+          onClick={() => {
+            setActiveProject(project);
+            setNewTaskDialogOpen(true);
+          }}
+        >
           <CirclePlus />
           New Task
+        </ContextMenuItem>
+        <ContextMenuItem
+          disabled={project?.isPending}
+          onClick={() => {
+            queryClient.invalidateQueries({
+              queryKey: ["projects"],
+              exact: false,
+            });
+          }}
+        >
+          <RefreshCcw />
+          Refresh
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem disabled>
