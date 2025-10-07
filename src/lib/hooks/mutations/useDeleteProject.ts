@@ -52,6 +52,7 @@ export const useDeleteProject = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["tasks"], exact: false });
     },
   });
 };

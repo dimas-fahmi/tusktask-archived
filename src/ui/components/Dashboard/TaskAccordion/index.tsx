@@ -1,8 +1,10 @@
 "use client";
 
-import { ChevronDown, Circle, Ellipsis } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import React, { createContext, useContext, useState } from "react";
 import { motion } from "motion/react";
+import { Task } from "@/src/db/schema/tasks";
+import TaskCard from "../TaskCard";
 export interface TaskAccordionContextValues {
   open: boolean;
   setOpen: (n: boolean) => void;
@@ -120,30 +122,17 @@ const body = ({ children }: { children: React.ReactNode }) => {
       }
       className="overflow-hidden"
     >
-      <div className={`py-4 px-4 space-y-2`}>{children}</div>
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 lg:md:grid-cols-3 xl:grid-cols-4 gap-4 p-4`}
+      >
+        {children}
+      </div>
     </motion.div>
   );
 };
 
-const item = () => {
-  return (
-    <div className="flex text-sm hover:bg-secondary hover:text-secondary-foreground transition-shadow duration-200 items-center cursor-pointer gap-1.5 p-2 border rounded-md">
-      {/* Toggler */}
-      <div>
-        <Circle className="w-5 h-5 opacity-70" />
-      </div>
-
-      {/* Title */}
-      <div className="flex-1 opacity-70">Brush My Teeth</div>
-
-      {/* Controller */}
-      <div>
-        <button className="cursor-pointer">
-          <Ellipsis />
-        </button>
-      </div>
-    </div>
-  );
+const item = ({ task }: { task: Task }) => {
+  return <TaskCard task={task} />;
 };
 
 const TaskAccordion = {

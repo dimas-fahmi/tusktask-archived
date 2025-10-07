@@ -1,4 +1,8 @@
+"use client";
+
+import { useThemeStore } from "@/src/lib/stores/ui/themeStore";
 import NewTaskDialog from "@/src/ui/components/Dashboard/Dialogs/NewTaskDialog";
+import ThemePickerDialog from "@/src/ui/components/Dashboard/Dialogs/ThemePickerDialog";
 import NewProjectDrawer from "@/src/ui/components/Dashboard/Drawers/NewProjectDrawer";
 import DashboardNavbar from "@/src/ui/components/Dashboard/NavBar/DashboardNavbar";
 import { DashboardSidebar } from "@/src/ui/components/Dashboard/Sidebar/DashboardSidebar";
@@ -14,8 +18,10 @@ const DashboardLayout = ({
 }: {
   children: Readonly<React.ReactNode>;
 }) => {
+  const { activeTheme } = useThemeStore();
+
   return (
-    <>
+    <div className={`${activeTheme.id} bg-background text-foreground`}>
       <SidebarProvider>
         <DashboardSidebar />
         <SidebarInset className="w-full overflow-hidden">
@@ -28,8 +34,9 @@ const DashboardLayout = ({
 
         {/* Dialogs */}
         <NewTaskDialog />
+        <ThemePickerDialog />
       </SidebarProvider>
-    </>
+    </div>
   );
 };
 
