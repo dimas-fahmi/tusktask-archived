@@ -28,6 +28,7 @@ import {
   CircleAlert,
   Clock1,
   ClockAlert,
+  Loader2Icon,
   Save,
   Settings2,
   Zap,
@@ -40,6 +41,10 @@ import {
   NewTaskFormSchema,
   newTaskFormSchema,
 } from "@/src/lib/zod/schemas/taskSchema";
+import { useCreateTask } from "@/src/lib/hooks/mutations/useCreateTask";
+import { TasksPostRequest } from "@/app/api/tasks/post";
+import PriorityButton from "./components/PriorityButton";
+import { PRIORITIES } from "@/src/db/schema/configs";
 
 const NewTaskDialog = () => {
   // Pull setters and states from store
@@ -58,12 +63,12 @@ const NewTaskDialog = () => {
 
   // Form
   const formDefaultValues = {
-    taskProjectId: "",
-    taskName: "",
-    taskDescription: "",
-    taskPriority: "medium",
-    taskDeadline: undefined,
-    taskReminder: undefined,
+    projectId: "",
+    name: "",
+    description: "",
+    priority: "low",
+    deadlineAt: undefined,
+    reminderAt: undefined,
   } as const;
 
   const {
@@ -114,6 +119,13 @@ const NewTaskDialog = () => {
     }
   }, [deadline, setValue]);
 
+  // Sync activeProject with form value
+  useEffect(() => {
+    if (activeProject) {
+      setValue("projectId", activeProject?.id);
+    }
+  }, [activeProject, setValue]);
+
   // Sync set default active project once projects is fetched
   useEffect(() => {
     if (projects) {
@@ -130,17 +142,33 @@ const NewTaskDialog = () => {
     <Clock1 />
   );
 
+  // Mutation
+  const { mutate: createTask, isPending: isCreatingTask } = useCreateTask([
+    "create",
+    "task",
+  ]);
+
+  // Reset Handler
+  const resetHandler = () => {
+    reset(formDefaultValues);
+    setTimeout(() => {
+      setAdvance(false);
+    }, 500);
+    setNewTaskDialogOpen(false);
+  };
+
+  // OnOpenChange
+  useEffect(() => {
+    if (!newTaskDialogOpen) {
+      resetHandler();
+    } else {
+      reset(formDefaultValues);
+      setValue("projectId", activeProject?.id || "");
+    }
+  }, [newTaskDialogOpen]);
+
   return (
-    <Dialog
-      open={newTaskDialogOpen}
-      onOpenChange={(e) => {
-        reset(formDefaultValues);
-        setTimeout(() => {
-          setAdvance(false);
-        }, 500);
-        setNewTaskDialogOpen(e);
-      }}
-    >
+    <Dialog open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>
       <DialogContent className="p-0 overflow-hidden">
         {/* Header [hidden] */}
         <DialogHeader className="sr-only">
@@ -150,8 +178,19 @@ const NewTaskDialog = () => {
 
         {/* Content */}
         <form
-          onSubmit={handleSubmit(() => {
-            // console.log(data);
+          onSubmit={handleSubmit((data) => {
+            const request: TasksPostRequest = {
+              newTaskRequest: {
+                ...data,
+                description: data?.description || undefined,
+              },
+            };
+
+            createTask(request, {
+              onSuccess: () => {
+                resetHandler();
+              },
+            });
           })}
         >
           {/* Forms Container */}
@@ -189,6 +228,7 @@ const NewTaskDialog = () => {
                     <textarea
                       value={field.value || ""}
                       onChange={field.onChange}
+                      name="description"
                       className="text-sm opacity-70 field-sizing-content min-h-16 max-h-42 px-4 outline-0 border-0 resize-none w-full"
                       placeholder="Description (optional)"
                     />
@@ -215,38 +255,14 @@ const NewTaskDialog = () => {
 
                 {/* Container */}
                 <div className="grid grid-cols-4 gap-2">
-                  <button
-                    className={`${priority?.toLowerCase() === "low" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
-                    onClick={() => {
-                      setValue("taskPriority", "low");
-                    }}
-                  >
-                    Low
-                  </button>
-                  <button
-                    className={`${priority?.toLowerCase() === "medium" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
-                    onClick={() => {
-                      setValue("taskPriority", "medium");
-                    }}
-                  >
-                    Medium
-                  </button>
-                  <button
-                    className={`${priority?.toLowerCase() === "high" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
-                    onClick={() => {
-                      setValue("taskPriority", "high");
-                    }}
-                  >
-                    High
-                  </button>
-                  <button
-                    className={`${priority?.toLowerCase() === "urgent" ? "bg-primary text-primary-foreground" : "hover:bg-primary hover:text-primary-foreground "} p-2 rounded-md border text-xs transition-all duration-300 cursor-pointer`}
-                    onClick={() => {
-                      setValue("taskPriority", "urgent");
-                    }}
-                  >
-                    Urgent
-                  </button>
+                  {PRIORITIES.map((item, index) => (
+                    <PriorityButton
+                      key={index}
+                      setValue={setValue}
+                      value={item}
+                      priority={priority}
+                    />
+                  ))}
                 </div>
               </div>
 
@@ -385,18 +401,23 @@ const NewTaskDialog = () => {
                 type="button"
                 variant={"outline"}
                 onClick={() => {
-                  reset(formDefaultValues);
-                  setTimeout(() => {
-                    setAdvance(false);
-                  }, 500);
-                  setNewTaskDialogOpen(false);
+                  resetHandler();
                 }}
               >
                 Cancel
               </Button>
-              <Button disabled={!isValid || !isReminderValid}>
-                <Save />
-                Save
+              <Button disabled={!isValid || !isReminderValid || isCreatingTask}>
+                {isCreatingTask ? (
+                  <>
+                    <Loader2Icon className="animate-spin" />
+                    Saving
+                  </>
+                ) : (
+                  <>
+                    <Save />
+                    Save
+                  </>
+                )}
               </Button>
             </div>
           </footer>

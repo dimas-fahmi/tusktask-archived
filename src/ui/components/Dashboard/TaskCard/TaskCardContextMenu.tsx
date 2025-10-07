@@ -1,6 +1,5 @@
-import { useDeleteProject } from "@/src/lib/hooks/mutations/useDeleteProject";
-import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
-import { ProjectApp } from "@/src/lib/types/projects";
+import { useDeleteTask } from "@/src/lib/hooks/mutations/useDeleteTask";
+import { TaskApp } from "@/src/lib/types/tasks";
 import {
   ContextMenuGroup,
   ContextMenuItem,
@@ -19,20 +18,17 @@ import {
 import Link from "next/link";
 import React from "react";
 
-const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
+const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
   // Delete Mutation
-  const { mutate: deleteProject } = useDeleteProject();
+  const { mutate: deleteTask } = useDeleteTask();
 
   // QueryClient
   const queryClient = useQueryClient();
 
-  // Pull states from tasks store
-  const { setNewTaskDialogOpen, setActiveProject } = useTaskStore();
-
   return (
     <div>
       <ContextMenuGroup>
-        {project?.isPending ? (
+        {task?.isPending ? (
           <>
             <ContextMenuItem disabled className="animate-pulse">
               <LoaderCircle className="animate-spin" />
@@ -42,29 +38,23 @@ const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
           </>
         ) : (
           <>
-            <ContextMenuLabel>{project.name}</ContextMenuLabel>
+            <ContextMenuLabel>{task.name}</ContextMenuLabel>
             <ContextMenuSeparator />
           </>
         )}
 
-        <ContextMenuItem disabled={project?.isPending} asChild>
-          <Link href={`/dashboard/projects/${project?.id}`}>
+        <ContextMenuItem disabled={task?.isPending} asChild>
+          <Link href={`/dashboard/projects/${task?.id}`}>
             <ExternalLink />
             Open Project
           </Link>
         </ContextMenuItem>
-        <ContextMenuItem
-          disabled={project?.isPending}
-          onClick={() => {
-            setActiveProject(project);
-            setNewTaskDialogOpen(true);
-          }}
-        >
+        <ContextMenuItem disabled={task?.isPending}>
           <CirclePlus />
           New Task
         </ContextMenuItem>
         <ContextMenuItem
-          disabled={project?.isPending}
+          disabled={task?.isPending}
           onClick={() => {
             queryClient.invalidateQueries({
               queryKey: ["projects"],
@@ -82,15 +72,9 @@ const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
         </ContextMenuItem>
         <ContextMenuItem
           variant="destructive"
-          disabled={project?.isPending || project.projectType === "primary"}
           onClick={() => {
-            deleteProject(project.id);
+            deleteTask(task.id);
           }}
-          title={
-            project?.projectType === "primary"
-              ? "Can't delete your primary project"
-              : "Click to delete this project"
-          }
         >
           <Trash />
           Delete
@@ -100,4 +84,4 @@ const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
   );
 };
 
-export default ProjectCardContextMenu;
+export default TaskCardContextMenu;

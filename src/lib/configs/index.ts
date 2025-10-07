@@ -102,3 +102,49 @@ export const ONBOARDING_STEPS = [
   "confirmation",
   "completed",
 ] as const;
+
+// THEMING
+export const APP_THEMES_ID = [
+  "default",
+  "dark",
+  "pop-bella",
+  "beige-serenity",
+] as const;
+
+export interface AppTheme {
+  id: (typeof APP_THEMES_ID)[number];
+  screenshot: string;
+  label: string;
+  name: string;
+}
+
+export const APP_THEMES: Record<(typeof APP_THEMES_ID)[number], AppTheme> = {
+  default: {
+    id: "default",
+    name: "TuskTask Default",
+    label: "Default TuskTask Light Theme",
+    screenshot:
+      "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/screenshots/screenshot-theme-default.png",
+  },
+  dark: {
+    id: "dark",
+    name: "TuskTask Dark",
+    label: "Default TuskTask Dark Theme",
+    screenshot:
+      "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/screenshots/screenshot-theme-dark-default.png",
+  },
+  "pop-bella": {
+    id: "pop-bella",
+    name: "Pop Bella",
+    label: "Beautifull Soft Pink Style",
+    screenshot:
+      "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/screenshots/screenshot-theme-pop-bella.png",
+  },
+  "beige-serenity": {
+    id: "beige-serenity",
+    name: "Beige Serenity",
+    label: "Beautifull Soft Beige Style",
+    screenshot:
+      "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/screenshots/screenshot-theme-beige-serenity.png",
+  },
+};
