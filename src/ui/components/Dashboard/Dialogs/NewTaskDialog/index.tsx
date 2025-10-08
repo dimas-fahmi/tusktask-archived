@@ -22,10 +22,11 @@ import {
   SelectValue,
 } from "@/src/ui/shadcn/components/ui/select";
 import React, { useEffect, useState } from "react";
-import { motion } from "motion/react";
+import { motion, Variants } from "motion/react";
 import {
   AlarmClock,
   CircleAlert,
+  CircleQuestionMark,
   Clock1,
   ClockAlert,
   Loader2Icon,
@@ -45,6 +46,23 @@ import { useCreateTask } from "@/src/lib/hooks/mutations/useCreateTask";
 import { TasksPostRequest } from "@/app/api/tasks/post";
 import PriorityButton from "./components/PriorityButton";
 import { PRIORITIES } from "@/src/db/schema/configs";
+import { formatRelative } from "date-fns";
+import { parseDate } from "chrono-node";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/src/ui/shadcn/components/ui/tooltip";
+import NewTaskHelper from "../../../TooltipContents/NewTaskHelper";
+
+const settingsVariants: Variants = {
+  hidden: { transition: { duration: 0.3 }, width: 0 },
+  visible: {
+    width: "auto",
+    transition: { duration: 0.3, ease: "easeOut" },
+  },
+  exit: { opacity: 0, transition: { duration: 0.3 } },
+};
 
 const NewTaskDialog = () => {
   // Pull setters and states from store
@@ -85,9 +103,38 @@ const NewTaskDialog = () => {
   });
 
   // Watch for deadline, reminder and priority
+  const name = watch("name");
   const deadline = watch("deadlineAt");
   const reminder = watch("reminderAt");
   const priority = watch("taskPriority");
+
+  // Deadline Manual
+  const [isDeadlineSetManually, setIsDeadlineSetManually] = useState(false);
+
+  // Deadline validity
+  const [isValidDeadline, setIsValidDeadline] = useState(true);
+
+  useEffect(() => {
+    if (deadline) {
+      const now = new Date();
+      if (now.getTime() > deadline.getTime()) {
+        setIsValidDeadline(false);
+      } else {
+        setIsValidDeadline(true);
+      }
+    }
+  }, [setIsValidDeadline, deadline]);
+
+  useEffect(() => {
+    if (isDeadlineSetManually) return;
+
+    const pd = parseDate(name);
+    if (pd) {
+      setValue("deadlineAt", pd);
+    } else {
+      setValue("deadlineAt", undefined);
+    }
+  }, [name, setValue, isDeadlineSetManually]);
 
   // Check if reminder is valid
   const isReminderValid =
@@ -167,9 +214,13 @@ const NewTaskDialog = () => {
     }
   }, [newTaskDialogOpen]);
 
+  // Theme
+
   return (
     <Dialog open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>
-      <DialogContent className="p-0 overflow-hidden">
+      <DialogContent
+        className={`p-0 bg-card text-card-foreground overflow-hidden`}
+      >
         {/* Header [hidden] */}
         <DialogHeader className="sr-only">
           <DialogTitle>New Task</DialogTitle>
@@ -229,11 +280,47 @@ const NewTaskDialog = () => {
                       value={field.value || ""}
                       onChange={field.onChange}
                       name="description"
-                      className="text-sm opacity-70 field-sizing-content min-h-16 max-h-42 px-4 outline-0 border-0 resize-none w-full"
+                      className="text-sm opacity-70 field-sizing-content min-h-16 max-h-42 px-4 outline-0 border-0 resize-none w-full scrollbar-none"
                       placeholder="Description (optional)"
                     />
                   )}
                 />
+              </div>
+
+              {/* Current Settings Bar */}
+              <div className="px-4 flex items-center justify-between mt-2">
+                <span>
+                  {/* Deadline */}
+                  <motion.div
+                    variants={settingsVariants}
+                    animate={deadline ? "visible" : "hidden"}
+                    className="overflow-hidden"
+                  >
+                    <div
+                      className={`${isValidDeadline ? "" : "bg-destructive/10 text-destructive"} px-4 py-1 min-w-48 capitalize max-w-48 border w-fit rounded-md flex items-center gap-2 text-xs`}
+                    >
+                      <AlarmClock className="w-4 h-4" />{" "}
+                      {deadline
+                        ? formatRelative(deadline, new Date())
+                        : "Unset"}
+                    </div>
+                  </motion.div>
+                </span>
+
+                <span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div
+                        className={`flex px-2 py-1 bg-muted text-muted-foreground rounded-md items-center gap-1.5 text-xs`}
+                      >
+                        <CircleQuestionMark className="w-4 h-4" />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <NewTaskHelper />
+                    </TooltipContent>
+                  </Tooltip>
+                </span>
               </div>
             </motion.div>
 
@@ -281,7 +368,14 @@ const NewTaskDialog = () => {
                     render={({ field }) => (
                       <DatePicker
                         value={field.value || undefined}
-                        onChange={field.onChange}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          if (e) {
+                            setIsDeadlineSetManually(true);
+                          } else {
+                            setIsDeadlineSetManually(false);
+                          }
+                        }}
                         classes={{ triggerClass: "w-full" }}
                         label="Set Deadline"
                         calendarProps={{
@@ -406,7 +500,14 @@ const NewTaskDialog = () => {
               >
                 Cancel
               </Button>
-              <Button disabled={!isValid || !isReminderValid || isCreatingTask}>
+              <Button
+                disabled={
+                  !isValid ||
+                  !isReminderValid ||
+                  isCreatingTask ||
+                  (!isValidDeadline && deadline ? true : false)
+                }
+              >
                 {isCreatingTask ? (
                   <>
                     <Loader2Icon className="animate-spin" />

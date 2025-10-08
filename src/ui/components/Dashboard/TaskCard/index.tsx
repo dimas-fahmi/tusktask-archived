@@ -8,7 +8,7 @@ import {
 import Card from "./Card";
 import TaskCardContextMenu from "./TaskCardContextMenu";
 
-export interface TaskCardProps extends React.HTMLAttributes<HTMLAnchorElement> {
+export interface TaskCardProps extends React.HTMLAttributes<HTMLDivElement> {
   task: Task;
 }
 

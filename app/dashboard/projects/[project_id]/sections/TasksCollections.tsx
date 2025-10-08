@@ -9,7 +9,8 @@ import {
 } from "@/src/lib/utils/categorizedTasks";
 import { motion } from "motion/react";
 import { OngoingSituation } from "../components/charts/OngoingSituation";
-import { CollectionsStatistics } from "../components/charts/CollectionsStatistics";
+import { PrioritySituation } from "../components/charts/PrioritySituation";
+import { PRIORITIES } from "@/src/db/schema/configs";
 
 const Collection = ({
   collection,
@@ -44,11 +45,16 @@ const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
   const { archived, completed, ongoing, overdue, overdueSoon, tomorrow } =
     categorizedTasks;
 
+  // Filter
   const [filter, setFilter] = useState<keyof CategorizedTasks | undefined>(
     () => {
       return overdue.length < 1 ? "ongoing" : "overdue";
     }
   );
+
+  // Priority Filter
+  const [priorityFilter, setPriorityFilter] =
+    useState<(typeof PRIORITIES)[number]>("urgent");
 
   return (
     <section id="taskCollections" className="py-4">
@@ -59,7 +65,12 @@ const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
           setActiveFilter={setFilter}
           categorizedTasks={categorizedTasks}
         />
-        <CollectionsStatistics categorizedTasks={categorizedTasks} />
+
+        <PrioritySituation
+          activeFilter={priorityFilter}
+          setActiveFilter={setPriorityFilter}
+          categorizedTasks={categorizedTasks}
+        />
       </div>
       {/* Filter Controller */}
       <div className="grid grid-cols-6 gap-3"></div>
