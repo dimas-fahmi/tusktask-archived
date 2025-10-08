@@ -7,6 +7,10 @@ export interface CategorizedTasks {
   ongoing: Task[];
   archived: Task[];
   completed: Task[];
+  lowPriority: Task[];
+  mediumPriority: Task[];
+  highPriority: Task[];
+  urgentPriority: Task[];
 }
 
 export const categorizeTasks = (tasks?: Task[]): CategorizedTasks => {
@@ -17,6 +21,10 @@ export const categorizeTasks = (tasks?: Task[]): CategorizedTasks => {
     overdueSoon: [],
     tomorrow: [],
     ongoing: [],
+    lowPriority: [],
+    mediumPriority: [],
+    highPriority: [],
+    urgentPriority: [],
   };
 
   if (!tasks || !Array.isArray(tasks) || !tasks.length) {
@@ -79,6 +87,20 @@ export const categorizeTasks = (tasks?: Task[]): CategorizedTasks => {
 
     return !isInOtherCategory;
   });
+
+  // Priority
+  categorizedTasks.lowPriority = tasks.filter(
+    (item) => item.taskPriority === "low"
+  );
+  categorizedTasks.mediumPriority = tasks.filter(
+    (item) => item.taskPriority === "medium"
+  );
+  categorizedTasks.highPriority = tasks.filter(
+    (item) => item.taskPriority === "high"
+  );
+  categorizedTasks.urgentPriority = tasks.filter(
+    (item) => item.taskPriority === "urgent"
+  );
 
   return categorizedTasks;
 };

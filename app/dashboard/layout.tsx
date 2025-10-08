@@ -18,10 +18,12 @@ const DashboardLayout = ({
 }: {
   children: Readonly<React.ReactNode>;
 }) => {
-  const { activeTheme } = useThemeStore();
+  const { activeTheme, activeFont } = useThemeStore();
 
   return (
-    <div className={`${activeTheme.id} bg-background text-foreground`}>
+    <div
+      className={`${activeTheme.id} ${activeFont.id} bg-background text-foreground`}
+    >
       <SidebarProvider>
         <DashboardSidebar />
         <SidebarInset className="w-full overflow-hidden">

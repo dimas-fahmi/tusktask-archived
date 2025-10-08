@@ -111,14 +111,14 @@
 }
 
 .dark {
-  --background: oklch(8% 0.01 270);
+  --background: oklch(13.072% 0.01293 241.475);
   --foreground: oklch(95% 0.01 270);
   --radius: 0.65rem;
   --card: oklch(12% 0.005 270);
   --card-foreground: oklch(95% 0.01 270);
   --popover: oklch(12% 0.005 270);
   --popover-foreground: oklch(95% 0.01 270);
-  --primary: oklch(31.756% 0.12901 260.226);
+  --primary: oklch(35.094% 0.14647 260.424);
   --primary-foreground: oklch(98% 0.01 270);
   --secondary: oklch(15% 0.04 260);
   --secondary-foreground: oklch(95% 0.01 270);
@@ -130,7 +130,7 @@
   --destructive-foreground: oklch(98% 0.01 270);
   --positive: oklch(35% 0.12 140);
   --positive-foreground: oklch(98% 0.01 270);
-  --border: oklch(28.459% 0.00788 264.477);
+  --border: oklch(22.083% 0.00498 248.173);
   --input: oklch(15% 0.01 270);
   --ring: oklch(45% 0.12 260);
   --chart-1: oklch(55% 0.12 260);
@@ -224,8 +224,8 @@
   --card-foreground: oklch(15% 0.03 40);
   --popover: oklch(99% 0.005 60);
   --popover-foreground: oklch(15% 0.03 40);
-  --primary: oklch(75% 0.08 65);
-  --primary-foreground: oklch(15% 0.03 40);
+  --primary: oklch(66.631% 0.06617 64.681);
+  --primary-foreground: oklch(100% 0.00011 271.152);
   --secondary: oklch(92% 0.04 60);
   --secondary-foreground: oklch(15% 0.03 40);
   --muted: oklch(96% 0.01 60);
@@ -292,6 +292,96 @@
 
   .dashboard-padding {
     @apply py-2 px-4 md:px-6;
+  }
+}
+
+.theme-font-default {
+  .font-header {
+    font-family: var(--font-oswald);
+  }
+
+  .font-body {
+    font-family: var(--font-space-grotesk);
+  }
+}
+
+.theme-font-space-mono {
+  .font-header {
+    font-family: var(--font-space-mono);
+  }
+
+  .font-body {
+    font-family: var(--font-space-mono);
+  }
+}
+
+.theme-font-inter {
+  .font-header {
+    font-family: var(--font-inter);
+  }
+
+  .font-body {
+    font-family: var(--font-inter);
+  }
+}
+
+.theme-font-merriweather {
+  .font-header {
+    font-family: var(--font-playfair-display);
+  }
+
+  .font-body {
+    font-family: var(--font-merriweather);
+  }
+}
+
+.theme-font-jetbrains {
+  .font-header {
+    font-family: var(--font-orbitron);
+  }
+
+  .font-body {
+    font-family: var(--font-jetbrains-mono);
+  }
+}
+
+.theme-font-poppins {
+  .font-header {
+    font-family: var(--font-poppins);
+  }
+
+  .font-body {
+    font-family: var(--font-nunito-sans);
+  }
+}
+
+.theme-font-bebas {
+  .font-header {
+    font-family: var(--font-bebas-neue);
+  }
+
+  .font-body {
+    font-family: var(--font-roboto);
+  }
+}
+
+.theme-font-cormorant {
+  .font-header {
+    font-family: var(--font-cormorant-garamond);
+  }
+
+  .font-body {
+    font-family: var(--font-jost);
+  }
+}
+
+.theme-font-fira-code {
+  .font-header {
+    font-family: var(--font-fira-code);
+  }
+
+  .font-body {
+    font-family: var(--font-fira-sans);
   }
 }
 

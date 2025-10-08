@@ -5,16 +5,15 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Label,
   LabelList,
-  Pie,
-  PieChart,
+  PolarAngleAxis,
+  PolarGrid,
+  Radar,
+  RadarChart,
   Rectangle,
-  Sector,
   XAxis,
   YAxis,
 } from "recharts";
-import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 import {
   Card,
@@ -26,6 +25,8 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartStyle,
   ChartTooltip,
   ChartTooltipContent,
@@ -39,7 +40,8 @@ import {
 } from "@/src/ui/shadcn/components/ui/select";
 import { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
 import { motion, Variants } from "motion/react";
-import { ChartBar, PieChartIcon } from "lucide-react";
+import { ChartBar, Diamond } from "lucide-react";
+import { PRIORITIES } from "@/src/db/schema/configs";
 
 export const description =
   "An interactive pie chart of ongoing tasks situation";
@@ -58,123 +60,95 @@ const containerVariants: Variants = {
 
 const chartConfig = {
   tasks: {
-    label: "Tasks",
+    label: "Active Tasks",
+    color: "var(--primary)",
   },
   collection: {
     label: "Collection",
   },
-  overdue: {
-    label: "Overdue",
+  low: {
+    label: "Low",
     color: "var(--chart-1)",
   },
-  overdueSoon: {
-    label: "Soon",
+  medium: {
+    label: "Medium",
     color: "var(--chart-2)",
   },
-  tomorrow: {
-    label: "Tomorrow",
+  high: {
+    label: "High",
     color: "var(--chart-3)",
   },
-  ongoing: {
-    label: "Ongoing",
+  urgent: {
+    label: "Urgent",
     color: "var(--chart-4)",
-  },
-  archived: {
-    label: "Archived",
-    color: "var(--chart-5)",
   },
 } satisfies ChartConfig;
 
-export interface OngoingSituation {
+export interface PrioritySituation {
   activeFilter: keyof CategorizedTasks | undefined;
   setActiveFilter: (n: keyof CategorizedTasks) => void;
   categorizedTasks: CategorizedTasks;
 }
 
-export function OngoingSituation({
+export function PrioritySituation({
   activeFilter,
   setActiveFilter,
   categorizedTasks,
-}: OngoingSituation) {
-  const id = "ongoing-situation-chart";
+}: PrioritySituation) {
+  const id = "priority-situation-chart";
   const [mode, setMode] = React.useState<"pie" | "bar">("pie");
-  const filters = [
-    "overdue",
-    "overdueSoon",
-    "tomorrow",
-    "ongoing",
-    "archived",
-  ] as const;
+  const filter: (typeof PRIORITIES)[number] =
+    ((): (typeof PRIORITIES)[number] => {
+      if (!activeFilter) return "medium";
+      if (PRIORITIES.includes(activeFilter as (typeof PRIORITIES)[number])) {
+        return activeFilter as (typeof PRIORITIES)[number];
+      }
 
-  // Ensure activeFilter is narrowed to one of the allowed filter keys (or default to "ongoing")
-  const filter: (typeof filters)[number] = ((): (typeof filters)[number] => {
-    if (!activeFilter) return "ongoing";
-    return filters.includes(activeFilter as (typeof filters)[number])
-      ? (activeFilter as (typeof filters)[number])
-      : "ongoing";
-  })();
+      return "medium";
+    })();
 
   const situationData = [
     {
-      collection: "overdue",
-      label: "Overdue",
-      tasks: categorizedTasks.overdue?.length,
-      fill: "var(--color-overdue)",
+      collection: "low",
+      label: "Low",
+      tasks: categorizedTasks.lowPriority?.length,
+      fill: "var(--color-low)",
     },
     {
-      collection: "overdueSoon",
-      label: "Overdue Soon",
-      tasks: categorizedTasks.overdueSoon?.length,
-      fill: "var(--color-overdueSoon)",
+      collection: "medium",
+      label: "Medium",
+      tasks: categorizedTasks.mediumPriority?.length,
+      fill: "var(--color-medium)",
     },
     {
-      collection: "tomorrow",
-      label: "Overdue Tomorrow",
-      tasks: categorizedTasks.tomorrow?.length,
-      fill: "var(--color-tomorrow)",
+      collection: "high",
+      label: "High",
+      tasks: categorizedTasks.highPriority?.length,
+      fill: "var(--color-high)",
     },
     {
-      collection: "ongoing",
-      label: "Ongoing Tasks",
-      tasks: categorizedTasks.ongoing?.length,
-      fill: "var(--color-ongoing)",
-    },
-    {
-      collection: "archived",
-      label: "Archived Tasks",
-      tasks: categorizedTasks.archived?.length,
-      fill: "var(--color-archived)",
+      collection: "urgent",
+      label: "Urgent",
+      tasks: categorizedTasks.urgentPriority?.length,
+      fill: "var(--color-urgent)",
     },
   ];
 
-  const descriptions: Record<
-    keyof Pick<
-      CategorizedTasks,
-      "overdue" | "overdueSoon" | "tomorrow" | "ongoing" | "archived"
-    >,
-    string
-  > = {
-    overdue: "Showing active tasks that have passed their deadline date",
-    overdueSoon: "Showing active tasks due within the next 24 hours",
-    tomorrow: "Showing active tasks that are due tomorrow",
-    ongoing: "Showing active tasks due later or without a deadline date",
-    archived: "Showing tasks that have been archived and stored",
+  const descriptions: Record<(typeof PRIORITIES)[number], string> = {
+    low: "Showing tasks flagged with low priority",
+    medium: "Showing tasks flagged with medium priority",
+    high: "Showing tasks flagged with high priority",
+    urgent: "Showing tasks flagged with urgent priority",
   };
 
   const activeIndex = React.useMemo(
-    () => situationData.findIndex((item) => item.collection === filter),
-    [activeFilter, categorizedTasks, filter]
+    () => situationData.findIndex((item) => item.collection === activeFilter),
+    [activeFilter, categorizedTasks]
   );
   const collections = React.useMemo(
     () => situationData.map((item) => item.collection),
     []
   );
-
-  const isNotRenderable =
-    categorizedTasks?.ongoing.length < 1 &&
-    categorizedTasks?.overdue.length < 1 &&
-    categorizedTasks?.overdueSoon.length < 1 &&
-    categorizedTasks?.tomorrow.length < 1;
 
   return (
     <Card data-chart={id} className="flex flex-col justify-between">
@@ -182,10 +156,10 @@ export function OngoingSituation({
       <CardHeader className="flex-row items-start space-y-0 pb-0">
         <div className="grid gap-1">
           <CardTitle className="text-2xl font-header">
-            Ongoing Situation
+            Priority Situation
           </CardTitle>
           <CardDescription>
-            Here is your ongoing tasks report as of today
+            This is your priority report for ongoing tasks.
           </CardDescription>
         </div>
       </CardHeader>
@@ -194,7 +168,7 @@ export function OngoingSituation({
         <div className="flex justify-end mb-2">
           <div className="relative inline-flex border rounded-full w-42 justify-between">
             {["pie", "bar"].map((value) => {
-              const Icon = value === "bar" ? ChartBar : PieChartIcon;
+              const Icon = value === "bar" ? ChartBar : Diamond;
 
               return (
                 <button
@@ -231,87 +205,28 @@ export function OngoingSituation({
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="flex flex-1 justify-center min-h-72 max-h-72 pb-0">
+            <div className="grid flex-1 min-h-72 max-h-72 pb-0">
               <ChartContainer
-                id={id}
                 config={chartConfig}
-                className="mx-auto aspect-square w-full max-w-[300px]"
+                className="mx-auto aspect-square h-full"
               >
-                {isNotRenderable ? (
-                  <div className="w-full h-full text-center flex items-center justify-center">
-                    Not enough data, report will be shown here once data is
-                    sufficient.
-                  </div>
-                ) : (
-                  <PieChart>
-                    <ChartTooltip
-                      cursor={false}
-                      content={
-                        <ChartTooltipContent
-                          className="min-w-38 max-w-38"
-                          hideLabel
-                        />
-                      }
-                    />
-                    <Pie
-                      data={situationData}
-                      dataKey="tasks"
-                      nameKey="collection"
-                      innerRadius={60}
-                      strokeWidth={5}
-                      activeIndex={activeIndex}
-                      className="cursor-pointer"
-                      onClick={(e) => {
-                        setActiveFilter(e?.payload?.collection);
-                      }}
-                      activeShape={({
-                        outerRadius = 0,
-                        ...props
-                      }: PieSectorDataItem) => (
-                        <g>
-                          <Sector {...props} outerRadius={outerRadius + 5} />
-                          <Sector
-                            {...props}
-                            outerRadius={outerRadius + 20}
-                            innerRadius={outerRadius + 10}
-                          />
-                        </g>
-                      )}
-                    >
-                      <Label
-                        content={({ viewBox }) => {
-                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                            return (
-                              <text
-                                x={viewBox.cx}
-                                y={viewBox.cy}
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                              >
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={viewBox.cy}
-                                  className="fill-foreground text-3xl font-bold"
-                                >
-                                  {situationData[
-                                    activeIndex
-                                  ]?.tasks.toLocaleString()}
-                                </tspan>
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={(viewBox.cy || 0) + 24}
-                                  className="fill-muted-foreground"
-                                >
-                                  {chartConfig?.[filter].label}
-                                </tspan>
-                              </text>
-                            );
-                          }
-                        }}
-                      />
-                    </Pie>
-                  </PieChart>
-                )}
+                <RadarChart data={situationData}>
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="line" />}
+                  />
+                  <PolarAngleAxis dataKey="collection" />
+                  <PolarGrid />
+                  <Radar
+                    dataKey="tasks"
+                    fill="var(--color-tasks)"
+                    fillOpacity={0.6}
+                  />
+                  <ChartLegend
+                    className="mt-8"
+                    content={<ChartLegendContent />}
+                  />
+                </RadarChart>
               </ChartContainer>
             </div>
           </motion.div>
@@ -365,7 +280,8 @@ export function OngoingSituation({
                         <Rectangle
                           {...props}
                           fillOpacity={0.8}
-                          stroke={props.payload.fill}
+                          // eslint-disable-next-line react/prop-types
+                          stroke={props?.payload?.fill}
                           strokeDasharray={4}
                           strokeDashoffset={4}
                         />
@@ -406,7 +322,7 @@ export function OngoingSituation({
             className="h-7 w-full border border-card-foreground/20 shadow-md"
             aria-label="Select a value"
           >
-            <SelectValue placeholder="Select month" />
+            <SelectValue placeholder="Select Priority" />
           </SelectTrigger>
           <SelectContent align="end" className="rounded-xl">
             {collections.map((key) => {

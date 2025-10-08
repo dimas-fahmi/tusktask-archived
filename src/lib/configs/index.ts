@@ -148,3 +148,81 @@ export const APP_THEMES: Record<(typeof APP_THEMES_ID)[number], AppTheme> = {
       "https://zvgpixcwdvbogm3e.public.blob.vercel-storage.com/tusktask/screenshots/screenshot-theme-beige-serenity.png",
   },
 };
+
+export const FONT_THEME_CLASSES = [
+  "theme-font-default",
+  "theme-font-space-mono",
+  "theme-font-inter",
+  "theme-font-merriweather",
+  "theme-font-jetbrains",
+  "theme-font-poppins",
+  "theme-font-bebas",
+  "theme-font-cormorant",
+  "theme-font-fira-code",
+] as const;
+
+export interface FontTheme {
+  id: (typeof FONT_THEME_CLASSES)[number];
+  name: string;
+  description: string;
+}
+
+export const FONT_THEMES: Record<
+  (typeof FONT_THEME_CLASSES)[number],
+  FontTheme
+> = {
+  "theme-font-default": {
+    id: "theme-font-default",
+    name: "Oswald & Space Grotesk",
+    description:
+      "A balanced modern look — bold headers with clean geometric body text.",
+  },
+  "theme-font-space-mono": {
+    id: "theme-font-space-mono",
+    name: "Space Mono",
+    description:
+      "Retro and technical — perfect for coding, terminal, or minimalist design themes.",
+  },
+  "theme-font-bebas": {
+    id: "theme-font-bebas",
+    name: "Bebas & Roboto",
+    description:
+      "Strong and assertive — perfect for headlines and content with attitude.",
+  },
+  "theme-font-inter": {
+    id: "theme-font-inter",
+    name: "Inter",
+    description:
+      "Crisp, modern, and highly readable — great for apps, dashboards, and clean UIs.",
+  },
+  "theme-font-cormorant": {
+    id: "theme-font-cormorant",
+    name: "Cormorant & Jost",
+    description:
+      "Artistic and elegant — ideal for creative studios, portfolios, and editorial work.",
+  },
+  "theme-font-fira-code": {
+    id: "theme-font-fira-code",
+    name: "Fira Code & Sans",
+    description:
+      "Developer aesthetic — monospaced precision with readable sans body text.",
+  },
+  "theme-font-jetbrains": {
+    id: "theme-font-jetbrains",
+    name: "Orbitron & JetBrains Mono",
+    description:
+      "Futuristic and digital — fits tech startups, dev tools, and sci-fi interfaces.",
+  },
+  "theme-font-merriweather": {
+    id: "theme-font-merriweather",
+    name: "Playfair Display & Merriweather",
+    description:
+      "Classic and refined — for blogs, publications, or professional presentations.",
+  },
+  "theme-font-poppins": {
+    id: "theme-font-poppins",
+    name: "Poppins & Nunito Sans",
+    description:
+      "Friendly and approachable — rounded shapes with soft, humanist feel.",
+  },
+};

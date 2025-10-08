@@ -9,7 +9,7 @@ import {
 } from "@/src/lib/utils/categorizedTasks";
 import { motion } from "motion/react";
 import { OngoingSituation } from "../components/charts/OngoingSituation";
-import { CollectionsStatistics } from "../components/charts/CollectionsStatistics";
+import { PrioritySituation } from "../components/charts/PrioritySituation";
 
 const Collection = ({
   collection,
@@ -59,7 +59,12 @@ const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
           setActiveFilter={setFilter}
           categorizedTasks={categorizedTasks}
         />
-        <CollectionsStatistics categorizedTasks={categorizedTasks} />
+
+        <PrioritySituation
+          activeFilter={filter}
+          setActiveFilter={setFilter}
+          categorizedTasks={categorizedTasks}
+        />
       </div>
       {/* Filter Controller */}
       <div className="grid grid-cols-6 gap-3"></div>
