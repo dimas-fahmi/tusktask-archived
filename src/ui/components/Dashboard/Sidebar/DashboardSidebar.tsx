@@ -44,7 +44,7 @@ const DsNavLink = ({
     <Link
       href={href}
       className={cn(
-        `${isActive ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-secondary-foreground"}  py-1 rounded-md flex px-4 gap-2 items-center`,
+        `${isActive ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-secondary-foreground"} font-body py-1 rounded-md flex px-4 gap-2 items-center`,
         className
       )}
       onClick={() => {
