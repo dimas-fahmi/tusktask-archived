@@ -108,6 +108,9 @@ const NewTaskDialog = () => {
   const reminder = watch("reminderAt");
   const priority = watch("taskPriority");
 
+  // Deadline Manual
+  const [isDeadlineSetManually, setIsDeadlineSetManually] = useState(false);
+
   // Deadline validity
   const [isValidDeadline, setIsValidDeadline] = useState(true);
 
@@ -123,13 +126,15 @@ const NewTaskDialog = () => {
   }, [setIsValidDeadline, deadline]);
 
   useEffect(() => {
+    if (isDeadlineSetManually) return;
+
     const pd = parseDate(name);
     if (pd) {
       setValue("deadlineAt", pd);
     } else {
       setValue("deadlineAt", undefined);
     }
-  }, [name, setValue]);
+  }, [name, setValue, isDeadlineSetManually]);
 
   // Check if reminder is valid
   const isReminderValid =
@@ -363,7 +368,14 @@ const NewTaskDialog = () => {
                     render={({ field }) => (
                       <DatePicker
                         value={field.value || undefined}
-                        onChange={field.onChange}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          if (e) {
+                            setIsDeadlineSetManually(true);
+                          } else {
+                            setIsDeadlineSetManually(false);
+                          }
+                        }}
                         classes={{ triggerClass: "w-full" }}
                         label="Set Deadline"
                         calendarProps={{
