@@ -10,7 +10,11 @@ import { priorityEnum, projectSchema, statusEnum } from "./configs";
 import { relations, sql } from "drizzle-orm";
 import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
 import { profiles } from "./profiles";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-zod";
 import { projects } from "./projects";
 
 // MasterTasks Table (recurring mechanism)
@@ -147,6 +151,7 @@ export type Task = typeof tasks.$inferSelect;
 export type InsertTask = typeof tasks.$inferInsert;
 export const TaskSchema = createSelectSchema(tasks);
 export const TaskInsertSchema = createInsertSchema(tasks);
+export const TaskUpdateSchema = createUpdateSchema(tasks);
 
 // Tasks Relations
 export const tasksRelations = relations(tasks, ({ one, many }) => ({
