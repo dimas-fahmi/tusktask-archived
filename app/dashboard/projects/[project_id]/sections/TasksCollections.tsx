@@ -10,6 +10,7 @@ import {
 import { motion } from "motion/react";
 import { OngoingSituation } from "../components/charts/OngoingSituation";
 import { PrioritySituation } from "../components/charts/PrioritySituation";
+import { PRIORITIES } from "@/src/db/schema/configs";
 
 const Collection = ({
   collection,
@@ -44,11 +45,16 @@ const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
   const { archived, completed, ongoing, overdue, overdueSoon, tomorrow } =
     categorizedTasks;
 
+  // Filter
   const [filter, setFilter] = useState<keyof CategorizedTasks | undefined>(
     () => {
       return overdue.length < 1 ? "ongoing" : "overdue";
     }
   );
+
+  // Priority Filter
+  const [priorityFilter, setPriorityFilter] =
+    useState<(typeof PRIORITIES)[number]>("urgent");
 
   return (
     <section id="taskCollections" className="py-4">
@@ -61,8 +67,8 @@ const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
         />
 
         <PrioritySituation
-          activeFilter={filter}
-          setActiveFilter={setFilter}
+          activeFilter={priorityFilter}
+          setActiveFilter={setPriorityFilter}
           categorizedTasks={categorizedTasks}
         />
       </div>

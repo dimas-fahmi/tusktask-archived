@@ -84,9 +84,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export interface PrioritySituation {
-  activeFilter: keyof CategorizedTasks | undefined;
-  setActiveFilter: (n: keyof CategorizedTasks) => void;
+export interface PrioritySituationProps {
+  activeFilter: (typeof PRIORITIES)[number] | undefined;
+  setActiveFilter: (n: (typeof PRIORITIES)[number]) => void;
   categorizedTasks: CategorizedTasks;
 }
 
@@ -94,7 +94,7 @@ export function PrioritySituation({
   activeFilter,
   setActiveFilter,
   categorizedTasks,
-}: PrioritySituation) {
+}: PrioritySituationProps) {
   const id = "priority-situation-chart";
   const [mode, setMode] = React.useState<"pie" | "bar">("pie");
   const filter: (typeof PRIORITIES)[number] =
