@@ -46,7 +46,6 @@ import { useCreateTask } from "@/src/lib/hooks/mutations/useCreateTask";
 import { TasksPostRequest } from "@/app/api/tasks/post";
 import PriorityButton from "./components/PriorityButton";
 import { PRIORITIES } from "@/src/db/schema/configs";
-import { useThemeStore } from "@/src/lib/stores/ui/themeStore";
 import { formatRelative } from "date-fns";
 import { parseDate } from "chrono-node";
 import {
@@ -211,12 +210,11 @@ const NewTaskDialog = () => {
   }, [newTaskDialogOpen]);
 
   // Theme
-  const { activeFont, activeTheme } = useThemeStore();
 
   return (
     <Dialog open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>
       <DialogContent
-        className={`p-0 ${activeFont} ${activeTheme} bg-card text-card-foreground overflow-hidden`}
+        className={`p-0 bg-card text-card-foreground overflow-hidden`}
       >
         {/* Header [hidden] */}
         <DialogHeader className="sr-only">
