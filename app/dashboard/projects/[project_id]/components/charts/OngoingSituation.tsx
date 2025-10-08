@@ -295,7 +295,7 @@ export function OngoingSituation({
                                 >
                                   {situationData[
                                     activeIndex
-                                  ]?.tasks.toLocaleString()}
+                                  ]?.tasks?.toLocaleString() || "0"}
                                 </tspan>
                                 <tspan
                                   x={viewBox.cx}
