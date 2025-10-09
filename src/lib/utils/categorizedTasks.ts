@@ -43,33 +43,50 @@ export const categorizeTasks = (tasks?: Task[]): CategorizedTasks => {
 
   // Overdue
   categorizedTasks.overdue = tasks.filter((item) => {
-    if (!item?.deadlineAt) return false;
+    if (
+      !item?.deadlineAt ||
+      ["completed", "archived"].includes(item?.taskStatus) ||
+      item?.completedAt
+    ) {
+      return false;
+    }
     const deadlineAt = new Date(item.deadlineAt);
     return deadlineAt.getTime() < now.getTime();
   });
 
   // Overdue Soon (within the next 24 hours, not overdue)
   categorizedTasks.overdueSoon = tasks.filter((item) => {
-    if (!item?.deadlineAt) return false;
+    if (
+      !item?.deadlineAt ||
+      ["completed", "archived"].includes(item?.taskStatus) ||
+      item?.completedAt
+    ) {
+      return false;
+    }
+
     const deadlineAt = new Date(item.deadlineAt);
     const diff = deadlineAt.getTime() - now.getTime();
-    const day = 1000 * 60 * 60 * 24;
+    const day = 1000 * 60 * 60 * 23;
     return diff > 0 && diff < day;
   });
 
   // Archived
   categorizedTasks.archived = tasks.filter(
-    (item) => item.taskStatus === "archived"
+    (item) => item.taskStatus === "archived" && !item?.completedAt
   );
 
   // Completed
-  categorizedTasks.completed = tasks.filter(
-    (item) => item.taskStatus === "completed"
-  );
+  categorizedTasks.completed = tasks.filter((item) => item.completedAt);
 
   // Tomorrow (Deadline falls on tomorrow's date)
   categorizedTasks.tomorrow = tasks.filter((item) => {
-    if (!item?.deadlineAt) return false;
+    if (
+      !item?.deadlineAt ||
+      ["completed", "archived"].includes(item?.taskStatus) ||
+      item?.completedAt
+    ) {
+      return false;
+    }
     const deadlineAt = new Date(item.deadlineAt);
     return deadlineAt >= tomorrowDate && deadlineAt < dayAfterTomorrow;
   });

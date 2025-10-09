@@ -97,7 +97,7 @@ export const tasks = projectSchema
       parentTask: uuid("parent_task"),
       name: text("name").notNull().default("Untitled"),
       description: text("description"),
-      taskStatus: statusEnum("task_status").notNull().default("on_process"),
+      taskStatus: statusEnum("task_status").notNull().default("pending"),
       taskPriority: priorityEnum("task_priority").notNull().default("medium"),
       createdAt: timestamp("created_at", { withTimezone: true })
         .notNull()

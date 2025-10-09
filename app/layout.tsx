@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import "@/src/ui/css/globals.tailwind.css";
 import { fontsVariables } from "@/src/ui/fonts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@/src/ui/shadcn/components/ui/sonner";
 import { useThemeStore } from "@/src/lib/stores/ui/themeStore";
 import { APP_THEMES_ID } from "@/src/lib/configs";
@@ -40,7 +40,7 @@ export default function RootLayout({
           <Toaster position="top-center" />
 
           {/* DevTools */}
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </body>
     </html>

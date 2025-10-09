@@ -31,9 +31,7 @@ export const projects = projectSchema
       cover: text("cover"),
       deadlineAt: timestamp("deadline_at", { withTimezone: true }),
       priority: priorityEnum("project_priority").notNull().default("low"),
-      projectStatus: statusEnum("project_status")
-        .notNull()
-        .default("on_process"),
+      projectStatus: statusEnum("project_status").notNull().default("pending"),
       createdAt: timestamp("created_at", { withTimezone: true })
         .notNull()
         .defaultNow(),

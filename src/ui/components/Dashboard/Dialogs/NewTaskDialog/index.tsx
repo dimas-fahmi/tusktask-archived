@@ -126,15 +126,28 @@ const NewTaskDialog = () => {
   }, [setIsValidDeadline, deadline]);
 
   useEffect(() => {
-    if (isDeadlineSetManually) return;
+    console.log(isDeadlineSetManually);
+    if (isDeadlineSetManually && isValidDeadline) return;
 
     const pd = parseDate(name);
     if (pd) {
       setValue("deadlineAt", pd);
+      setTimeout(() => {
+        setIsDeadlineSetManually(false);
+      }, 1000);
     } else {
       setValue("deadlineAt", undefined);
+      setTimeout(() => {
+        setIsDeadlineSetManually(false);
+      }, 1000);
     }
-  }, [name, setValue, isDeadlineSetManually]);
+  }, [
+    name,
+    setValue,
+    isDeadlineSetManually,
+    isValidDeadline,
+    setIsDeadlineSetManually,
+  ]);
 
   // Check if reminder is valid
   const isReminderValid =
@@ -202,6 +215,7 @@ const NewTaskDialog = () => {
       setAdvance(false);
     }, 500);
     setNewTaskDialogOpen(false);
+    setIsDeadlineSetManually(false);
   };
 
   // OnOpenChange
@@ -213,8 +227,6 @@ const NewTaskDialog = () => {
       setValue("projectId", activeProject?.id || "");
     }
   }, [newTaskDialogOpen]);
-
-  // Theme
 
   return (
     <Dialog open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>
@@ -265,6 +277,8 @@ const NewTaskDialog = () => {
                       {...field}
                       className="text-4xl font-header outline-0 border-0 px-4 w-full h-full"
                       placeholder="Task Name"
+                      autoFocus
+                      autoComplete="off"
                     />
                   )}
                 />

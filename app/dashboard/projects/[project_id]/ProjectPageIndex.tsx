@@ -7,6 +7,7 @@ import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import React, { useEffect } from "react";
 import HeaderSection from "./sections/Header";
 import TaskCollectionsSection from "./sections/TasksCollections";
+import { queryKeys } from "@/src/lib/utils/queryKeys";
 
 const ProjectPageIndex = ({ project }: { project: Project }) => {
   // Pull states and setters from taskStore
@@ -21,7 +22,7 @@ const ProjectPageIndex = ({ project }: { project: Project }) => {
 
   // Query Tasks
   const { data: tasksResult } = useFetchTasks<Task[]>(
-    ["tasks", `project-${project.id}`],
+    queryKeys.tasks.project(project.id),
     {
       projectId: project.id,
     }

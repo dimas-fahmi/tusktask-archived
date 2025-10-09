@@ -5,7 +5,7 @@ import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
-import { prettifyError } from "zod";
+import z, { prettifyError } from "zod";
 
 const PATH = "API_TASKS_PATCH";
 
@@ -72,6 +72,11 @@ export async function tasksPatch(req: NextRequest) {
     masterTasks: true,
   })
     .strict()
+    .extend({
+      deadlineAt: z.coerce.date().optional().nullable(),
+      reminderAt: z.coerce.date().optional().nullable(),
+      completedAt: z.coerce.date().optional().nullable(),
+    })
     .safeParse(newValues);
 
   if (!validation.success) {
@@ -79,7 +84,9 @@ export async function tasksPatch(req: NextRequest) {
       400,
       "bad_request",
       prettifyError(validation.error),
-      undefined
+      undefined,
+      true,
+      `${PATH}`
     );
   }
 
@@ -117,7 +124,9 @@ export async function tasksPatch(req: NextRequest) {
       try {
         const response = await tx
           .update(tasks)
-          .set(validation.data)
+          .set({
+            ...validation.data,
+          })
           .where(eq(tasks.id, id))
           .returning();
 
