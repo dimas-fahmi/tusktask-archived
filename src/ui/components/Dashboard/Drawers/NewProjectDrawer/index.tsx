@@ -23,7 +23,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { ProjectsPostRequest } from "@/app/api/projects/post";
 import { useCreateProject } from "@/src/lib/hooks/mutations/useCreateProject";
-import { useFetchUserProject } from "@/src/lib/hooks/queries/useFetchUserProjects";
+import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
+import { queryKeys } from "@/src/lib/utils/queryKeys";
 
 const NewProjectDrawer = () => {
   // Pull states from projectStore
@@ -70,7 +71,9 @@ const NewProjectDrawer = () => {
     useCreateProject();
 
   // Projects query
-  const { refetch: refetchProjects } = useFetchUserProject();
+  const { refetch: refetchProjects } = useFetchUserProjects({
+    queryKey: queryKeys.projects.all,
+  });
 
   return (
     <>

@@ -8,23 +8,39 @@ import React, { useEffect } from "react";
 import HeaderSection from "./sections/Header";
 import TaskCollectionsSection from "./sections/TasksCollections";
 import { queryKeys } from "@/src/lib/utils/queryKeys";
+import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
 
-const ProjectPageIndex = ({ project }: { project: Project }) => {
+const ProjectPageIndex = ({
+  projectFromServer,
+}: {
+  projectFromServer: Project;
+}) => {
+  // Query Project Data
+  const { data: projectResult } = useFetchUserProjects<Project[]>(
+    {
+      queryKey: queryKeys.projects.detail(projectFromServer.id),
+    },
+    {
+      id: projectFromServer?.id,
+    }
+  );
+  const project = projectResult?.result?.[0];
+
   // Pull states and setters from taskStore
   const { activeProject, setActiveProject } = useTaskStore();
 
   // Set Default Active Project On Mount
   useEffect(() => {
-    if (activeProject?.id === project.id) return;
+    if (activeProject?.id === projectFromServer.id) return;
 
     setActiveProject(project);
   }, [setActiveProject]);
 
   // Query Tasks
   const { data: tasksResult } = useFetchTasks<Task[]>(
-    queryKeys.tasks.project(project.id),
+    queryKeys.tasks.project(projectFromServer.id),
     {
-      projectId: project.id,
+      projectId: projectFromServer.id,
     }
   );
 

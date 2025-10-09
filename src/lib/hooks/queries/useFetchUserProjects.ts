@@ -1,16 +1,20 @@
 import { ProjectsGetRequest } from "@/app/api/projects/get";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchUserProjects } from "../../utils/fetchers/fetchUserProjects";
+import { StandardizeResponse } from "../../utils/createResponse";
 
-export const useFetchUserProject = <T>(req?: ProjectsGetRequest) => {
-  const queryKey = req ? ["projects", JSON.stringify(req)] : ["projects"];
-
+export const useFetchUserProjects = <T>(
+  options: UseQueryOptions<
+    StandardizeResponse<T>,
+    StandardizeResponse<unknown>
+  >,
+  req?: ProjectsGetRequest
+) => {
   const query = useQuery({
-    queryKey: queryKey,
     queryFn: () => fetchUserProjects<T>(req),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
+    ...options,
   });
 
   return query;

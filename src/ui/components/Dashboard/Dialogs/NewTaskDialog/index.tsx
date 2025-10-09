@@ -2,7 +2,7 @@
 
 import { Project } from "@/src/db/schema/projects";
 import { Task } from "@/src/db/schema/tasks";
-import { useFetchUserProject } from "@/src/lib/hooks/queries/useFetchUserProjects";
+import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
@@ -54,6 +54,7 @@ import {
   TooltipTrigger,
 } from "@/src/ui/shadcn/components/ui/tooltip";
 import NewTaskHelper from "../../../TooltipContents/NewTaskHelper";
+import { queryKeys } from "@/src/lib/utils/queryKeys";
 
 const settingsVariants: Variants = {
   hidden: { transition: { duration: 0.3 }, width: 0 },
@@ -167,9 +168,9 @@ const NewTaskDialog = () => {
   }, [isReminderValid, setError]);
 
   // Projects query
-  const { data: userProjects } = useFetchUserProject<
+  const { data: userProjects } = useFetchUserProjects<
     Array<Project & { tasks: Task[] }>
-  >({ include: "tasks" });
+  >({ queryKey: queryKeys.projects.all });
   const projects = userProjects?.result;
 
   // Sync task reminder with deadline, set it to undefined if deadline is resetted

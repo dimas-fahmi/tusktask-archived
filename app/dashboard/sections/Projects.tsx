@@ -2,7 +2,7 @@
 
 import { Project } from "@/src/db/schema/projects";
 import { Task } from "@/src/db/schema/tasks";
-import { useFetchUserProject } from "@/src/lib/hooks/queries/useFetchUserProjects";
+import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
 import { useProjectStore } from "@/src/lib/stores/ui/projectStore";
 import {
   ProjectCard,
@@ -23,9 +23,9 @@ const Projects = () => {
   const { events } = useDraggable(containerRef);
 
   // Projects query
-  const { data: userProjects } = useFetchUserProject<
+  const { data: userProjects } = useFetchUserProjects<
     Array<Project & { tasks: Task[] }>
-  >({ include: "tasks" });
+  >({ queryKey: ["projects"] }, { include: "tasks" });
   const projects = userProjects?.result;
 
   return (
