@@ -68,7 +68,7 @@ const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
         )}
 
         <ContextMenuItem disabled={task?.isPending} asChild>
-          <Link href={`/dashboard/projects/${task?.id}`}>
+          <Link href={`/dashboard/tasks/detail/${task?.id}`}>
             <ExternalLink />
             Task Detail
           </Link>
