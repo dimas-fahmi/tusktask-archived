@@ -22,7 +22,7 @@ export const useFetchTasks = <T>(
 
       // Do not retry if the status is 404
       if (status === 404) {
-        // Treat 404 as successfull but not found
+        // Treat 404 as successful but not found
         queryClient.setQueryData(queryKey, data);
         return false;
       }
