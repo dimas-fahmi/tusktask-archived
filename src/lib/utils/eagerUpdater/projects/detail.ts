@@ -35,6 +35,9 @@ const update = (req: ProjectsPatchRequest, queryClient: QueryClient) => {
       ...req?.newValues,
     };
 
+    // Just in case fall back to oldProject, even though it won't really matter
+    document.title = `${newProject?.name || oldProject?.name} | TuskTask`;
+
     const newList = oldData?.result?.map((item) =>
       item?.id === req?.id ? newProject : item
     );
@@ -47,7 +50,6 @@ const update = (req: ProjectsPatchRequest, queryClient: QueryClient) => {
 
   if (oldData) {
     queryClient.setQueryData(queryKey, newData);
-    document.title = `${req?.newValues?.name} | TuskTask`;
   }
 
   return { oldData, newData, queryKey };
