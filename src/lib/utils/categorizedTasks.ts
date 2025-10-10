@@ -54,7 +54,7 @@ export const categorizeTasks = (tasks?: Task[]): CategorizedTasks => {
     return deadlineAt.getTime() < now.getTime();
   });
 
-  // Overdue Soon (within the next 24 hours, not overdue)
+  // Overdue Soon (within the next 23 hours, not overdue)
   categorizedTasks.overdueSoon = tasks.filter((item) => {
     if (
       !item?.deadlineAt ||
@@ -66,7 +66,7 @@ export const categorizeTasks = (tasks?: Task[]): CategorizedTasks => {
 
     const deadlineAt = new Date(item.deadlineAt);
     const diff = deadlineAt.getTime() - now.getTime();
-    const day = 1000 * 60 * 60 * 23;
+    const day = 1000 * 60 * 60 * 23; // replace to within 23 hours
     return diff > 0 && diff < day;
   });
 
