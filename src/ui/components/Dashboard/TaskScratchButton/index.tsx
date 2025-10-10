@@ -20,6 +20,7 @@ export interface TaskScratchButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
   task: TaskApp;
   classes?: TaskScratchButtonClasses;
+  disabled?: string;
 }
 
 const TaskScratchButton = React.forwardRef<
@@ -37,8 +38,10 @@ const TaskScratchButton = React.forwardRef<
       <TooltipTrigger asChild>
         <button
           ref={ref}
+          {...props}
           onClick={(e) => {
             e.stopPropagation();
+            props?.onClick?.(e);
 
             updateTask({
               req: {
@@ -50,11 +53,17 @@ const TaskScratchButton = React.forwardRef<
               old: task,
             });
           }}
-          disabled={isUpdatingTask}
-          {...props}
+          aria-pressed={!!task?.completedAt}
+          aria-label={
+            task?.completedAt
+              ? "Unmark task as completed"
+              : "Mark task as completed"
+          }
+          disabled={isUpdatingTask || !!props?.disabled}
           className={cn(
             `group relative w-6 h-6 cursor-pointer opacity-50 hover:opacity-100 transition-all duration-300`,
-            classes?.buttonClassNames
+            classes?.buttonClassNames,
+            props?.className
           )}
         >
           <Circle
