@@ -125,7 +125,7 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         // More eager update here...
 
         // Extensions
-        ...extensions,
+        ...(extensions ?? {}),
       } as TContext;
     },
     onError: (error, variables, onMutateResult, context) => {

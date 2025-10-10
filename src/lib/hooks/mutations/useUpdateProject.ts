@@ -64,7 +64,7 @@ export const useUpdateProject = <TContext extends UseUpdateProjectContext>(
         ),
 
         // Extensions
-        ...extensions,
+        ...(extensions ?? {}),
       } as TContext;
     },
     onError: (error, variables, onMutateResult, context) => {
