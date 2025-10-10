@@ -49,7 +49,7 @@ export async function projectsPatch(req: NextRequest) {
   if (!id) {
     return createResponse(
       400,
-      "bad_requst",
+      "bad_request",
       "Missing important parameters: Id",
       undefined
     );
@@ -131,6 +131,17 @@ export async function projectsPatch(req: NextRequest) {
       response
     );
   } catch (error) {
+    if (error instanceof OperationError) {
+      const status =
+        error.code === "unauthorized"
+          ? 401
+          : error.code === "bad_request"
+            ? 400
+            : 500;
+
+      return createResponse(status, error.code, error.message, undefined);
+    }
+
     return createResponse(
       500,
       "unknown_error",
