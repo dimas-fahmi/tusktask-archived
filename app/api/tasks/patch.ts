@@ -116,7 +116,7 @@ export async function tasksPatch(req: NextRequest) {
       if (oldTask.ownerId !== user.id) {
         throw new OperationError(
           "unauthorized",
-          "Not the owner of tha task, operation aborted"
+          "Not the owner of the task, operation aborted"
         );
       }
 
