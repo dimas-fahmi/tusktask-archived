@@ -24,6 +24,8 @@ function update(
   >;
 
   const newData = (() => {
+    if (!oldData) return oldData;
+
     const oldTask = oldData?.result?.find((item) => item.id === req.id);
 
     if (!oldTask) {
