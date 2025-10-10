@@ -86,10 +86,9 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
     mutationKey,
     mutationFn: async (data: UseUpdateTaskVariables) => {
       const { req } = data;
-      const stringified = JSON.stringify(req);
-      console.log(stringified);
       const response = await fetch("/api/tasks", {
         method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(req),
       });
 
