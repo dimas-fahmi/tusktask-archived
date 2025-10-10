@@ -24,17 +24,18 @@ const ProjectPageIndex = ({
       id: projectFromServer?.id,
     }
   );
-  const project = projectResult?.result?.[0];
+  const project = projectResult?.result?.[0] ?? projectFromServer;
 
   // Pull states and setters from taskStore
   const { activeProject, setActiveProject } = useTaskStore();
 
   // Set Default Active Project On Mount
   useEffect(() => {
-    if (activeProject?.id === projectFromServer.id) return;
+    if (!project) return;
+    if (activeProject?.id === project.id) return;
 
     setActiveProject(project);
-  }, [setActiveProject]);
+  }, [activeProject?.id, project, setActiveProject]);
 
   // Query Tasks
   const { data: tasksResult } = useFetchTasks<Task[]>(
