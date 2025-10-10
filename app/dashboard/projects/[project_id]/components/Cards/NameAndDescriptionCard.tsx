@@ -61,6 +61,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { isValid },
   } = useForm({
     resolver: zodResolver(
@@ -95,6 +96,16 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
   // Mutation
   const { mutate: updateProject, isPending: isUpdatingProject } =
     useUpdateProject(["update", "project"]);
+
+  useEffect(() => {
+    if (!editMode) {
+      reset({
+        name: project?.name,
+        description: project?.description,
+        icon: project?.icon || "Clock1",
+      });
+    }
+  }, [editMode]);
 
   return (
     <>
