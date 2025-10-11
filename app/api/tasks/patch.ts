@@ -70,6 +70,11 @@ export async function tasksPatch(req: NextRequest) {
     id: true,
     createdAt: true,
     masterTasks: true,
+    // omit project id
+    projectId: true,
+
+    // disable task ownerhship transfer for now
+    ownerId: true,
   })
     .strict()
     .extend({
@@ -138,12 +143,20 @@ export async function tasksPatch(req: NextRequest) {
 
     return createResponse(200, "success_update_task", "Task updated", response);
   } catch (error) {
-    const er = error as OperationError;
+    if (error instanceof OperationError) {
+      const status =
+        error.code === "unauthorized"
+          ? 401
+          : error.code === "bad_request"
+            ? 400
+            : 500;
+      return createResponse(status, error.code, error.message, undefined);
+    }
 
     return createResponse(
       500,
-      er?.code || "unknown_error",
-      er?.message || "Unknown error",
+      "unknown_error",
+      "Unknown error",
       undefined,
       true,
       `${PATH}:${JSON.stringify(error)}`
