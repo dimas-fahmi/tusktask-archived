@@ -48,7 +48,6 @@ import { TasksPostRequest } from "@/app/api/tasks/post";
 import PriorityButton from "./components/PriorityButton";
 import { PRIORITIES } from "@/src/db/schema/configs";
 import { formatRelative } from "date-fns";
-import { parseDate } from "chrono-node";
 import {
   Tooltip,
   TooltipContent,
@@ -57,6 +56,7 @@ import {
 import NewTaskHelper from "../../../TooltipContents/NewTaskHelper";
 import { queryKeys } from "@/src/lib/utils/queryKeys";
 import { DEFAULT_ICON } from "@/src/lib/configs";
+import { naturalLanguangeDateParse } from "@/src/lib/utils/naturalLanguageDateParser";
 
 const settingsVariants: Variants = {
   hidden: { transition: { duration: 0.3 }, width: 0 },
@@ -134,7 +134,7 @@ const NewTaskDialog = () => {
   useEffect(() => {
     if (isDeadlineSetManually && isValidDeadline) return;
 
-    const pd = parseDate(name);
+    const { date: pd } = naturalLanguangeDateParse(name);
     if (pd) {
       setValue("deadlineAt", pd);
       setTimeout(() => {
