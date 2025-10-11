@@ -82,7 +82,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
       setValue("description", project?.description || undefined);
     }
     setPickedIcon(project?.icon || DEFAULT_ICON);
-  }, [project, setValue, setPickedIcon]);
+  }, [project]);
 
   useEffect(() => {
     if (pickedIcon) {
@@ -100,10 +100,10 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
       reset({
         name: project?.name,
         description: project?.description || "",
-        icon: project?.icon || DEFAULT_ICON,
+        icon: pickedIcon,
       });
     }
-  }, [editMode, setPickedIcon]);
+  }, [editMode, pickedIcon, setPickedIcon]);
 
   return (
     <>
