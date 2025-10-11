@@ -27,7 +27,6 @@ import {
   AlarmClock,
   CircleAlert,
   CircleQuestionMark,
-  Clock1,
   ClockAlert,
   Loader2Icon,
   Save,
@@ -55,6 +54,7 @@ import {
 } from "@/src/ui/shadcn/components/ui/tooltip";
 import NewTaskHelper from "../../../TooltipContents/NewTaskHelper";
 import { queryKeys } from "@/src/lib/utils/queryKeys";
+import { DEFAULT_ICON } from "@/src/lib/configs";
 
 const settingsVariants: Variants = {
   hidden: { transition: { duration: 0.3 }, width: 0 },
@@ -200,7 +200,7 @@ const NewTaskDialog = () => {
   const ActiveProjectIcon = activeProject ? (
     <RenderLucide iconName={activeProject?.icon} />
   ) : (
-    <Clock1 />
+    <RenderLucide iconName={DEFAULT_ICON} />
   );
 
   // Mutation

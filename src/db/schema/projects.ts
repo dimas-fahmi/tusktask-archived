@@ -10,6 +10,7 @@ import { relations, sql } from "drizzle-orm";
 import { profiles } from "./profiles";
 import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
 import { tasks } from "./tasks";
+import { DEFAULT_ICON } from "@/src/lib/configs";
 
 // Project Schema
 export const projects = projectSchema
@@ -27,7 +28,7 @@ export const projects = projectSchema
       projectType: projectTypeEnum("project_type").notNull().default("generic"),
       name: text("name").notNull().default("My Project"),
       description: text("description"),
-      icon: text("icon").notNull().default("Clock1"),
+      icon: text("icon").notNull().default(DEFAULT_ICON),
       cover: text("cover"),
       deadlineAt: timestamp("deadline_at", { withTimezone: true }),
       priority: priorityEnum("project_priority").notNull().default("low"),

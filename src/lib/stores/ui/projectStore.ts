@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { DEFAULT_ICON } from "../../configs";
 
 export type ProjectStoreSetter = Omit<
   ProjectStore,
@@ -21,7 +22,7 @@ export interface ProjectStore {
 
 export const DEFAULT_PROJECT_STORE = {
   newProjectDrawerOpen: false,
-  newProjectIcon: "Clock1",
+  newProjectIcon: DEFAULT_ICON,
 };
 
 export const useProjectStore = create<ProjectStore>((set) => ({

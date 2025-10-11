@@ -12,6 +12,7 @@ import { motion, Variants } from "motion/react";
 import { Pencil, PencilOff } from "lucide-react";
 import { useUpdateProject } from "@/src/lib/hooks/mutations/useUpdateProject";
 import { projectFormSchema } from "@/src/lib/zod/schemas/projectSchema";
+import { DEFAULT_ICON } from "@/src/lib/configs";
 
 export const motionVariants = {
   hidden: {
@@ -68,7 +69,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
     defaultValues: {
       name: project?.name,
       description: project?.description || "",
-      icon: project?.icon || "Clock1",
+      icon: project?.icon || DEFAULT_ICON,
     },
   });
 
@@ -79,7 +80,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
       setValue("name", project?.name);
       setValue("description", project?.description || undefined);
     }
-    setPickedIcon(project?.icon || "Clock1");
+    setPickedIcon(project?.icon || DEFAULT_ICON);
   }, [project]);
 
   useEffect(() => {
@@ -97,7 +98,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
       reset({
         name: project?.name,
         description: project?.description || "",
-        icon: project?.icon || "Clock1",
+        icon: project?.icon || DEFAULT_ICON,
       });
     }
   }, [editMode]);
@@ -132,7 +133,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
             <div className="flex flex-col flex-1 overflow-hidden">
               <div className="flex items-center gap-1.5 text-4xl font-header py-2">
                 <RenderLucide
-                  iconName={icon ?? project?.icon ?? "Clock1"}
+                  iconName={icon ?? project?.icon ?? DEFAULT_ICON}
                   className={`${editMode ? "border-border cursor-pointer" : "border-transparent"} border p-1 rounded-md box-content w-10 h-10`}
                   onClick={() => {
                     setEditMode(true);

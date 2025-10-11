@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { DEFAULT_ICON } from "../../configs";
 
 export interface IconPickerStore {
   pickedIcon: string;
@@ -9,7 +10,7 @@ export interface IconPickerStore {
 }
 
 export const useIconPickerStore = create<IconPickerStore>((set) => ({
-  pickedIcon: "Clock1",
+  pickedIcon: DEFAULT_ICON,
   setPickedIcon: (n) => set({ pickedIcon: n }),
 
   iconPickerDrawerOpen: false,
