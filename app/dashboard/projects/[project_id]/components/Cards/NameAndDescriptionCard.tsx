@@ -77,14 +77,16 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
 
   useEffect(() => {
     if (project) {
+      // No need to set icon, sync below everytime pickedIcon change
       setValue("name", project?.name);
       setValue("description", project?.description || undefined);
     }
     setPickedIcon(project?.icon || DEFAULT_ICON);
-  }, [project]);
+  }, [project, setValue, setPickedIcon]);
 
   useEffect(() => {
     if (pickedIcon) {
+      // Sync picked icon
       setValue("icon", pickedIcon);
     }
   }, [setValue, pickedIcon]);
@@ -101,7 +103,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
         icon: project?.icon || DEFAULT_ICON,
       });
     }
-  }, [editMode]);
+  }, [editMode, setPickedIcon]);
 
   return (
     <>
