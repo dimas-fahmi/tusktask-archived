@@ -25,7 +25,7 @@ export async function projectsPatch(req: NextRequest) {
     return createResponse(
       401,
       "unauthorized",
-      "Sesion invalid, login required",
+      "Session invalid, login required",
       undefined
     );
   }
@@ -119,7 +119,10 @@ export async function projectsPatch(req: NextRequest) {
           .where(eq(projects.id, id))
           .returning();
       } catch (_error) {
-        throw new OperationError("database_error", "Failed when updating task");
+        throw new OperationError(
+          "database_error",
+          "Failed when updating project"
+        );
       }
     });
 
