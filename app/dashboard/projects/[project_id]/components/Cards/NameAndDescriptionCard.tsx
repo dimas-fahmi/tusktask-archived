@@ -2,17 +2,16 @@
 
 import { useIconPickerStore } from "@/src/lib/stores/ui/iconPickerStore";
 import { ProjectApp } from "@/src/lib/types/projects";
-import { newTaskFormSchema } from "@/src/lib/zod/schemas/taskSchema";
 import RenderLucide from "@/src/ui/components/RenderLucide";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Card, CardContent } from "@/src/ui/shadcn/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
 import { motion, Variants } from "motion/react";
 import { Pencil, PencilOff } from "lucide-react";
 import { useUpdateProject } from "@/src/lib/hooks/mutations/useUpdateProject";
+import { projectFormSchema } from "@/src/lib/zod/schemas/projectSchema";
 
 export const motionVariants = {
   hidden: {
@@ -64,15 +63,11 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
     reset,
     formState: { isValid },
   } = useForm({
-    resolver: zodResolver(
-      newTaskFormSchema
-        .pick({ name: true, description: true })
-        .extend({ icon: z.string() })
-    ),
+    resolver: zodResolver(projectFormSchema),
     mode: "onChange",
     defaultValues: {
       name: project?.name,
-      description: project?.description,
+      description: project?.description || "",
       icon: project?.icon || "Clock1",
     },
   });
@@ -101,7 +96,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
     if (!editMode) {
       reset({
         name: project?.name,
-        description: project?.description,
+        description: project?.description || "",
         icon: project?.icon || "Clock1",
       });
     }
