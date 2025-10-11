@@ -111,25 +111,31 @@ export function PrioritySituation({
     {
       collection: "low",
       label: "Low",
-      tasks: categorizedTasks.lowPriority?.length,
+      tasks: categorizedTasks.lowPriority?.filter((item) => !item?.completedAt)
+        ?.length,
       fill: "var(--color-low)",
     },
     {
       collection: "medium",
       label: "Medium",
-      tasks: categorizedTasks.mediumPriority?.length,
+      tasks: categorizedTasks.mediumPriority?.filter(
+        (item) => !item?.completedAt
+      )?.length,
       fill: "var(--color-medium)",
     },
     {
       collection: "high",
       label: "High",
-      tasks: categorizedTasks.highPriority?.length,
+      tasks: categorizedTasks.highPriority?.filter((item) => !item?.completedAt)
+        ?.length,
       fill: "var(--color-high)",
     },
     {
       collection: "urgent",
       label: "Urgent",
-      tasks: categorizedTasks.urgentPriority?.length,
+      tasks: categorizedTasks.urgentPriority?.filter(
+        (item) => !item?.completedAt
+      )?.length,
       fill: "var(--color-urgent)",
     },
   ];

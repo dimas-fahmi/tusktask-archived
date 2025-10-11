@@ -155,7 +155,7 @@ export function OngoingSituation({
     string
   > = {
     overdue: "Showing active tasks that have passed their deadline date",
-    overdueSoon: "Showing active tasks due within the next 24 hours",
+    overdueSoon: "Showing active tasks due within the next 23 hours",
     tomorrow: "Showing active tasks that are due tomorrow",
     ongoing: "Showing active tasks due later or without a deadline date",
     archived: "Showing tasks that have been archived and stored",

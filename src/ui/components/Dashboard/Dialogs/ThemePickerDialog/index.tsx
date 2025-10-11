@@ -158,10 +158,10 @@ const ThemePickerDialog = () => {
                     </div>
 
                     <div className="p-4 text-left bg-background">
-                      <h3 className="font-semibold text-base mb-1">
+                      <h3 className="font-header font-semibold text-base mb-1">
                         {theme.name}
                       </h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="font-body text-xs text-muted-foreground">
                         {theme.label}
                       </p>
                     </div>

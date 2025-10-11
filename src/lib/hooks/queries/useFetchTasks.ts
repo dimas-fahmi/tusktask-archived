@@ -1,4 +1,8 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import { fetchTasks } from "../../utils/fetchers/fetchTasks";
 import { TasksGetRequest } from "@/app/api/tasks/get";
 import { StandardizeResponse } from "../../utils/createResponse";
@@ -8,6 +12,7 @@ export const useFetchTasks = <T>(
   req?: TasksGetRequest,
   options?: UseQueryOptions<StandardizeResponse<T>>
 ) => {
+  const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: queryKey,
     queryFn: () => fetchTasks<T>(req),
@@ -17,6 +22,8 @@ export const useFetchTasks = <T>(
 
       // Do not retry if the status is 404
       if (status === 404) {
+        // Treat 404 as successful but not found
+        queryClient.setQueryData(queryKey, data);
         return false;
       }
 

@@ -2,7 +2,6 @@
 
 import React from "react";
 import InformationTable from "@/src/ui/components/Dashboard/InformationTable";
-import RenderLucide from "@/src/ui/components/RenderLucide";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Archive, PlusCircle, Settings2, Tag } from "lucide-react";
 import { Project } from "@/src/db/schema/projects";
@@ -12,28 +11,16 @@ import {
   CardContent,
   CardHeader,
 } from "@/src/ui/shadcn/components/ui/card";
+import NameAndDescriptionCard from "../components/Cards/NameAndDescriptionCard";
 
-const HeaderSection = ({ project }: { project: Project }) => {
+const HeaderSection = ({ project }: { project?: Project }) => {
   // Pull states and setter from task store
   const { setActiveProject, setNewTaskDialogOpen } = useTaskStore();
 
   return (
     <header className="flex flex-col gap-6 md:grid md:grid-cols-[auto_420px]">
       {/* Project Name */}
-      <Card>
-        <CardContent>
-          <h1 className="flex items-center gap-1.5 text-4xl font-header py-2">
-            <RenderLucide
-              iconName={project.icon ?? "Clock1"}
-              className="w-10 h-10"
-            />
-            {project?.name || "Untitled"}
-          </h1>
-          <p className="text-sm opacity-70 mt-4">
-            {project?.description || "No description"}
-          </p>
-        </CardContent>
-      </Card>
+      <NameAndDescriptionCard project={project} />
 
       {/* Information */}
       <Card>
@@ -62,7 +49,7 @@ const HeaderSection = ({ project }: { project: Project }) => {
                 icon: Tag,
                 title: "Project Type",
                 content: (
-                  <span className="capitalize">{project.projectType}</span>
+                  <span className="capitalize">{project?.projectType}</span>
                 ),
               },
             ]}
@@ -71,9 +58,9 @@ const HeaderSection = ({ project }: { project: Project }) => {
           <div className="mt-4 grid grid-cols-2 gap-2">
             <Button
               variant={"outline"}
-              disabled={project.projectType === "primary"}
+              disabled={project?.projectType === "primary"}
               title={
-                project.projectType === "primary"
+                project?.projectType === "primary"
                   ? "Can't archived primary project"
                   : "Archived project"
               }

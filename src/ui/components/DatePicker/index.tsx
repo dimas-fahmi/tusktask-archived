@@ -56,8 +56,9 @@ export function DatePicker({
   // Update time when value changes from parent
   React.useEffect(() => {
     if (value) {
-      const h = value.getHours();
-      const m = value.getMinutes();
+      const v = new Date(value);
+      const h = v?.getHours();
+      const m = v?.getMinutes();
       setHour(h % 12 || 12);
       setMinute(m);
       setMeridiem(h >= 12 ? "pm" : "am");

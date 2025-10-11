@@ -64,7 +64,7 @@ const ProjectPage = async ({
 
   return (
     <Suspense>
-      <ProjectPageIndex project={project} />
+      <ProjectPageIndex projectFromServer={project} />
     </Suspense>
   );
 };

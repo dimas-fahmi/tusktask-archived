@@ -9,6 +9,11 @@ import {
   ContextMenuContent,
   ContextMenuTrigger,
 } from "@/src/ui/shadcn/components/ui/context-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/src/ui/shadcn/components/ui/tooltip";
 import ProjectCardContextMenu from "./ProjectCardContextMenu";
 import { Task } from "@/src/db/schema/tasks";
 import { compactNumber } from "@/src/lib/utils/compactNumber";
@@ -47,9 +52,15 @@ export const ProjectCard = ({
           <div className="bg-background p-4 h-full rounded-md cursor-pointer transition-all duration-300 hover:border-transparent group/card z-10 hover:bg-primary hover:text-primary-foreground">
             {/* header */}
             <header>
-              <h1 className="font-header group-hover/card:opacity-100 transition-all duration-300 text-xl opacity-50">
-                {project?.name || "Untitled"}
-              </h1>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <h1 className="font-header group-hover/card:opacity-100 transition-all duration-300 text-xl opacity-50 truncate">
+                    {project?.name || "Untitled"}
+                  </h1>
+                </TooltipTrigger>
+                <TooltipContent>{project?.name || "Untitled"}</TooltipContent>
+              </Tooltip>
+
               <p className="text-sm opacity-50 group-hover/card:opacity-75 transition-all duration-300">
                 {Array.isArray(project?.tasks) && project?.tasks?.length
                   ? compactNumber(project?.tasks?.length)

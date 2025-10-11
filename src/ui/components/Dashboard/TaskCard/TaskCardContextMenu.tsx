@@ -1,29 +1,53 @@
+import { PRIORITIES } from "@/src/db/schema/configs";
 import { useDeleteTask } from "@/src/lib/hooks/mutations/useDeleteTask";
+import { useUpdateTask } from "@/src/lib/hooks/mutations/useUpdateTasks";
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import { TaskApp } from "@/src/lib/types/tasks";
 import {
   ContextMenuGroup,
   ContextMenuItem,
   ContextMenuLabel,
   ContextMenuSeparator,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
 } from "@/src/ui/shadcn/components/ui/context-menu";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   Archive,
+  ArchiveRestore,
+  CalendarSync,
+  Circle,
+  CircleCheck,
   CirclePlus,
   ExternalLink,
   LoaderCircle,
-  RefreshCcw,
+  Settings,
   Trash,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import PriorityIcon from "../PriorityIcon";
 
 const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
-  // Delete Mutation
-  const { mutate: deleteTask } = useDeleteTask();
+  // Pull states and setters from task context
+  const { setRescheduleDialogOpen, setActiveTask } = useTaskStore();
 
-  // QueryClient
-  const queryClient = useQueryClient();
+  // Delete Mutation
+  const { mutate: deleteTask, isPending: isDeletingTask } = useDeleteTask();
+
+  // Update Mutation
+  const { mutate: updateTask, isPending: isUpdatingTask } = useUpdateTask(
+    ["update", "task", task.id],
+    {
+      onMutate: () => {
+        console.log("extending");
+      },
+      onSettled: (_data, _err, _var, context) => {
+        console.log(context);
+      },
+    }
+  );
 
   return (
     <div>
@@ -44,41 +68,148 @@ const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
         )}
 
         <ContextMenuItem disabled={task?.isPending} asChild>
-          <Link href={`/dashboard/projects/${task?.id}`}>
+          <Link href={`/dashboard/tasks/detail/${task?.id}`}>
             <ExternalLink />
-            Open Project
+            Task Detail
           </Link>
         </ContextMenuItem>
+
+        <ContextMenuSeparator />
+
+        <ContextMenuItem
+          disabled={task?.isPending || isUpdatingTask}
+          onClick={() => {
+            updateTask({
+              req: {
+                id: task.id,
+                newValues: {
+                  completedAt: task?.completedAt ? null : new Date(),
+                },
+              },
+              old: task,
+            });
+          }}
+          title="Mark this task as completed?"
+        >
+          {task?.completedAt ? (
+            <>
+              <CircleCheck />
+              Unscratch
+            </>
+          ) : (
+            <>
+              <Circle />
+              Scratch
+            </>
+          )}
+        </ContextMenuItem>
+
         <ContextMenuItem disabled={task?.isPending}>
           <CirclePlus />
-          New Task
+          New Subtask
         </ContextMenuItem>
+
+        {/* TODO: IMPLEMENT RESCHEDULE FEATURE */}
         <ContextMenuItem
           disabled={task?.isPending}
           onClick={() => {
-            queryClient.invalidateQueries({
-              queryKey: ["projects"],
-              exact: false,
-            });
+            setActiveTask(task);
+            setRescheduleDialogOpen(true);
           }}
         >
-          <RefreshCcw />
-          Refresh
+          <CalendarSync />
+          Reschedule
         </ContextMenuItem>
+
         <ContextMenuSeparator />
-        <ContextMenuItem disabled>
-          <Archive />
-          Archive
-        </ContextMenuItem>
-        <ContextMenuItem
-          variant="destructive"
-          onClick={() => {
-            deleteTask(task.id);
-          }}
-        >
-          <Trash />
-          Delete
-        </ContextMenuItem>
+
+        {/* Priority */}
+        <ContextMenuSub>
+          <ContextMenuSubTrigger className="gap-2 capitalize">
+            <Zap />
+            {task?.taskPriority}
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent className="w-44">
+            {PRIORITIES.map((item, index) => (
+              <ContextMenuItem
+                className="capitalize"
+                disabled={
+                  task?.taskPriority === item ||
+                  isUpdatingTask ||
+                  task?.isPending
+                }
+                key={index}
+                onClick={() => {
+                  updateTask({
+                    old: task,
+                    req: {
+                      id: task?.id,
+                      newValues: {
+                        taskPriority: item,
+                      },
+                    },
+                  });
+                }}
+              >
+                <PriorityIcon variant={item} />
+                {item}
+              </ContextMenuItem>
+            ))}
+          </ContextMenuSubContent>
+        </ContextMenuSub>
+
+        <ContextMenuSeparator />
+
+        {/* More Actions */}
+        <ContextMenuSub>
+          <ContextMenuSubTrigger className="gap-2">
+            <Settings />
+            More Action
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent>
+            <ContextMenuItem
+              onClick={() => {
+                const updateTo =
+                  task.taskStatus === "archived" ? "on_process" : "archived";
+
+                updateTask({
+                  req: {
+                    id: task.id,
+                    newValues: {
+                      taskStatus: updateTo,
+                    },
+                  },
+                  old: task,
+                });
+              }}
+              disabled={isUpdatingTask}
+            >
+              {task?.taskStatus === "archived" ? (
+                <ArchiveRestore />
+              ) : (
+                <Archive />
+              )}
+              {task?.taskStatus === "archived" ? (
+                <span>Restore</span>
+              ) : (
+                <span>Archive</span>
+              )}
+            </ContextMenuItem>
+            <ContextMenuItem
+              variant="destructive"
+              disabled={isDeletingTask}
+              onClick={() => {
+                deleteTask({
+                  id: task?.id,
+                  projectId: task?.projectId,
+                });
+              }}
+            >
+              <Trash />
+              Delete
+            </ContextMenuItem>
+          </ContextMenuSubContent>
+        </ContextMenuSub>
       </ContextMenuGroup>
     </div>
   );

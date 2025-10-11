@@ -122,6 +122,7 @@ const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
             title="Archived Tasks"
             variant="default"
             collection={archived}
+            defaultOpen
           />
         )}
 
@@ -131,6 +132,7 @@ const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
             title="Completed Tasks"
             variant="default"
             collection={completed}
+            defaultOpen
           />
         )}
       </motion.div>

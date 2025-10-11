@@ -2,7 +2,7 @@
 
 import { Project } from "@/src/db/schema/projects";
 import { Task } from "@/src/db/schema/tasks";
-import { useFetchUserProject } from "@/src/lib/hooks/queries/useFetchUserProjects";
+import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
@@ -27,7 +27,6 @@ import {
   AlarmClock,
   CircleAlert,
   CircleQuestionMark,
-  Clock1,
   ClockAlert,
   Loader2Icon,
   Save,
@@ -54,6 +53,8 @@ import {
   TooltipTrigger,
 } from "@/src/ui/shadcn/components/ui/tooltip";
 import NewTaskHelper from "../../../TooltipContents/NewTaskHelper";
+import { queryKeys } from "@/src/lib/utils/queryKeys";
+import { DEFAULT_ICON } from "@/src/lib/configs";
 
 const settingsVariants: Variants = {
   hidden: { transition: { duration: 0.3 }, width: 0 },
@@ -126,15 +127,28 @@ const NewTaskDialog = () => {
   }, [setIsValidDeadline, deadline]);
 
   useEffect(() => {
-    if (isDeadlineSetManually) return;
+    console.log(isDeadlineSetManually);
+    if (isDeadlineSetManually && isValidDeadline) return;
 
     const pd = parseDate(name);
     if (pd) {
       setValue("deadlineAt", pd);
+      setTimeout(() => {
+        setIsDeadlineSetManually(false);
+      }, 1000);
     } else {
       setValue("deadlineAt", undefined);
+      setTimeout(() => {
+        setIsDeadlineSetManually(false);
+      }, 1000);
     }
-  }, [name, setValue, isDeadlineSetManually]);
+  }, [
+    name,
+    setValue,
+    isDeadlineSetManually,
+    isValidDeadline,
+    setIsDeadlineSetManually,
+  ]);
 
   // Check if reminder is valid
   const isReminderValid =
@@ -154,9 +168,9 @@ const NewTaskDialog = () => {
   }, [isReminderValid, setError]);
 
   // Projects query
-  const { data: userProjects } = useFetchUserProject<
+  const { data: userProjects } = useFetchUserProjects<
     Array<Project & { tasks: Task[] }>
-  >({ include: "tasks" });
+  >({ queryKey: queryKeys.projects.all });
   const projects = userProjects?.result;
 
   // Sync task reminder with deadline, set it to undefined if deadline is resetted
@@ -186,7 +200,7 @@ const NewTaskDialog = () => {
   const ActiveProjectIcon = activeProject ? (
     <RenderLucide iconName={activeProject?.icon} />
   ) : (
-    <Clock1 />
+    <RenderLucide iconName={DEFAULT_ICON} />
   );
 
   // Mutation
@@ -202,6 +216,7 @@ const NewTaskDialog = () => {
       setAdvance(false);
     }, 500);
     setNewTaskDialogOpen(false);
+    setIsDeadlineSetManually(false);
   };
 
   // OnOpenChange
@@ -213,8 +228,6 @@ const NewTaskDialog = () => {
       setValue("projectId", activeProject?.id || "");
     }
   }, [newTaskDialogOpen]);
-
-  // Theme
 
   return (
     <Dialog open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>
@@ -265,6 +278,8 @@ const NewTaskDialog = () => {
                       {...field}
                       className="text-4xl font-header outline-0 border-0 px-4 w-full h-full"
                       placeholder="Task Name"
+                      autoFocus
+                      autoComplete="off"
                     />
                   )}
                 />

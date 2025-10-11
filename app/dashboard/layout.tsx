@@ -2,6 +2,7 @@
 
 import { useThemeStore } from "@/src/lib/stores/ui/themeStore";
 import NewTaskDialog from "@/src/ui/components/Dashboard/Dialogs/NewTaskDialog";
+import RescheduleTaskDialog from "@/src/ui/components/Dashboard/Dialogs/RescheduleTaskDialog";
 import ThemePickerDialog from "@/src/ui/components/Dashboard/Dialogs/ThemePickerDialog";
 import NewProjectDrawer from "@/src/ui/components/Dashboard/Drawers/NewProjectDrawer";
 import DashboardNavbar from "@/src/ui/components/Dashboard/NavBar/DashboardNavbar";
@@ -36,6 +37,7 @@ const DashboardLayout = ({
 
         {/* Dialogs */}
         <NewTaskDialog />
+        <RescheduleTaskDialog />
         <ThemePickerDialog />
       </SidebarProvider>
     </div>

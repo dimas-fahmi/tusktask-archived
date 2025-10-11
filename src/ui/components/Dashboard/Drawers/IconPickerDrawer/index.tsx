@@ -9,9 +9,9 @@ import {
 import React from "react";
 import IconPicker from "../../IconPicker";
 
-const IconPickerDrawer = ({ onChange }: { onChange: (n: string) => void }) => {
+const IconPickerDrawer = ({ onChange }: { onChange?: (n: string) => void }) => {
   // Pull states from store
-  const { iconPickerDrawerOpen, setIconPickerDrawerOpen } =
+  const { iconPickerDrawerOpen, setIconPickerDrawerOpen, setPickedIcon } =
     useIconPickerStore();
 
   return (
@@ -28,7 +28,8 @@ const IconPickerDrawer = ({ onChange }: { onChange: (n: string) => void }) => {
           <IconPicker
             setIconName={(e) => {
               setIconPickerDrawerOpen(false);
-              onChange(e);
+              setPickedIcon(e);
+              onChange?.(e);
             }}
           />
         </div>

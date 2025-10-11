@@ -16,10 +16,10 @@ export interface ThemeStore {
 }
 
 export const useThemeStore = create<ThemeStore>((set) => ({
-  activeTheme: APP_THEMES["default"],
+  activeTheme: APP_THEMES["beige-serenity"],
   setActiveTheme: (n) => set({ activeTheme: n }),
 
-  activeFont: FONT_THEMES["theme-font-default"],
+  activeFont: FONT_THEMES["theme-font-merriweather"],
   setActiveFont: (n) => set({ activeFont: n }),
 
   themePickerDialogOpen: false,

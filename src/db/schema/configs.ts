@@ -8,12 +8,7 @@ export const projectSchema = pgSchema("project");
 export const PRIORITIES = ["low", "medium", "high", "urgent"] as const;
 export const priorityEnum = projectSchema.enum("priority_enum", PRIORITIES);
 
-export const STATUSES = [
-  "pending",
-  "archived",
-  "on_process",
-  "completed",
-] as const;
+export const STATUSES = ["pending", "archived", "on_process"] as const;
 export const statusEnum = projectSchema.enum("status", STATUSES);
 
 // Enums

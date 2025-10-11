@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { StandardizeResponse } from "../../utils/createResponse";
 import { Project } from "@/src/db/schema/projects";
 import { ProjectApp } from "../../types/projects";
+import { DEFAULT_ICON } from "../../configs";
 
 export const useCreateProject = () => {
   const queryClient = useQueryClient();
@@ -42,7 +43,7 @@ export const useCreateProject = () => {
               name: request?.newProject?.name || "Untitled",
               cover: request?.newProject?.cover || null,
               description: request?.newProject?.description || null,
-              icon: request?.newProject?.icon || "Clock1",
+              icon: request?.newProject?.icon || DEFAULT_ICON,
               priority: request?.newProject?.priority || "medium",
               projectStatus: request?.newProject?.projectStatus || "on_process",
               projectType: "generic",

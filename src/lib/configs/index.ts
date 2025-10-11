@@ -78,6 +78,7 @@ export const DEFAULT_AVATARS = [
 export const DEFAULT_EMAIL_COOLDOWN = 1000 * 60 * 5;
 export const DEFAULT_NO_IMAGE_SQUARE = "/no-image-square.jpg";
 export const DEFAULT_NO_IMAGE_WIDE = "/no-image-wide.jpg";
+export const DEFAULT_ICON = "Clock1";
 
 // IMAGES CONFIGURATIONS
 export const ALLOWED_IMAGE_MIME_TYPES = [
