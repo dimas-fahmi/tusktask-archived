@@ -1,6 +1,6 @@
-import { getTask } from "@/src/lib/utils/serverQueries/getTask";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { generateMetadata as gm } from "@/src/lib/utils/generateMetadata";
+import { getTask } from "@/src/lib/utils/serverQueries/getTask";
 import TaskPageIndex from "./TaskPageIndex";
 
 export async function generateMetadata({

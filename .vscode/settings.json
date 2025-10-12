@@ -2,5 +2,9 @@
   "editor.inlineSuggest.enabled": false,
   "explorer.compactFolders": false,
   "editor.minimap.enabled": false,
-  "explorer.autoReveal": false
+  "explorer.autoReveal": false,
+  "editor.codeActionsOnSave": {
+     "source.organizeImports.biome": "explicit",
+     "source.fixAll.biome": "explicit"
+  }
 }
