@@ -122,7 +122,7 @@ const body = ({ children }: { children: React.ReactNode }) => {
       }
       className="overflow-hidden"
     >
-      <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 p-4`}>
+      <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 md:p-4`}>
         {children}
       </div>
     </motion.div>
