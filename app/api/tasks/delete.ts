@@ -1,10 +1,10 @@
 import { db } from "@/src/db";
-import { Task, tasks } from "@/src/db/schema/tasks";
+import { type Task, tasks } from "@/src/db/schema/tasks";
 import { OperationError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { eq } from "drizzle-orm";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import z, { prettifyError } from "zod";
 
 export interface TasksDeleteRequest {
@@ -24,14 +24,14 @@ export async function tasksDelete(req: NextRequest) {
       401,
       "unauthorized",
       "Session invalid, login required",
-      undefined
+      undefined,
     );
   }
 
   // Extract Query Parameters
   const url = req.nextUrl;
   const { id } = Object.fromEntries(
-    url.searchParams.entries()
+    url.searchParams.entries(),
   ) as unknown as TasksDeleteRequest;
 
   // Validate id existence
@@ -40,7 +40,7 @@ export async function tasksDelete(req: NextRequest) {
       400,
       "bad_request",
       "Missing important parameters: ID",
-      undefined
+      undefined,
     );
   }
 
@@ -52,7 +52,7 @@ export async function tasksDelete(req: NextRequest) {
       400,
       "bad_request",
       prettifyError(validation.error),
-      undefined
+      undefined,
     );
   }
 
@@ -69,7 +69,7 @@ export async function tasksDelete(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when fetching task information"
+          "Failed when fetching task information",
         );
       }
 
@@ -80,7 +80,7 @@ export async function tasksDelete(req: NextRequest) {
       if (task.ownerId !== user.id) {
         throw new OperationError(
           "unauthorized",
-          "User's not the owner of the task"
+          "User's not the owner of the task",
         );
       }
 
@@ -99,7 +99,7 @@ export async function tasksDelete(req: NextRequest) {
       200,
       "success_delete_task",
       "Task is deleted",
-      response
+      response,
     );
   } catch (error) {
     return createResponse(
@@ -108,7 +108,7 @@ export async function tasksDelete(req: NextRequest) {
       "Unknown Error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

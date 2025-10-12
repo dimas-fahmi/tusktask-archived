@@ -1,19 +1,19 @@
-import { TasksPatchRequest } from "@/app/api/tasks/patch";
 import {
+  type UseMutationOptions,
   useMutation,
-  UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query";
-import { StandardizeResponse } from "../../utils/createResponse";
-import { Task } from "@/src/db/schema/tasks";
-import { OperationError } from "../../errors";
-import {
-  eagerUpdaterTasksProject,
-  EagerUpdateTasksProjectResult,
-} from "../../utils/eagerUpdater/tasks/project";
-import { EagerUpdaterResult } from "../../types/eagerUpdate";
+import type { TasksPatchRequest } from "@/app/api/tasks/patch";
+import type { Task } from "@/src/db/schema/tasks";
+import type { OperationError } from "../../errors";
+import type { EagerUpdaterResult } from "../../types/eagerUpdate";
+import type { TaskApp } from "../../types/tasks";
+import type { StandardizeResponse } from "../../utils/createResponse";
 import { eagerUpdaterTaskDetail } from "../../utils/eagerUpdater/tasks/detail";
-import { TaskApp } from "../../types/tasks";
+import {
+  type EagerUpdateTasksProjectResult,
+  eagerUpdaterTasksProject,
+} from "../../utils/eagerUpdater/tasks/project";
 
 export interface UseUpdateTaskDefaultContext {
   euTasksProject?: EagerUpdateTasksProjectResult;
@@ -77,10 +77,11 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
       StandardizeResponse<Task>,
       OperationError,
       UseUpdateTaskVariables,
+      // biome-ignore lint/suspicious/noConfusingVoidType: CHAINING, SO VOID IS FINE.
       TContext | void
     >,
     "mutationKey" | "mutationFn"
-  >
+  >,
 ) => {
   const queryClient = useQueryClient();
 
@@ -123,13 +124,13 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         euTasksProject: eagerUpdaterTasksProject.update(
           data.req,
           data.old.projectId,
-          queryClient
+          queryClient,
         ),
         euTasksDetail: eagerUpdaterTaskDetail.update(data.req, queryClient),
         euSubtasksList: eagerUpdaterTaskDetail.updateSubtasksList(
           data.req,
           queryClient,
-          data?.old?.parentTask
+          data?.old?.parentTask,
         ),
 
         // More eager update here...
@@ -146,21 +147,21 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
       if (onMutateResult?.euTasksProject) {
         queryClient.setQueryData(
           onMutateResult?.euTasksProject?.queryKey,
-          onMutateResult?.euTasksProject?.oldData
+          onMutateResult?.euTasksProject?.oldData,
         );
       }
 
       if (onMutateResult?.euTasksDetail) {
         queryClient.setQueryData(
           onMutateResult?.euTasksDetail?.queryKey,
-          onMutateResult?.euTasksDetail?.oldData
+          onMutateResult?.euTasksDetail?.oldData,
         );
       }
 
       if (onMutateResult?.euSubtasksList) {
         queryClient.setQueryData(
           onMutateResult?.euSubtasksList?.queryKey,
-          onMutateResult?.euSubtasksList?.oldData
+          onMutateResult?.euSubtasksList?.oldData,
         );
       }
     },

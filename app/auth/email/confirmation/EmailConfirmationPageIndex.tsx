@@ -1,9 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle, Mail } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { DEFAULT_EMAIL_COOLDOWN, VERCEL_BLOB_HOST } from "@/src/lib/configs";
 import { useResendOtp } from "@/src/lib/hooks/mutations/useResendOtp";
 import { useFetchEmailStatus } from "@/src/lib/hooks/queries/useFetchEmailStatus";
-import { StandardizeResponse } from "@/src/lib/utils/createResponse";
+import type { StandardizeResponse } from "@/src/lib/utils/createResponse";
 import { formatTime } from "@/src/lib/utils/formatTime";
 import { emailSchema } from "@/src/lib/zod/schemas/authSchema";
 import Input from "@/src/ui/components/Inputs/Input";
@@ -13,14 +21,6 @@ import Discord from "@/src/ui/components/SVG/Logos/Discord";
 import Github from "@/src/ui/components/SVG/Logos/Github";
 import Google from "@/src/ui/components/SVG/Logos/Google";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderCircle, Mail } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 const EmailConfirmationPageIndex = ({
   paramsEmail,
@@ -60,13 +60,13 @@ const EmailConfirmationPageIndex = ({
     }, 1000);
 
     return () => clearTimeout(debouncer);
-  }, [email, setEmailKey, setIsTyping]);
+  }, [email]);
 
   // Query
   const { data, isFetching, isFetched, refetch } =
     useFetchEmailStatus(emailKey);
   const emailStatus = data?.result;
-  const alreadyConfirmed = emailStatus?.email_confirmed_at ? true : false;
+  const alreadyConfirmed = !!emailStatus?.email_confirmed_at;
 
   // Force Redirect to /auth if already confirmed
   useEffect(() => {
@@ -75,8 +75,7 @@ const EmailConfirmationPageIndex = ({
     }
   }, [alreadyConfirmed, router]);
 
-  const isNotExist =
-    !emailStatus && emailKey && isValid && isFetched ? true : false;
+  const isNotExist = !emailStatus && emailKey && isValid && isFetched;
 
   // Cooldown Mechanism
   const [timeLeft, setTimeLeft] = useState(0);
@@ -101,12 +100,7 @@ const EmailConfirmationPageIndex = ({
         setTimeLeft(0);
       }
     }
-  }, [
-    emailStatus?.confirmation_sent_at,
-    setTimeLeft,
-    setIsCooldownPassed,
-    isCooldownPassed,
-  ]);
+  }, [emailStatus?.confirmation_sent_at]);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -166,13 +160,13 @@ const EmailConfirmationPageIndex = ({
                 const code = err?.code ?? "unknown_error";
                 const message = err?.message ?? "Unknown error";
                 router.push(
-                  `/auth/email/confirmation?code=${code}&message=${encodeURIComponent(message)}`
+                  `/auth/email/confirmation?code=${code}&message=${encodeURIComponent(message)}`,
                 );
               },
               onSettled: () => {
                 refetch();
               },
-            }
+            },
           );
         })}
       >
@@ -193,7 +187,8 @@ const EmailConfirmationPageIndex = ({
             timeLeft > 0 ||
             isTyping ||
             alreadyConfirmed ||
-            isNotExist
+            isNotExist ||
+            !isCooldownPassed
           }
           className="w-full flex items-center"
         >

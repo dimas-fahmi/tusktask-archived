@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-import TaskAccordion from "@/src/ui/components/Dashboard/TaskAccordion";
-import { Task } from "@/src/db/schema/tasks";
+import { motion } from "motion/react";
+import { useState } from "react";
+import type { PRIORITIES } from "@/src/db/schema/configs";
+import type { Task } from "@/src/db/schema/tasks";
 import {
-  CategorizedTasks,
+  type CategorizedTasks,
   categorizeTasks,
 } from "@/src/lib/utils/categorizedTasks";
-import { motion } from "motion/react";
+import TaskAccordion from "@/src/ui/components/Dashboard/TaskAccordion";
 import { OngoingSituation } from "../components/charts/OngoingSituation";
 import { PrioritySituation } from "../components/charts/PrioritySituation";
-import { PRIORITIES } from "@/src/db/schema/configs";
 
 const Collection = ({
   collection,
@@ -49,7 +49,7 @@ const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
   const [filter, setFilter] = useState<keyof CategorizedTasks | undefined>(
     () => {
       return overdue.length < 1 ? "ongoing" : "overdue";
-    }
+    },
   );
 
   // Priority Filter

@@ -1,6 +1,5 @@
 import PublicNavBar from "@/src/ui/components/NavBar/public";
 import PublicSidebar from "@/src/ui/components/NavBar/public/Sidebar";
-import React from "react";
 
 const PublicLayout = ({
   children,

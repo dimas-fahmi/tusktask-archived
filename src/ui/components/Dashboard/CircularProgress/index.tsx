@@ -1,5 +1,6 @@
+/** biome-ignore-all lint/a11y/noSvgWithoutTitle: JUST SIMPLE SVG */
+import type React from "react";
 import { cn } from "@/src/ui/shadcn/lib/utils";
-import React from "react";
 
 /**
  * Props for customizing the CSS classes of the CircularProgress component.
@@ -162,7 +163,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
     <div
       className={cn(
         `flex flex-col items-center justify-center`,
-        classes?.containerClass
+        classes?.containerClass,
       )}
     >
       <svg
@@ -195,7 +196,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
       <div
         className={cn(
           `absolute text-center text-xs font-medium`,
-          classes?.labelClass
+          classes?.labelClass,
         )}
       >
         {percent}%

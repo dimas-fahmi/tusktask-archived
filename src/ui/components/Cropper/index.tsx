@@ -1,19 +1,19 @@
-import Cropper from "react-easy-crop";
-import { Button } from "../../shadcn/components/ui/button";
-
-import React, { useState } from "react";
 import {
   LoaderCircle,
-  LucideIcon,
+  type LucideIcon,
   RectangleHorizontal,
   RectangleVertical,
   Square,
 } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import Cropper from "react-easy-crop";
 import { useCropperStore } from "@/src/lib/stores/ui/cropperStore";
 import {
+  type GetCroppedImgSettings,
   getCroppedImg,
-  GetCroppedImgSettings,
 } from "@/src/lib/utils/getCroppedImage";
+import { Button } from "../../shadcn/components/ui/button";
 import { Progress } from "../../shadcn/components/ui/progress";
 
 export interface ImageCropperProps {
@@ -43,6 +43,7 @@ const AspectRatioButton = ({
 
   return (
     <button
+      type="button"
       className={`${
         aspectRatio === setTo ? "border glass-card" : "hover:border-border"
       } flex flex-col border-transparent text-xs font-light cursor-pointer transition-all duration-300 px-4 py-2 items-center justify-center rounded-xl disabled:opacity-50`}
@@ -92,7 +93,7 @@ const ImageCropper = ({
         croppingImage,
         croppedAreaPixels,
         setStatus,
-        compressionOptions
+        compressionOptions,
       );
       setLoading(false);
       setPreview(url);
@@ -141,7 +142,7 @@ const ImageCropper = ({
               icon={RectangleHorizontal}
               label="16:9"
               setAspectRatio={setAspectRatio}
-              disabled={aspect && aspect !== 16 / 9 ? true : false}
+              disabled={aspect !== 16 / 9}
             />
             <AspectRatioButton
               aspectRatio={aspectRatio}
@@ -149,7 +150,7 @@ const ImageCropper = ({
               icon={RectangleVertical}
               label="9:16"
               setAspectRatio={setAspectRatio}
-              disabled={aspect && aspect !== 9 / 16 ? true : false}
+              disabled={aspect !== 9 / 16}
             />
             <AspectRatioButton
               aspectRatio={aspectRatio}
@@ -157,7 +158,7 @@ const ImageCropper = ({
               icon={Square}
               label="1:1"
               setAspectRatio={setAspectRatio}
-              disabled={aspect && aspect !== 1 / 1 ? true : false}
+              disabled={aspect !== 1 / 1}
             />
           </div>
 

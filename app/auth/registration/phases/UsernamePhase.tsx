@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
 import { useMutateUserMetadata } from "@/src/lib/hooks/mutations/useMutateUserMetadata";
 import { useMutateUserProfile } from "@/src/lib/hooks/mutations/useMutateUserProfile";
 import { useFetchProfile } from "@/src/lib/hooks/queries/useFetchProfile";
@@ -8,11 +13,6 @@ import { usernameSchema } from "@/src/lib/zod/schemas/authSchema";
 import Input from "@/src/ui/components/Inputs/Input";
 import StaticAlert from "@/src/ui/components/StaticAlert";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
 
 const UsernamePhase = () => {
   // Pull states from onboarding store
@@ -48,7 +48,7 @@ const UsernamePhase = () => {
     }, 1000);
 
     return () => clearTimeout(debouncer);
-  }, [setIsTyping, setUsernameKey, username]);
+  }, [username]);
 
   // Username availability mechanism
   const [available, setAvailable] = useState(false);
@@ -59,7 +59,7 @@ const UsernamePhase = () => {
     {
       username: usernameKey,
     },
-    startFetching
+    startFetching,
   );
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const UsernamePhase = () => {
     } else {
       setAvailable(true);
     }
-  }, [profile, setAvailable]);
+  }, [profile]);
 
   // Mutate Profile
   const { mutate: mutateProfile, isPending: isMutatingProfile } =
@@ -97,7 +97,7 @@ const UsernamePhase = () => {
                   description: `Changed your username to ${data.username}`,
                 });
               },
-            }
+            },
           );
         })}
       >

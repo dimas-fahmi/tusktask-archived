@@ -45,7 +45,7 @@ export const masterTasks = projectSchema
       // Full Text Search
       index("FTS_PROJECT_MASTER_TASKS_NAME").using(
         "gin",
-        sql`to_tsvector('simple', ${t.name})`
+        sql`to_tsvector('simple', ${t.name})`,
       ),
 
       // Policies
@@ -62,7 +62,7 @@ export const masterTasks = projectSchema
         for: "all",
         using: sql``,
       }),
-    ]
+    ],
   )
   .enableRLS();
 
@@ -125,7 +125,7 @@ export const tasks = projectSchema
       // Full Text Search
       index("FTS_PROJECT_TASKS_NAME").using(
         "gin",
-        sql`to_tsVector('simple', ${t.name})`
+        sql`to_tsVector('simple', ${t.name})`,
       ),
 
       // Policies
@@ -142,7 +142,7 @@ export const tasks = projectSchema
         for: "all",
         using: sql``,
       }),
-    ]
+    ],
   )
   .enableRLS();
 

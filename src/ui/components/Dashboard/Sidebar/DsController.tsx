@@ -1,10 +1,9 @@
 "use client";
 
+import { CirclePlus, PanelLeftClose, Settings } from "lucide-react";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { useSidebar } from "@/src/ui/shadcn/components/ui/sidebar";
-import { CirclePlus, PanelLeftClose, Settings } from "lucide-react";
-import React from "react";
 
 const DsController = () => {
   // Pull setters from useSidebar

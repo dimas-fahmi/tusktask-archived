@@ -1,7 +1,7 @@
-import { TasksPatchRequest } from "@/app/api/tasks/patch";
-import { QueryClient } from "@tanstack/react-query";
-import { StandardizeResponse } from "../../createResponse";
-import { Task } from "@/src/db/schema/tasks";
+import type { QueryClient } from "@tanstack/react-query";
+import type { TasksPatchRequest } from "@/app/api/tasks/patch";
+import type { Task } from "@/src/db/schema/tasks";
+import type { StandardizeResponse } from "../../createResponse";
 import { queryKeys } from "../../queryKeys";
 
 export interface EagerUpdateTasksProjectResult {
@@ -13,7 +13,7 @@ export interface EagerUpdateTasksProjectResult {
 function update(
   req: TasksPatchRequest,
   projectId: string,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): EagerUpdateTasksProjectResult {
   const queryKey = queryKeys.tasks.project(projectId);
 
@@ -36,7 +36,7 @@ function update(
     };
 
     const updatedList = oldData.result.map((task) =>
-      task.id === req.id ? updatedTask : task
+      task.id === req.id ? updatedTask : task,
     );
 
     return {
@@ -45,7 +45,7 @@ function update(
     };
   })();
 
-  if (oldData && oldData?.result) {
+  if (oldData?.result) {
     queryClient.setQueryData(queryKey, newData);
   }
 
@@ -55,7 +55,7 @@ function update(
 function del(
   taskId: string,
   projectId: string,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): EagerUpdateTasksProjectResult {
   const queryKey = queryKeys.tasks.project(projectId);
 

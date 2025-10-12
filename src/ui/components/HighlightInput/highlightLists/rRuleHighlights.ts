@@ -1,4 +1,4 @@
-import { HighlightedWord } from "..";
+import type { HighlightedWord } from "..";
 
 const baseStyle = "bg-primary text-primary-foreground"; // padding helps readability
 

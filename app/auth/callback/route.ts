@@ -5,7 +5,7 @@ import {
   constructCodeAndMessage,
 } from "@/src/lib/utils/constructErrorParameters";
 import { AuthError } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 // The client you created from the Server-Side Auth instructions
 
 export async function GET(request: NextRequest) {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
   // Get parameters
   const { code, next, type, token } = Object.fromEntries(
-    searchParams.entries()
+    searchParams.entries(),
   );
 
   // Next Route
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       clonedURL.pathname = `/auth/recovery/reset`;
       clonedURL.search = `?${constructCodeAndMessage(
         "bad_request",
-        "Missing code parameter"
+        "Missing code parameter",
       )}`;
       return NextResponse.redirect(clonedURL);
     }
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       // Set Expire Time
       const now = new Date();
       const transferWindowExpire = new Date(
-        now.getTime() + DEFAULT_EMAIL_COOLDOWN
+        now.getTime() + DEFAULT_EMAIL_COOLDOWN,
       );
 
       const { error: editError } = await supabase.auth.admin.updateUserById(
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
           app_metadata: {
             reset_password_window: transferWindowExpire,
           },
-        }
+        },
       );
 
       if (editError) {
@@ -104,11 +104,11 @@ export async function GET(request: NextRequest) {
 
     // return the user to an error page with instructions
     return NextResponse.redirect(
-      `${origin}/auth?code=${(error as AuthError)?.code ?? "unknown_error"}&message=${encodeURIComponent((error as AuthError)?.message ?? "Unknwon error")}`
+      `${origin}/auth?code=${(error as AuthError)?.code ?? "unknown_error"}&message=${encodeURIComponent((error as AuthError)?.message ?? "Unknwon error")}`,
     );
   }
 
   return NextResponse.redirect(
-    `${origin}/auth?code=${"code_unavailable"}&message=${encodeURIComponent("No code parameter is provided")}`
+    `${origin}/auth?code=${"code_unavailable"}&message=${encodeURIComponent("No code parameter is provided")}`,
   );
 }

@@ -3,16 +3,22 @@
 import {
   Eye,
   EyeClosed,
-  LucideIcon,
+  type LucideIcon,
   TextCursorInput,
   Mail,
   Lock,
   ArrowDown01,
   Search,
 } from "lucide-react";
-import React, { HTMLInputTypeAttribute, useState } from "react";
+import type React from "react";
+import { type HTMLInputTypeAttribute, useState } from "react";
 import { cn } from "../../shadcn/lib/utils";
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import {
+  type Control,
+  Controller,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 
 export interface InputClasses {
   container?: string;
@@ -66,7 +72,7 @@ const Input = <T extends FieldValues>({
           <div
             className={cn(
               `${focus ? "outline-2" : ""} ${fieldState?.error ? "outline-2 outline-destructive text-destructive" : ""} border flex items-center rounded-md`,
-              classes?.container
+              classes?.container,
             )}
           >
             {/* Icon */}
@@ -79,7 +85,7 @@ const Input = <T extends FieldValues>({
               {...field}
               className={cn(
                 "flex-1 py-2 px-1 outline-0 cursor-pointer",
-                classes?.input
+                classes?.input,
               )}
               onFocus={(e) => {
                 props?.onFocus?.(e);

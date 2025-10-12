@@ -6,15 +6,14 @@ export const useFetchUserProfile = () => {
   const { data: session, isFetching: isFetchingSession } = useSession();
 
   // Start Fetching When
-  const startFetching =
-    session && session?.user?.id && !isFetchingSession ? true : false;
+  const startFetching = !!session?.user?.id && !isFetchingSession;
 
   // Query Profile
   const query = useFetchProfile(
     {
       id: session?.user?.id,
     },
-    startFetching
+    startFetching,
   );
 
   return query;

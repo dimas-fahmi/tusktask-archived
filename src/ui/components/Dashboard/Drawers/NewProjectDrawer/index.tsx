@@ -1,9 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronDown } from "lucide-react";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import z from "zod";
+import type { ProjectsPostRequest } from "@/app/api/projects/post";
+import { useCreateProject } from "@/src/lib/hooks/mutations/useCreateProject";
+import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
+import { useIconPickerStore } from "@/src/lib/stores/ui/iconPickerStore";
 import {
   DEFAULT_PROJECT_STORE,
   useProjectStore,
 } from "@/src/lib/stores/ui/projectStore";
+import { queryKeys } from "@/src/lib/utils/queryKeys";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
   Drawer,
@@ -13,18 +23,8 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/src/ui/shadcn/components/ui/drawer";
-import React, { useEffect } from "react";
-import { ChevronDown } from "lucide-react";
-import IconPickerDrawer from "../IconPickerDrawer";
-import { useIconPickerStore } from "@/src/lib/stores/ui/iconPickerStore";
 import RenderLucide from "../../../RenderLucide";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
-import { ProjectsPostRequest } from "@/app/api/projects/post";
-import { useCreateProject } from "@/src/lib/hooks/mutations/useCreateProject";
-import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
-import { queryKeys } from "@/src/lib/utils/queryKeys";
+import IconPickerDrawer from "../IconPickerDrawer";
 
 const NewProjectDrawer = () => {
   // Pull states from projectStore
@@ -52,7 +52,7 @@ const NewProjectDrawer = () => {
         projectName: z.string().min(3).max(100),
         projectDescription: z.string().optional(),
         icon: z.string().min(1),
-      })
+      }),
     ),
     mode: "onChange",
     defaultValues: {
@@ -64,7 +64,7 @@ const NewProjectDrawer = () => {
 
   useEffect(() => {
     setValue("icon", newProjectIcon);
-  }, [newProjectIcon]);
+  }, [newProjectIcon, setValue]);
 
   // Mutation
   const { mutate: createProject, isPending: isCreatingProject } =
@@ -109,7 +109,7 @@ const NewProjectDrawer = () => {
                 });
 
                 resetForm({
-                  icon: DEFAULT_PROJECT_STORE["newProjectIcon"],
+                  icon: DEFAULT_PROJECT_STORE.newProjectIcon,
                   projectName: "",
                   projectDescription: "",
                 });
@@ -123,7 +123,8 @@ const NewProjectDrawer = () => {
                 <div className="flex flex-col">
                   {/* Title */}
                   <div className="flex items-center gap-1.5">
-                    <div
+                    <button
+                      type="button"
                       className={`p-1 border hover:scale-[1.05] transition-all duration-300 hover:mr-2 rounded-md cursor-pointer opacity-50 active:scale-100 flex items-center gap-0.5`}
                       title="Click to change icon"
                       onClick={() => {
@@ -135,7 +136,7 @@ const NewProjectDrawer = () => {
                         className="w-10 h-10"
                       />
                       <ChevronDown className="w-3 h-3" />
-                    </div>
+                    </button>
                     <Controller
                       control={control}
                       name="projectName"

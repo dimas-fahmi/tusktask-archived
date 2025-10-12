@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
+import { Archive, PlusCircle, Settings2, Tag } from "lucide-react";
+import type { Project } from "@/src/db/schema/projects";
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import InformationTable from "@/src/ui/components/Dashboard/InformationTable";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { Archive, PlusCircle, Settings2, Tag } from "lucide-react";
-import { Project } from "@/src/db/schema/projects";
-import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import {
   Card,
   CardContent,

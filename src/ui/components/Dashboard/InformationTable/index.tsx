@@ -1,6 +1,6 @@
-import { Clock1, ClockAlert, Info, LucideIcon, Zap } from "lucide-react";
-import React from "react";
-import PriorityBadge, { PriorityBadgeProps } from "../PriorityBadge";
+import { Clock1, ClockAlert, Info, type LucideIcon, Zap } from "lucide-react";
+import type React from "react";
+import PriorityBadge, { type PriorityBadgeProps } from "../PriorityBadge";
 
 export interface InformationObject {
   icon: LucideIcon;
@@ -30,10 +30,10 @@ const InformationTable = ({
         {rows &&
           Array.isArray(rows) &&
           rows.length > 0 &&
-          rows.map((item, index) => {
+          rows.map((item) => {
             const Icon = item.icon;
             return (
-              <tr className="grid grid-cols-2" key={index}>
+              <tr className="grid grid-cols-2" key={item?.title}>
                 <td className="flex items-center gap-1.5 opacity-70">
                   <Icon className={"w-5 h-5"} />
                   {item.title}
@@ -98,10 +98,10 @@ const InformationTable = ({
         {rowsAfter &&
           Array.isArray(rowsAfter) &&
           rowsAfter.length > 0 &&
-          rowsAfter.map((item, index) => {
+          rowsAfter.map((item) => {
             const Icon = item.icon;
             return (
-              <tr className="grid grid-cols-2" key={index}>
+              <tr className="grid grid-cols-2" key={item?.title}>
                 <td className="flex items-center gap-1.5 opacity-70">
                   <Icon className={"w-5 h-5"} />
                   {item.title}

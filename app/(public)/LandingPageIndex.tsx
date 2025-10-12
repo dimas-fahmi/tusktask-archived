@@ -1,6 +1,5 @@
-import React from "react";
-import HeroSection from "./sections/Hero";
 import Features from "./sections/Features";
+import HeroSection from "./sections/Hero";
 
 const LandingPageIndex = () => {
   return (

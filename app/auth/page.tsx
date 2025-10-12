@@ -1,6 +1,5 @@
-import { generateMetadata } from "@/src/lib/utils/generateMetadata";
 import type { Metadata } from "next";
-import React from "react";
+import { generateMetadata } from "@/src/lib/utils/generateMetadata";
 import AuthPageIndex from "./AuthPageIndex";
 
 export const metadata: Metadata = generateMetadata({

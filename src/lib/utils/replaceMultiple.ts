@@ -34,7 +34,7 @@ type ReplacementRules = ReplacementRule[];
 function replaceMultiple(
   str: string | undefined,
   rules: ReplacementRules,
-  caseSensitive: boolean = false
+  caseSensitive: boolean = false,
 ): string {
   // Handle undefined or null string
   if (!str) {

@@ -1,19 +1,19 @@
-import { TasksPatchRequest } from "@/app/api/tasks/patch";
-import { QueryClient } from "@tanstack/react-query";
+import type { TasksPatchRequest } from "@/app/api/tasks/patch";
+import type { QueryClient } from "@tanstack/react-query";
 import { queryKeys } from "../../queryKeys";
-import { StandardizeResponse } from "../../createResponse";
-import { Task } from "@/src/db/schema/tasks";
-import { EagerUpdaterResult } from "@/src/lib/types/eagerUpdate";
-import { TaskApp } from "@/src/lib/types/tasks";
+import type { StandardizeResponse } from "../../createResponse";
+import type { Task } from "@/src/db/schema/tasks";
+import type { EagerUpdaterResult } from "@/src/lib/types/eagerUpdate";
+import type { TaskApp } from "@/src/lib/types/tasks";
 
 const update = (
   req: TasksPatchRequest,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): EagerUpdaterResult<Task> => {
   const queryKey = queryKeys.tasks.detail(req?.id);
 
   const oldData = queryClient.getQueryData(
-    queryKey
+    queryKey,
   ) as StandardizeResponse<Task>;
 
   const newData = (() => {
@@ -46,14 +46,14 @@ const update = (
 const updateSubtasksList = (
   req: TasksPatchRequest,
   queryClient: QueryClient,
-  parentTaskId?: string | null
+  parentTaskId?: string | null,
 ) => {
   if (!parentTaskId) return;
 
   const queryKey = queryKeys.tasks.detail(parentTaskId);
 
   const oldData = queryClient.getQueryData(
-    queryKey
+    queryKey,
   ) as StandardizeResponse<TaskApp>;
 
   const newData = (() => {
@@ -73,7 +73,7 @@ const updateSubtasksList = (
     };
 
     const newList = oldSubtasks.map((item) =>
-      item.id === req?.id ? newTask : item
+      item.id === req?.id ? newTask : item,
     );
 
     return {
@@ -95,14 +95,14 @@ const updateSubtasksList = (
 const deleteSubtaskFromList = (
   id: string,
   queryClient: QueryClient,
-  parentTaskId?: string | null
+  parentTaskId?: string | null,
 ) => {
   if (!parentTaskId || !id) return;
 
   const queryKey = queryKeys.tasks.detail(parentTaskId);
 
   const oldData = queryClient.getQueryData(
-    queryKey
+    queryKey,
   ) as StandardizeResponse<TaskApp>;
 
   const newData = (() => {

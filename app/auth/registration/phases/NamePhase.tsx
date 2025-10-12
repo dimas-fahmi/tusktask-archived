@@ -1,5 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { useMutateUserMetadata } from "@/src/lib/hooks/mutations/useMutateUserMetadata";
 import { useMutateUserProfile } from "@/src/lib/hooks/mutations/useMutateUserProfile";
 import { useOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
@@ -7,11 +11,6 @@ import { nameSchema } from "@/src/lib/zod/schemas/authSchema";
 import Input from "@/src/ui/components/Inputs/Input";
 import StaticAlert from "@/src/ui/components/StaticAlert";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 const NamePhase = () => {
   // Pull states from onboarding store
@@ -26,7 +25,7 @@ const NamePhase = () => {
     resolver: zodResolver(
       z.object({
         name: nameSchema,
-      })
+      }),
     ),
     mode: "onChange",
     defaultValues: {
@@ -61,7 +60,7 @@ const NamePhase = () => {
                   description: `Changed your name to ${data.name}`,
                 });
               },
-            }
+            },
           );
         })}
       >

@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Lock, Mail } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { VERCEL_BLOB_HOST } from "@/src/lib/configs";
 import { useSignUp } from "@/src/lib/hooks/auth/useAuth";
 import { registrationSchema } from "@/src/lib/zod/schemas/authSchema";
@@ -7,12 +13,6 @@ import Input from "@/src/ui/components/Inputs/Input";
 import NavLink from "@/src/ui/components/NavLink";
 import OAuthBar from "@/src/ui/components/OAuthBar";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Lock, Mail } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 
 const RegisterPageIndex = () => {
   // Loading State

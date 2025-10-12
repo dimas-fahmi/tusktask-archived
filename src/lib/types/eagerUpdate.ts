@@ -1,4 +1,4 @@
-import { StandardizeResponse } from "../utils/createResponse";
+import type { StandardizeResponse } from "../utils/createResponse";
 
 export interface EagerUpdaterResult<T> {
   oldData: StandardizeResponse<T>;

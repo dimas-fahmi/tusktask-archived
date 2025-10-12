@@ -1,5 +1,5 @@
 import { cn } from "@/src/ui/shadcn/lib/utils";
-import { cva, VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
 const PriorityBadgeVariants = cva("flex items-center rounded-md w-fit", {
@@ -67,13 +67,13 @@ const PriorityBadge = React.forwardRef<HTMLDivElement, PriorityBadgeProps>(
         className={cn(
           ``,
           PriorityBadgeVariants({ variant: variant || variantToRender }),
-          className
+          className,
         )}
       >
         {priorityTitles[priority || "medium"]}
       </div>
     );
-  }
+  },
 );
 
 PriorityBadge.displayName = "PriorityBadge";

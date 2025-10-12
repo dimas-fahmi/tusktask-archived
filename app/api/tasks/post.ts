@@ -1,15 +1,15 @@
 import { db } from "@/src/db";
-import { Project, projects } from "@/src/db/schema/projects";
-import { InsertTask, tasks } from "@/src/db/schema/tasks";
+import { type Project, projects } from "@/src/db/schema/projects";
+import { type InsertTask, tasks } from "@/src/db/schema/tasks";
 import { OperationError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import {
-  NewTaskFormSchema,
+  type NewTaskFormSchema,
   newTaskFormSchema,
 } from "@/src/lib/zod/schemas/taskSchema";
 import { eq } from "drizzle-orm";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { z, prettifyError } from "zod";
 
 const PATH = "API_TASKS_POST";
@@ -29,7 +29,7 @@ export async function tasksPost(req: NextRequest) {
       401,
       "unauthorized",
       "Invalid session, login required",
-      undefined
+      undefined,
     );
   }
 
@@ -43,7 +43,7 @@ export async function tasksPost(req: NextRequest) {
       400,
       "bad_request",
       "Invalid request form, expected: Raw JSON",
-      undefined
+      undefined,
     );
   }
 
@@ -55,7 +55,7 @@ export async function tasksPost(req: NextRequest) {
       400,
       "bad_request",
       "Missing important parameters: newTaskRequest",
-      undefined
+      undefined,
     );
   }
 
@@ -73,7 +73,7 @@ export async function tasksPost(req: NextRequest) {
       400,
       "bad_request",
       prettifyError(validation.error),
-      undefined
+      undefined,
     );
   }
 
@@ -102,21 +102,21 @@ export async function tasksPost(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when fetching project"
+          "Failed when fetching project",
         );
       }
 
       if (!project) {
         throw new OperationError(
           "bad_request",
-          "Project ID is invalid or project has been deleted"
+          "Project ID is invalid or project has been deleted",
         );
       }
 
       if (project.ownerId !== user.id) {
         throw new OperationError(
           "unauthorized",
-          "Now the owner of the project"
+          "Now the owner of the project",
         );
       }
 
@@ -134,7 +134,7 @@ export async function tasksPost(req: NextRequest) {
       200,
       "success_created_task",
       "Task is created",
-      response
+      response,
     );
   } catch (error) {
     return createResponse(
@@ -143,7 +143,7 @@ export async function tasksPost(req: NextRequest) {
       "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

@@ -1,9 +1,8 @@
-import React from "react";
-import { Button } from "../../shadcn/components/ui/button";
-import Google from "../SVG/Logos/Google";
-import Github from "../SVG/Logos/Github";
-import Discord from "../SVG/Logos/Discord";
 import { useOAuth } from "@/src/lib/hooks/auth/useAuth";
+import { Button } from "../../shadcn/components/ui/button";
+import Discord from "../SVG/Logos/Discord";
+import Github from "../SVG/Logos/Github";
+import Google from "../SVG/Logos/Google";
 
 const OAuthBar = () => {
   // Use OAuth

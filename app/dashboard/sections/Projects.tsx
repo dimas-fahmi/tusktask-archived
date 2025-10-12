@@ -1,16 +1,17 @@
 "use client";
 
-import { Project } from "@/src/db/schema/projects";
-import { Task } from "@/src/db/schema/tasks";
+import { CircleFadingPlus, CirclePlus } from "lucide-react";
+import type React from "react";
+import { useRef } from "react";
+import { useDraggable } from "react-use-draggable-scroll";
+import type { Project } from "@/src/db/schema/projects";
+import type { Task } from "@/src/db/schema/tasks";
 import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
 import { useProjectStore } from "@/src/lib/stores/ui/projectStore";
 import {
   ProjectCard,
   ProjectCardSkeleton,
 } from "@/src/ui/components/Dashboard/ProjectCard";
-import { CircleFadingPlus, CirclePlus } from "lucide-react";
-import React, { useRef } from "react";
-import { useDraggable } from "react-use-draggable-scroll";
 
 const Projects = () => {
   // Pull states and setter from projectStore
@@ -18,7 +19,7 @@ const Projects = () => {
 
   // Drag To Scroll Mechanism
   const containerRef = useRef<HTMLDivElement>(
-    null
+    null,
   ) as React.RefObject<HTMLInputElement>;
   const { events } = useDraggable(containerRef);
 
@@ -44,6 +45,7 @@ const Projects = () => {
           projects.map((item) => <ProjectCard key={item.id} project={item} />)
         )}
         <button
+          type="button"
           className="p-4 cursor-pointer hover:scale-[1.05] transition-all duration-300 border text-nowrap rounded-md group text-sm border-dashed flex items-center justify-center flex-col
          hover:bg-primary hover:text-primary-foreground hover:border-transparent
         "

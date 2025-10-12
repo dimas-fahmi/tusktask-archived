@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { StandardizeResponse } from "../../utils/createResponse";
-import { ProjectApp } from "../../types/projects";
+import type { StandardizeResponse } from "../../utils/createResponse";
+import type { ProjectApp } from "../../types/projects";
 
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();
@@ -36,7 +36,7 @@ export const useDeleteProject = () => {
               ...oldData,
               result: newList,
             };
-          }
+          },
         );
       }
 
@@ -46,7 +46,7 @@ export const useDeleteProject = () => {
       if (context?.oldData) {
         queryClient.setQueryData(
           ["projects", JSON.stringify({ include: "tasks" })],
-          context.oldData
+          context.oldData,
         );
       }
     },

@@ -1,5 +1,5 @@
-import { Project } from "@/src/db/schema/projects";
-import { Task } from "@/src/db/schema/tasks";
+import type { Project } from "@/src/db/schema/projects";
+import type { Task } from "@/src/db/schema/tasks";
 
 export interface TaskWithSubtasks extends Task {
   subtasks?: TaskWithSubtasks[];

@@ -12,7 +12,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/src/ui/shadcn/components/ui/sidebar";
-import React from "react";
+import type React from "react";
 
 const DashboardLayout = ({
   children,

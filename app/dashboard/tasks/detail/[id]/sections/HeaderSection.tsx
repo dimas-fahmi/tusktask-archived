@@ -1,15 +1,14 @@
-import { TaskApp } from "@/src/lib/types/tasks";
-import React from "react";
-import NameAndDescriptionCard from "../components/NameAndDescriptionCard";
+import { Archive, PlusCircle, Settings2 } from "lucide-react";
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import type { TaskApp } from "@/src/lib/types/tasks";
+import InformationTable from "@/src/ui/components/Dashboard/InformationTable";
+import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
 } from "@/src/ui/shadcn/components/ui/card";
-import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { Archive, PlusCircle, Settings2 } from "lucide-react";
-import InformationTable from "@/src/ui/components/Dashboard/InformationTable";
-import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import NameAndDescriptionCard from "../components/NameAndDescriptionCard";
 
 const HeaderSection = ({ task }: { task?: TaskApp }) => {
   const { openNewTaskDialog } = useTaskStore();

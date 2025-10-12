@@ -1,12 +1,12 @@
 import { db } from "@/src/db";
 import {
-  InsertProject,
+  type InsertProject,
   ProjectInsertSchema,
   projects,
 } from "@/src/db/schema/projects";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { prettifyError } from "zod";
 
 const PATH = "API_PROJECTS_POST";
@@ -26,7 +26,7 @@ export async function projectsPost(req: NextRequest) {
       401,
       "unauthorized",
       "Session invalid, login required",
-      undefined
+      undefined,
     );
   }
 
@@ -40,7 +40,7 @@ export async function projectsPost(req: NextRequest) {
       400,
       "bad_request",
       "Request is malformed, expected raw JSON",
-      undefined
+      undefined,
     );
   }
 
@@ -51,7 +51,7 @@ export async function projectsPost(req: NextRequest) {
       400,
       "bad_request",
       "Missing important parameters",
-      undefined
+      undefined,
     );
   }
 
@@ -69,7 +69,7 @@ export async function projectsPost(req: NextRequest) {
       400,
       "bad_request",
       prettifyError(validation.error),
-      undefined
+      undefined,
     );
   }
 
@@ -96,7 +96,7 @@ export async function projectsPost(req: NextRequest) {
       "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

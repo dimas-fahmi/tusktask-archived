@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  AuthResponse,
+  type AuthResponse,
   signIn,
   signOut,
   signup,
@@ -8,7 +8,7 @@ import {
 import { useEffect } from "react";
 import { createBrowserClient } from "../../supabase/instances/client";
 import { useRouter } from "next/navigation";
-import { APP_URL, AuthProvider, OAUTH_PROVIDERS } from "../../configs";
+import { APP_URL, type AuthProvider, OAUTH_PROVIDERS } from "../../configs";
 import { parseAuthError } from "../../utils/parseAuthError";
 
 // Session
@@ -84,7 +84,7 @@ export const useSignIn = () => {
     onError: (error: AuthResponse) => {
       // Sent error to auth page
       router.replace(
-        `/auth?code=${error?.code ?? "unknown_error"}&message=${encodeURIComponent(error?.message ?? "Unknown error")}`
+        `/auth?code=${error?.code ?? "unknown_error"}&message=${encodeURIComponent(error?.message ?? "Unknown error")}`,
       );
     },
     onSettled: () => {
@@ -145,7 +145,7 @@ export const useOAuth = () => {
     onError: (error: AuthResponse) => {
       // Sent error to auth page
       router.replace(
-        `/auth?code=${error?.code ?? "unknown_error"}&message=${encodeURIComponent(error?.message ?? "Unknown error")}`
+        `/auth?code=${error?.code ?? "unknown_error"}&message=${encodeURIComponent(error?.message ?? "Unknown error")}`,
       );
     },
     onSettled: () => {
@@ -176,12 +176,12 @@ export const useSignUp = () => {
     },
     onError: (error: AuthResponse) => {
       router.push(
-        `/auth/register?code=${error?.code ?? "unknown_error"}&message=${encodeURIComponent(error?.message ?? "Unknown error")}`
+        `/auth/register?code=${error?.code ?? "unknown_error"}&message=${encodeURIComponent(error?.message ?? "Unknown error")}`,
       );
     },
     onSuccess: (_data, request) => {
       router.push(
-        `/auth/email/confirmation?code=success&message=${encodeURIComponent("Welcome to TuskTask")}&email=${request.email}`
+        `/auth/email/confirmation?code=success&message=${encodeURIComponent("Welcome to TuskTask")}&email=${request.email}`,
       );
     },
   });

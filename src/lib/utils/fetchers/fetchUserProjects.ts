@@ -1,11 +1,11 @@
-import { ProjectsGetRequest } from "@/app/api/projects/get";
-import { StandardizeResponse } from "../createResponse";
+import type { ProjectsGetRequest } from "@/app/api/projects/get";
+import type { StandardizeResponse } from "../createResponse";
 import { objectToQueryString } from "../objectToQueryString";
 import { APP_URL } from "../../configs";
 
 export async function fetchUserProjects<T>(
   req?: ProjectsGetRequest,
-  options?: RequestInit
+  options?: RequestInit,
 ): Promise<StandardizeResponse<T>> {
   // Construct query string
   const query = objectToQueryString(req as Record<string, string>);

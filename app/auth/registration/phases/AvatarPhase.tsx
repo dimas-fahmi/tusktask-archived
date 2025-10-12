@@ -1,5 +1,9 @@
 "use client";
 
+import { Camera, XIcon } from "lucide-react";
+import Image from "next/image";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ALLOWED_IMAGE_MAX_MIME_SIZE,
   ALLOWED_IMAGE_MIME_TYPES,
@@ -15,9 +19,6 @@ import { formatFileSize } from "@/src/lib/utils/formatFileSize";
 import ImageCropper from "@/src/ui/components/Cropper";
 import StaticAlert from "@/src/ui/components/StaticAlert";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { Camera, XIcon } from "lucide-react";
-import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
 
 export interface AvatarPhaseErrorState {
   error: boolean;
@@ -66,11 +67,11 @@ const AvatarPhase = () => {
       setPreview(userMetadata.avatar_url);
       setPreviewURL(userMetadata.avatar_url);
     }
-  }, [userMetadata, setPreview, setPreviewURL]);
+  }, [userMetadata, setPreview]);
 
   // Error State
   const [error, setError] = useState<AvatarPhaseErrorState>(
-    defaultAvatarPhaseErrorSate
+    defaultAvatarPhaseErrorSate,
   );
 
   // Hidden Input Ref
@@ -165,7 +166,7 @@ const AvatarPhase = () => {
           </p>
 
           <div className="mt-4 grid grid-cols-1">
-            {file && file.size && (
+            {file?.size && (
               <div className="mb-1.5 text-xs">
                 Compressed file size : {formatFileSize(file?.size)}
               </div>
@@ -197,7 +198,7 @@ const AvatarPhase = () => {
                           registration_phase: "confirmation",
                         });
                       },
-                    }
+                    },
                   );
                   return;
                 }

@@ -1,4 +1,4 @@
-import { TaskApp } from "../types/tasks";
+import type { TaskApp } from "../types/tasks";
 
 export interface CategorizedTasks {
   overdue: TaskApp[];
@@ -74,7 +74,7 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
 
   // Archived
   categorizedTasks.archived = tasks.filter(
-    (item) => item.taskStatus === "archived" && !item?.completedAt
+    (item) => item.taskStatus === "archived" && !item?.completedAt,
   );
 
   // Completed
@@ -118,16 +118,16 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
 
   // Priority
   categorizedTasks.lowPriority = tasks.filter(
-    (item) => item.taskPriority === "low"
+    (item) => item.taskPriority === "low",
   );
   categorizedTasks.mediumPriority = tasks.filter(
-    (item) => item.taskPriority === "medium"
+    (item) => item.taskPriority === "medium",
   );
   categorizedTasks.highPriority = tasks.filter(
-    (item) => item.taskPriority === "high"
+    (item) => item.taskPriority === "high",
   );
   categorizedTasks.urgentPriority = tasks.filter(
-    (item) => item.taskPriority === "urgent"
+    (item) => item.taskPriority === "urgent",
   );
 
   return categorizedTasks;

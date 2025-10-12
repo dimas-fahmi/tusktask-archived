@@ -1,7 +1,9 @@
 "use client";
 
-import * as React from "react";
-
+import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type * as React from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -9,13 +11,10 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/src/ui/shadcn/components/ui/sidebar";
+import { cn } from "@/src/ui/shadcn/lib/utils";
 import ProfileCard from "../../ProfileCard";
 import DsController from "./DsController";
 import { navigations } from "./DsNavigations";
-import { LucideIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/src/ui/shadcn/lib/utils";
 
 const DsNavLink = ({
   title,
@@ -45,7 +44,7 @@ const DsNavLink = ({
       href={href}
       className={cn(
         `${isActive ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-secondary-foreground"} font-body py-1 rounded-md flex px-4 gap-2 items-center`,
-        className
+        className,
       )}
       onClick={() => {
         setOpenMobile(false);
@@ -72,9 +71,9 @@ export function DashboardSidebar({
         <DsController />
       </SidebarHeader>
       <SidebarContent className="px-2 mt-6">
-        {navigations.map((item, index) => (
+        {navigations.map((item) => (
           <DsNavLink
-            key={index}
+            key={item.href}
             title={item.title}
             href={item.href}
             icon={item.icon}

@@ -1,7 +1,8 @@
+/** biome-ignore-all lint/suspicious/useIterableCallbackReturn: JUST ACTIONS HERE!!! */
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
-import { UserMetadata } from "../../types/supabase";
+import { type NextRequest, NextResponse } from "next/server";
 import { PROTECTED_ROUTES } from "../../configs";
+import type { UserMetadata } from "../../types/supabase";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -28,13 +29,13 @@ export async function updateSession(request: NextRequest) {
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) =>
-          request.cookies.set(name, value)
+          request.cookies.set(name, value),
         );
         supabaseResponse = NextResponse.next({
           request,
         });
         cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options)
+          supabaseResponse.cookies.set(name, value, options),
         );
       },
     },

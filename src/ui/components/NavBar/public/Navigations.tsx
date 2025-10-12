@@ -1,9 +1,9 @@
 "use client";
 
-import { NAVIGATIONS } from "@/src/lib/configs";
-import Link from "next/link";
-import React, { useState } from "react";
 import { CircleUser, PanelLeftOpen } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { NAVIGATIONS } from "@/src/lib/configs";
 import { usePublicSidebarStore } from "@/src/lib/stores/ui/publicSidebar";
 
 export type NavItem = (typeof NAVIGATIONS)[number];
@@ -44,12 +44,13 @@ const Navigations = () => {
           <NavigationItem
             item={item}
             active={active === index}
-            key={index}
+            key={item.href}
             setActive={() => setActive(index)}
           />
         ))}
       </ul>
       <button
+        type="button"
         className={`${
           open
             ? "bg-secondary text-secondary-foreground"

@@ -1,9 +1,10 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import React, { createContext, useContext, useState } from "react";
 import { motion } from "motion/react";
-import { Task } from "@/src/db/schema/tasks";
+import type React from "react";
+import { createContext, useContext, useState } from "react";
+import type { Task } from "@/src/db/schema/tasks";
 import TaskCard from "../TaskCard";
 export interface TaskAccordionContextValues {
   open: boolean;
@@ -11,7 +12,7 @@ export interface TaskAccordionContextValues {
 }
 
 const TaskAccordionContext = createContext<TaskAccordionContextValues | null>(
-  null
+  null,
 );
 
 const useTaskAccordionContext = () => {
@@ -19,7 +20,7 @@ const useTaskAccordionContext = () => {
 
   if (!context) {
     throw new Error(
-      "TaskAccordionContext only available inside the TaskAccordion.root element"
+      "TaskAccordionContext only available inside the TaskAccordion.root element",
     );
   }
 
@@ -78,6 +79,7 @@ const trigger = ({
 
   return (
     <button
+      type="button"
       className={`flex w-full text-left cursor-pointer group/button items-center gap-4 p-2 border rounded-md ${open ? activeClass.positive : activeClass.negative} shadow-md transition-all duration-200`}
       onClick={() => setOpen(!open)}
     >

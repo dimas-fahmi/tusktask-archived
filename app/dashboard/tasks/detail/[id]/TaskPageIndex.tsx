@@ -1,22 +1,21 @@
 "use client";
 
+import { ChartPie, ListTodo } from "lucide-react";
+import { motion } from "motion/react";
+import { createContext, useEffect, useState } from "react";
 import { useFetchTasks } from "@/src/lib/hooks/queries/useFetchTasks";
-import { queryKeys } from "@/src/lib/utils/queryKeys";
-import React, { createContext, useEffect, useState } from "react";
-import Countdown from "./components/Countdown";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
-
-import HeaderSection from "./sections/HeaderSection";
+import type { TaskApp } from "@/src/lib/types/tasks";
 import {
-  CategorizedTasks,
+  type CategorizedTasks,
   categorizeTasks,
 } from "@/src/lib/utils/categorizedTasks";
-import { TaskApp } from "@/src/lib/types/tasks";
+import { queryKeys } from "@/src/lib/utils/queryKeys";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { ChartPie, ListTodo } from "lucide-react";
-import TasksSection from "./sections/TasksCollections";
+import Countdown from "./components/Countdown";
+import HeaderSection from "./sections/HeaderSection";
 import StatsSection from "./sections/StatsSection";
-import { motion } from "motion/react";
+import TasksSection from "./sections/TasksCollections";
 
 type OngoingSituationFilter = keyof Pick<
   CategorizedTasks,
@@ -38,7 +37,7 @@ export interface TaskPageIndexContextValues {
 }
 
 const TaskPageIndexContext = createContext<TaskPageIndexContextValues | null>(
-  null
+  null,
 );
 
 const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {

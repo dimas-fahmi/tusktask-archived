@@ -1,23 +1,23 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { AuthError } from "@supabase/supabase-js";
+import { useMutation } from "@tanstack/react-query";
+import { Lock } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { VERCEL_BLOB_HOST } from "@/src/lib/configs";
+import { useSignOut } from "@/src/lib/hooks/auth/useAuth";
 import { createBrowserClient } from "@/src/lib/supabase/instances/client";
+import { formatTime } from "@/src/lib/utils/formatTime";
 import { passwordResetSchema } from "@/src/lib/zod/schemas/authSchema";
 import Input from "@/src/ui/components/Inputs/Input";
 import NavLink from "@/src/ui/components/NavLink";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Lock } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { AuthError } from "@supabase/supabase-js";
-import { formatTime } from "@/src/lib/utils/formatTime";
-import { useSignOut } from "@/src/lib/hooks/auth/useAuth";
 
 const ResetPageIndex = () => {
   // Session
@@ -123,13 +123,13 @@ const ResetPageIndex = () => {
     onError: (error) => {
       const authError = error as AuthError;
       router.push(
-        `/auth/recovery/reset?code=${authError?.code ?? "unknown_error"}&message=${encodeURIComponent(authError?.message ?? "Unknown error")}`
+        `/auth/recovery/reset?code=${authError?.code ?? "unknown_error"}&message=${encodeURIComponent(authError?.message ?? "Unknown error")}`,
       );
     },
     onSuccess: () => {
       signOut();
       router.push(
-        "/auth?code=success_reset_password&message=Password has been reset successfully"
+        "/auth?code=success_reset_password&message=Password has been reset successfully",
       );
     },
   });

@@ -1,14 +1,13 @@
-import { UseOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
-import { RegistrationPhase } from "@/src/lib/types/supabase";
-import React from "react";
-import NamePhase from "./phases/NamePhase";
-import UsernamePhase from "./phases/UsernamePhase";
+import type { UseOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
+import type { RegistrationPhase } from "@/src/lib/types/supabase";
 import AvatarPhase from "./phases/AvatarPhase";
 import ConfirmationPhase from "./phases/ConfirmationPhase";
+import NamePhase from "./phases/NamePhase";
+import UsernamePhase from "./phases/UsernamePhase";
 
 export function renderer(
   setter: UseOnboardingStore["setter"],
-  phase?: RegistrationPhase
+  phase?: RegistrationPhase,
 ) {
   switch (phase) {
     case "name":

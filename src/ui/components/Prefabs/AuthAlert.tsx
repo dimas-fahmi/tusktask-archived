@@ -1,20 +1,20 @@
 "use client";
 
-import React from "react";
-import { cn } from "../../shadcn/lib/utils";
+import { CircleAlert, X } from "lucide-react";
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {
-  ReadonlyURLSearchParams,
+  type ReadonlyURLSearchParams,
   usePathname,
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { CircleAlert, X } from "lucide-react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import type React from "react";
+import { cn } from "../../shadcn/lib/utils";
 
 export const removeAlert = (
   params: ReadonlyURLSearchParams,
   router: AppRouterInstance,
-  pathname: string
+  pathname: string,
 ) => {
   const nextParams = new URLSearchParams(params.toString());
   nextParams.delete("code");
@@ -41,13 +41,13 @@ const AuthAlert = ({
   const message = params.get("message");
 
   // Conditions
-  const isError = code?.startsWith("success") ? false : true;
+  const isError = !!code?.startsWith("success");
 
   return (
     <div
       className={cn(
         `${!code || !message ? "hidden" : "block"} ${isError ? "bg-destructive/20 text-destructive" : "bg-secondary text-secondary-foreground"} p-4 rounded-md`,
-        className
+        className,
       )}
     >
       {/* Header */}
@@ -65,6 +65,7 @@ const AuthAlert = ({
 
         {/* Alert Dismiss Button */}
         <button
+          type="button"
           className="cursor-pointer"
           onClick={() => {
             removeAlert(params, router, pathname);

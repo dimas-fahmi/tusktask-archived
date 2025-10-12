@@ -1,9 +1,9 @@
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { and, eq, ilike } from "drizzle-orm";
 import { profiles } from "@/src/db/schema/profiles";
 import { db } from "@/src/db";
-import { PostgresError } from "postgres";
+import type { PostgresError } from "postgres";
 
 export interface UsersProfilesGetRequest {
   username?: string;
@@ -15,7 +15,7 @@ export async function usersProfilesGet(req: NextRequest) {
   // Extract Parameters
   const url = req.nextUrl;
   const { id, name, username } = Object.fromEntries(
-    url.searchParams.entries()
+    url.searchParams.entries(),
   ) as UsersProfilesGetRequest;
 
   // Validate
@@ -24,7 +24,7 @@ export async function usersProfilesGet(req: NextRequest) {
       400,
       "bad_request",
       "Missing query parameters, provide at least one either id,name or username",
-      undefined
+      undefined,
     );
   }
 
@@ -55,14 +55,14 @@ export async function usersProfilesGet(req: NextRequest) {
       isFound ? 200 : 404,
       isFound ? "success_found" : "not_found",
       isFound ? "Record found" : "No such record found",
-      response
+      response,
     );
   } catch (error) {
     return createResponse(
       500,
       (error as PostgresError)?.code ?? "unknown_error",
       (error as PostgresError)?.message ?? "Unknown error",
-      undefined
+      undefined,
     );
   }
 }

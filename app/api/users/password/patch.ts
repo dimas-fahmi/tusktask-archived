@@ -1,9 +1,9 @@
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { passwordResetSchema } from "@/src/lib/zod/schemas/authSchema";
 import { prettifyError } from "zod";
 import { createServiceClient } from "@/src/lib/supabase/instances/service";
-import { AuthError } from "@supabase/supabase-js";
+import type { AuthError } from "@supabase/supabase-js";
 
 export interface UsersPasswordPathRequest {
   password: string;
@@ -27,7 +27,7 @@ export async function usersPasswordPath(req: NextRequest) {
       400,
       "bad_request",
       "Missing password or confirmation parameter",
-      undefined
+      undefined,
     );
   }
 
@@ -42,7 +42,7 @@ export async function usersPasswordPath(req: NextRequest) {
       400,
       "bad_request",
       prettifyError(validation.error),
-      undefined
+      undefined,
     );
   }
 
@@ -57,7 +57,7 @@ export async function usersPasswordPath(req: NextRequest) {
       400,
       error?.code ?? "unknown_error",
       error?.message ?? "Unknown error",
-      undefined
+      undefined,
     );
   }
 
@@ -72,7 +72,7 @@ export async function usersPasswordPath(req: NextRequest) {
       401,
       "Unauthorized or window is expired",
       "Either password reset window is not exist or expired",
-      undefined
+      undefined,
     );
   }
 
@@ -95,7 +95,7 @@ export async function usersPasswordPath(req: NextRequest) {
       500,
       (error as AuthError)?.code ?? "unknown_error",
       (error as AuthError)?.message ?? "Unknown error",
-      undefined
+      undefined,
     );
   }
 }

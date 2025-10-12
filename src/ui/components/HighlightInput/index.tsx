@@ -1,6 +1,7 @@
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: IT'S FINEEEE */
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 export type HighlightedWord = { word: string; className?: string };
 
@@ -15,7 +16,7 @@ export default function HighlightInput({ words = [] }: HighlightInputProps) {
     // Build regex: match either words from the array OR numbers
     const regex = new RegExp(
       `\\b(${words.map((w) => escapeRegExp(w.word)).join("|")})\\b|(\\d+)`,
-      "gi"
+      "gi",
     );
 
     const parts = text.split(regex);
@@ -34,7 +35,7 @@ export default function HighlightInput({ words = [] }: HighlightInputProps) {
 
       // Words from the config
       const wordConfig = words.find(
-        (w) => w.word.toLowerCase() === part.toLowerCase()
+        (w) => w.word.toLowerCase() === part.toLowerCase(),
       );
 
       if (wordConfig) {

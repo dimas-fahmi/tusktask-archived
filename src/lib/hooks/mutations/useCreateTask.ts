@@ -1,14 +1,14 @@
-import { TasksPostRequest } from "@/app/api/tasks/post";
+import type { TasksPostRequest } from "@/app/api/tasks/post";
 import {
   useMutation,
-  UseMutationOptions,
+  type UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query";
-import { StandardizeResponse } from "../../utils/createResponse";
+import type { StandardizeResponse } from "../../utils/createResponse";
 
 export const useCreateTask = <T>(
   mutationKey: string[],
-  options?: UseMutationOptions<StandardizeResponse<T>, Error, TasksPostRequest>
+  options?: UseMutationOptions<StandardizeResponse<T>, Error, TasksPostRequest>,
 ) => {
   const queryClient = useQueryClient();
 

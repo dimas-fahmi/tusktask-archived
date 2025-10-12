@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { cn } from "@/src/ui/shadcn/lib/utils/index";
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {

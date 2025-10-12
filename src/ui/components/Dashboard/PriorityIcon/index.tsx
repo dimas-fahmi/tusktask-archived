@@ -1,6 +1,5 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/src/ui/shadcn/lib/utils";
-import { cva, VariantProps } from "class-variance-authority";
-import React from "react";
 
 export const priorityIconVariants = cva("", {
   variants: {
@@ -27,7 +26,7 @@ const PriorityIcon = ({ variant, className }: PriorityIconProps) => {
       className={cn(
         `w-3 h-3 rounded-full`,
         priorityIconVariants({ variant }),
-        className
+        className,
       )}
     />
   );

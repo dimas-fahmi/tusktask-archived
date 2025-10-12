@@ -1,5 +1,9 @@
-import { InsertProfile, Profile, profiles } from "@/src/db/schema/profiles";
-import { NextRequest } from "next/server";
+import {
+  type InsertProfile,
+  type Profile,
+  profiles,
+} from "@/src/db/schema/profiles";
+import type { NextRequest } from "next/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { profileSchema } from "@/src/lib/zod/schemas/authSchema";
@@ -36,7 +40,7 @@ export async function usersProfilesPatch(req: NextRequest) {
       401,
       "invalid_session",
       "Session is invalid, please sign in.",
-      undefined
+      undefined,
     );
   }
 
@@ -48,7 +52,7 @@ export async function usersProfilesPatch(req: NextRequest) {
       403,
       "forbidden_field_included",
       "New values contained forbidden field",
-      undefined
+      undefined,
     );
   }
 
@@ -59,7 +63,7 @@ export async function usersProfilesPatch(req: NextRequest) {
       400,
       "bad_request",
       prettifyError(validation.error),
-      undefined
+      undefined,
     );
   }
 
@@ -80,7 +84,7 @@ export async function usersProfilesPatch(req: NextRequest) {
       200,
       "success_update_profiles",
       "Profile record updated",
-      response
+      response,
     );
   } catch (error) {
     return createResponse(
@@ -89,7 +93,7 @@ export async function usersProfilesPatch(req: NextRequest) {
       "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

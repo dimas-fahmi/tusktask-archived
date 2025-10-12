@@ -1,10 +1,10 @@
 import { db } from "@/src/db";
-import { Task, tasks, TaskUpdateSchema } from "@/src/db/schema/tasks";
+import { type Task, tasks, TaskUpdateSchema } from "@/src/db/schema/tasks";
 import { OperationError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { eq } from "drizzle-orm";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import z, { prettifyError } from "zod";
 
 const PATH = "API_TASKS_PATCH";
@@ -25,7 +25,7 @@ export async function tasksPatch(req: NextRequest) {
       401,
       "unauthorized",
       "Invalid session, login required",
-      undefined
+      undefined,
     );
   }
 
@@ -41,7 +41,7 @@ export async function tasksPatch(req: NextRequest) {
       "Invalid request form, expected: raw JSON",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 
@@ -53,7 +53,7 @@ export async function tasksPatch(req: NextRequest) {
       400,
       "bad_request",
       "Missing important parameter: id",
-      undefined
+      undefined,
     );
   }
 
@@ -62,7 +62,7 @@ export async function tasksPatch(req: NextRequest) {
       400,
       "bad_request",
       "Missing important parameter: newValues",
-      undefined
+      undefined,
     );
   }
 
@@ -91,7 +91,7 @@ export async function tasksPatch(req: NextRequest) {
       prettifyError(validation.error),
       undefined,
       true,
-      `${PATH}`
+      `${PATH}`,
     );
   }
 
@@ -107,21 +107,21 @@ export async function tasksPatch(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when fetching information about old task"
+          "Failed when fetching information about old task",
         );
       }
 
       if (!oldTask) {
         throw new OperationError(
           "bad_request",
-          "Failed to find information about old task"
+          "Failed to find information about old task",
         );
       }
 
       if (oldTask.ownerId !== user.id) {
         throw new OperationError(
           "unauthorized",
-          "Not the owner of the task, operation aborted"
+          "Not the owner of the task, operation aborted",
         );
       }
 
@@ -159,7 +159,7 @@ export async function tasksPatch(req: NextRequest) {
       "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

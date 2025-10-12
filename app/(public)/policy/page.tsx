@@ -1,5 +1,3 @@
-import React from "react";
-
 const PolicyPage = () => {
   return <div>PolicyPage</div>;
 };

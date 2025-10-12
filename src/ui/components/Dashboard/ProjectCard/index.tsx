@@ -1,23 +1,22 @@
 "use client";
 
-import { Skeleton } from "@/src/ui/shadcn/components/ui/skeleton";
-import React from "react";
-import RenderLucide from "../../RenderLucide";
-import { ProjectApp } from "@/src/lib/types/projects";
+import Link from "next/link";
+import type { Task } from "@/src/db/schema/tasks";
+import type { ProjectApp } from "@/src/lib/types/projects";
+import { compactNumber } from "@/src/lib/utils/compactNumber";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuTrigger,
 } from "@/src/ui/shadcn/components/ui/context-menu";
+import { Skeleton } from "@/src/ui/shadcn/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/src/ui/shadcn/components/ui/tooltip";
+import RenderLucide from "../../RenderLucide";
 import ProjectCardContextMenu from "./ProjectCardContextMenu";
-import { Task } from "@/src/db/schema/tasks";
-import { compactNumber } from "@/src/lib/utils/compactNumber";
-import Link from "next/link";
 
 export const ProjectCardSkeleton = () => {
   return (

@@ -1,14 +1,14 @@
 "use client";
 
-import { Project } from "@/src/db/schema/projects";
-import { Task } from "@/src/db/schema/tasks";
+import { useEffect } from "react";
+import type { Project } from "@/src/db/schema/projects";
+import type { Task } from "@/src/db/schema/tasks";
 import { useFetchTasks } from "@/src/lib/hooks/queries/useFetchTasks";
+import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
-import React, { useEffect } from "react";
+import { queryKeys } from "@/src/lib/utils/queryKeys";
 import HeaderSection from "./sections/Header";
 import TaskCollectionsSection from "./sections/TasksCollections";
-import { queryKeys } from "@/src/lib/utils/queryKeys";
-import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
 
 const ProjectPageIndex = ({
   projectFromServer,
@@ -22,7 +22,7 @@ const ProjectPageIndex = ({
     },
     {
       id: projectFromServer?.id,
-    }
+    },
   );
   const project = projectResult?.result?.[0] ?? projectFromServer;
 
@@ -42,7 +42,7 @@ const ProjectPageIndex = ({
     queryKeys.tasks.project(projectFromServer.id),
     {
       projectId: projectFromServer.id,
-    }
+    },
   );
 
   const tasks = tasksResult?.result;

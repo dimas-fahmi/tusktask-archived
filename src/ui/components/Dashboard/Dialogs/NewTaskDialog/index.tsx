@@ -15,7 +15,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion, type Variants } from "motion/react";
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import type { TasksPostRequest } from "@/app/api/tasks/post";
 import { PRIORITIES } from "@/src/db/schema/configs";
@@ -129,7 +129,7 @@ const NewTaskDialog = () => {
         setIsValidDeadline(true);
       }
     }
-  }, [setIsValidDeadline, deadline]);
+  }, [deadline]);
 
   useEffect(() => {
     if (isDeadlineSetManually && isValidDeadline) return;
@@ -146,21 +146,11 @@ const NewTaskDialog = () => {
         setIsDeadlineSetManually(false);
       }, 1000);
     }
-  }, [
-    name,
-    setValue,
-    isDeadlineSetManually,
-    isValidDeadline,
-    setIsDeadlineSetManually,
-  ]);
+  }, [name, setValue, isDeadlineSetManually, isValidDeadline]);
 
   // Check if reminder is valid
   const isReminderValid =
-    reminder && deadline
-      ? deadline?.getTime() < reminder?.getTime()
-        ? false
-        : true
-      : true;
+    !reminder || !deadline || reminder.getTime() <= deadline.getTime();
 
   // Listen to isReminderValid to set Error
   useEffect(() => {
@@ -169,7 +159,7 @@ const NewTaskDialog = () => {
     } else {
       setError(null);
     }
-  }, [isReminderValid, setError]);
+  }, [isReminderValid]);
 
   // Projects query
   const { data: userProjects } = useFetchUserProjects<
@@ -214,7 +204,7 @@ const NewTaskDialog = () => {
   ]);
 
   // Reset Handler
-  const resetHandler = () => {
+  const resetHandler = useCallback(() => {
     reset(formDefaultValues);
     setTimeout(() => {
       setAdvance(false);
@@ -222,9 +212,10 @@ const NewTaskDialog = () => {
     setNewTaskDialogOpen(false);
     setIsDeadlineSetManually(false);
     resetStore();
-  };
+  }, [formDefaultValues, resetStore, reset, setNewTaskDialogOpen]);
 
   // OnOpenChange
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Only listen to newTaskDialog to prevent loop hell
   useEffect(() => {
     if (!newTaskDialogOpen) {
       resetHandler();
@@ -232,7 +223,7 @@ const NewTaskDialog = () => {
       reset(formDefaultValues);
       setValue("projectId", activeProject?.id || "");
     }
-  }, [newTaskDialogOpen, activeProject?.id, formDefaultValues]);
+  }, [newTaskDialogOpen]);
 
   return (
     <Dialog open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>
@@ -364,9 +355,9 @@ const NewTaskDialog = () => {
 
                 {/* Container */}
                 <div className="grid grid-cols-4 gap-2">
-                  {PRIORITIES.map((item, index) => (
+                  {PRIORITIES.map((item) => (
                     <PriorityButton
-                      key={index}
+                      key={item}
                       setValue={setValue}
                       value={item}
                       priority={priority}
@@ -559,7 +550,7 @@ const NewTaskDialog = () => {
                   !isValid ||
                   !isReminderValid ||
                   isCreatingTask ||
-                  (!isValidDeadline && deadline ? true : false)
+                  (!isValidDeadline && !!deadline)
                 }
               >
                 {isCreatingTask ? (

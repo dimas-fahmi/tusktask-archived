@@ -1,11 +1,14 @@
 "use client";
 
-import * as React from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-
+import { motion } from "motion/react";
+import * as React from "react";
 import { Button } from "../../shadcn/components/ui/button";
-import { Calendar, CalendarProps } from "../../shadcn/components/ui/calendar";
+import {
+  Calendar,
+  type CalendarProps,
+} from "../../shadcn/components/ui/calendar";
 import {
   Dialog,
   DialogClose,
@@ -16,7 +19,6 @@ import {
   DialogTrigger,
 } from "../../shadcn/components/ui/dialog";
 import { cn } from "../../shadcn/lib/utils";
-import { motion } from "motion/react";
 
 export interface DatePickerClasses {
   triggerClass?: string;
@@ -50,7 +52,7 @@ export function DatePicker({
   const [hour, setHour] = React.useState(currentHour % 12 || 12);
   const [minute, setMinute] = React.useState(currentMinute);
   const [meridiem, setMeridiem] = React.useState<"am" | "pm">(
-    currentHour >= 12 ? "pm" : "am"
+    currentHour >= 12 ? "pm" : "am",
   );
 
   // Update time when value changes from parent
@@ -103,6 +105,7 @@ export function DatePicker({
   };
 
   const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // biome-ignore lint/correctness/useParseIntRadix: HXD
     let newHour = parseInt(e.target.value) || 0;
     // Clamp hour between 1 and 12
     if (newHour > 12) newHour = 12;
@@ -111,6 +114,7 @@ export function DatePicker({
   };
 
   const handleMinuteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // biome-ignore lint/correctness/useParseIntRadix: HXD
     let newMinute = parseInt(e.target.value) || 0;
     // Clamp minute between 0 and 59
     if (newMinute > 59) newMinute = 59;
@@ -119,6 +123,7 @@ export function DatePicker({
   };
 
   // Trigger time update when meridiem changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: NEEDED HERE
   React.useEffect(() => {
     handleTimeChange();
   }, [meridiem]);
@@ -131,7 +136,7 @@ export function DatePicker({
           data-empty={!value}
           className={cn(
             `data-[empty=true]:text-muted-foreground w-[280px] justify-start text-left font-normal`,
-            classes?.triggerClass
+            classes?.triggerClass,
           )}
           disabled={disabled}
         >
@@ -146,7 +151,7 @@ export function DatePicker({
       <DialogContent
         className={cn(
           "overflow-hidden flex flex-col items-center w-fit p-4",
-          classes?.containerClass
+          classes?.containerClass,
         )}
       >
         {/* Header - Hidden */}
@@ -202,6 +207,7 @@ export function DatePicker({
           <div className="relative inline-flex border rounded-full w-full justify-between">
             {["am", "pm"].map((value) => (
               <button
+                type="button"
                 key={value}
                 onClick={() => setMeridiem(value as "am" | "pm")}
                 className={`${

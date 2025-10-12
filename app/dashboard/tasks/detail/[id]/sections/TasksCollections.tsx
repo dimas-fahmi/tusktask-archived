@@ -1,6 +1,5 @@
-import { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
+import type { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
 import TaskAccordion from "@/src/ui/components/Dashboard/TaskAccordion";
-import React from "react";
 
 const TasksSection = ({
   categorizedTasks,

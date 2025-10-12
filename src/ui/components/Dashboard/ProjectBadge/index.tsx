@@ -1,6 +1,6 @@
 import { cn } from "@/src/ui/shadcn/lib/utils";
-import { cva, VariantProps } from "class-variance-authority";
-import { LucideIcon, Tag } from "lucide-react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { type LucideIcon, Tag } from "lucide-react";
 import React from "react";
 
 const projectBadgeVariants = cva("flex items-center rounded-md w-fit", {
@@ -45,7 +45,7 @@ const ProjectBadge = React.forwardRef<HTMLDivElement, ProjectBadgeProps>(
         {title}
       </div>
     );
-  }
+  },
 );
 
 ProjectBadge.displayName = "ProjectBadge";

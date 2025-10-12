@@ -1,10 +1,10 @@
 import { db } from "@/src/db";
 import { PRIORITIES, STATUSES } from "@/src/db/schema/configs";
-import { tasks, TasksRelations } from "@/src/db/schema/tasks";
+import { tasks, type TasksRelations } from "@/src/db/schema/tasks";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { and, eq, ilike } from "drizzle-orm";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
 const PATH = "API_TASKS_GET";
 
@@ -33,7 +33,7 @@ export async function tasksGet(req: NextRequest) {
       401,
       "unauthorized",
       "Invalid session, login required",
-      undefined
+      undefined,
     );
   }
 
@@ -64,7 +64,7 @@ export async function tasksGet(req: NextRequest) {
         response ? 200 : 404,
         response ? "sucess_fetched" : "not_found",
         response ? "Found and fetched" : "No such task",
-        response
+        response,
       );
     } catch (error) {
       return createResponse(
@@ -73,7 +73,7 @@ export async function tasksGet(req: NextRequest) {
         "Unknown error",
         undefined,
         true,
-        `${PATH}:${JSON.stringify(error)}`
+        `${PATH}:${JSON.stringify(error)}`,
       );
     }
   }
@@ -95,14 +95,14 @@ export async function tasksGet(req: NextRequest) {
   if (taskPriority) {
     if (PRIORITIES.includes(taskPriority as (typeof PRIORITIES)[number])) {
       query.push(
-        eq(tasks.taskPriority, taskPriority as (typeof PRIORITIES)[number])
+        eq(tasks.taskPriority, taskPriority as (typeof PRIORITIES)[number]),
       );
     } else {
       return createResponse(
         400,
         "bad_request",
         `Invalid taskPriority: either ${PRIORITIES.join(",")}`,
-        undefined
+        undefined,
       );
     }
   }
@@ -115,7 +115,7 @@ export async function tasksGet(req: NextRequest) {
         400,
         "bad_request",
         `Invalid taskStatus: either ${STATUSES.join(",")}`,
-        undefined
+        undefined,
       );
     }
   }
@@ -175,7 +175,7 @@ export async function tasksGet(req: NextRequest) {
       isFound ? 200 : 404,
       isFound ? "sucess_fetched" : "not_found",
       isFound ? "Found and fetched" : "No such task",
-      response
+      response,
     );
   } catch (error) {
     return createResponse(
@@ -184,7 +184,7 @@ export async function tasksGet(req: NextRequest) {
       "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

@@ -1,10 +1,10 @@
 "use client";
 
+import { Suspense, useEffect } from "react";
 import { useSession, useSignOut } from "@/src/lib/hooks/auth/useAuth";
 import { useOnboardingStore } from "@/src/lib/stores/page/onboardingStore";
-import { UserMetadata } from "@/src/lib/types/supabase";
+import type { UserMetadata } from "@/src/lib/types/supabase";
 import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
-import React, { Suspense, useEffect } from "react";
 import { renderer } from "./renderer";
 
 const RegistrationPageIndex = () => {
@@ -15,7 +15,7 @@ const RegistrationPageIndex = () => {
   const {
     data: session,
     isFetching: isFetchingSession,
-    refetch: refetchSession,
+    refetch: _refetchSession,
   } = useSession();
 
   // Syncronize data
@@ -43,7 +43,7 @@ const RegistrationPageIndex = () => {
       // Run Renderer
       renderer(setter, "name");
     }
-  }, [setter, session, isFetchingSession, refetchSession]);
+  }, [setter, session, isFetchingSession]);
 
   // SignOut
   const { mutate: signOut } = useSignOut();
@@ -67,6 +67,7 @@ const RegistrationPageIndex = () => {
       <div className="mt-4 text-sm font-light flex items-center justify-between">
         <span>{`It's not your account?`}</span>
         <button
+          type="button"
           className="navlink"
           onClick={() => {
             signOut();

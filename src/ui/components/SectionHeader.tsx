@@ -16,14 +16,14 @@ const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
         {...props}
         className={cn(
           "md:flex items-center gap-4 text-center md:text-start",
-          className
+          className,
         )}
       >
         <Heading className="mb-4 md:mb-0 mx-auto md:mx-0">{header}</Heading>
         <p className="max-w-[60ch] font-light">{subtitle}</p>
       </div>
     );
-  }
+  },
 );
 
 SectionHeader.displayName = "SectionHeader";

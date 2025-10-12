@@ -1,17 +1,3 @@
-import { PRIORITIES } from "@/src/db/schema/configs";
-import { useDeleteTask } from "@/src/lib/hooks/mutations/useDeleteTask";
-import { useUpdateTask } from "@/src/lib/hooks/mutations/useUpdateTasks";
-import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
-import { TaskApp } from "@/src/lib/types/tasks";
-import {
-  ContextMenuGroup,
-  ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuSeparator,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-} from "@/src/ui/shadcn/components/ui/context-menu";
 import {
   Archive,
   ArchiveRestore,
@@ -26,7 +12,20 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { PRIORITIES } from "@/src/db/schema/configs";
+import { useDeleteTask } from "@/src/lib/hooks/mutations/useDeleteTask";
+import { useUpdateTask } from "@/src/lib/hooks/mutations/useUpdateTasks";
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import type { TaskApp } from "@/src/lib/types/tasks";
+import {
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+} from "@/src/ui/shadcn/components/ui/context-menu";
 import PriorityIcon from "../PriorityIcon";
 
 const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
@@ -131,6 +130,7 @@ const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
                   isUpdatingTask ||
                   task?.isPending
                 }
+                // biome-ignore lint/suspicious/noArrayIndexKey: IT'S FINE
                 key={index}
                 onClick={() => {
                   updateTask({

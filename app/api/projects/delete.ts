@@ -1,8 +1,8 @@
 import { createServerClient } from "@/src/lib/supabase/instances/server";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { db } from "@/src/db";
-import { Project, projects } from "@/src/db/schema/projects";
+import { type Project, projects } from "@/src/db/schema/projects";
 import { eq } from "drizzle-orm";
 import { OperationError } from "@/src/lib/errors";
 
@@ -19,7 +19,7 @@ export async function projectsDelete(req: NextRequest) {
       401,
       "unauthorized",
       "Invalid session, login required",
-      undefined
+      undefined,
     );
   }
 
@@ -33,7 +33,7 @@ export async function projectsDelete(req: NextRequest) {
       400,
       "bad_request",
       "Missing important parameters: projectId",
-      undefined
+      undefined,
     );
   }
 
@@ -49,21 +49,21 @@ export async function projectsDelete(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when fetching target project"
+          "Failed when fetching target project",
         );
       }
 
       if (!project) {
         throw new OperationError(
           "bad_request",
-          "Project is not found on database"
+          "Project is not found on database",
         );
       }
 
       if (project.ownerId !== user.id) {
         throw new OperationError(
           "unathorized",
-          "User is not the owner of the project"
+          "User is not the owner of the project",
         );
       }
 
@@ -78,7 +78,7 @@ export async function projectsDelete(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when deleting project"
+          "Failed when deleting project",
         );
       }
     });
@@ -87,7 +87,7 @@ export async function projectsDelete(req: NextRequest) {
       200,
       "success_delete_project",
       "Project is deleted",
-      response
+      response,
     );
   } catch (error) {
     return createResponse(
@@ -96,7 +96,7 @@ export async function projectsDelete(req: NextRequest) {
       "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

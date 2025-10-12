@@ -1,7 +1,7 @@
-import { Project } from "@/src/db/schema/projects";
+import type { Project } from "@/src/db/schema/projects";
 import { create } from "zustand";
-import { TaskApp } from "../../types/tasks";
-import { Task } from "@/src/db/schema/tasks";
+import type { TaskApp } from "../../types/tasks";
+import type { Task } from "@/src/db/schema/tasks";
 
 /**
  * Zustand store for managing task-related UI and state.

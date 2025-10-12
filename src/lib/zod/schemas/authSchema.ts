@@ -25,7 +25,7 @@ export const usernameSchema = z
   .regex(/^(?!.*[_-]{2})/, "Username cannot have consecutive symbols")
   .regex(
     /^(?!.*[_-].*[_-])/,
-    "Username can only contain one symbol ('_' or '-')"
+    "Username can only contain one symbol ('_' or '-')",
   )
   .regex(USERNAME_REGEX, "Username contains invalid characters or format");
 
