@@ -4,12 +4,14 @@ import { TaskApp } from "@/src/lib/types/tasks";
 import { Card, CardContent } from "@/src/ui/shadcn/components/ui/card";
 import React, { useState, useEffect } from "react";
 import { Clock, AlertCircle } from "lucide-react";
-import { parseISO, isValid, differenceInSeconds, isPast } from "date-fns";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import { useCountdown } from "@/src/lib/hooks/ui/useCountdown";
 
 const Countdown = ({ task }: { task: TaskApp }) => {
   const { setRescheduleDialogOpen } = useTaskStore();
+
+  const { calculateTimeLeft } = useCountdown(task);
 
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
@@ -17,33 +19,9 @@ const Countdown = ({ task }: { task: TaskApp }) => {
     minutes: number;
     seconds: number;
     isPast: boolean;
-  } | null>(null);
+  } | null>(calculateTimeLeft);
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      // Handle both string and Date object using date-fns
-      const deadline =
-        typeof task.deadlineAt === "string"
-          ? parseISO(task.deadlineAt)
-          : task.deadlineAt;
-
-      if (!deadline || !isValid(deadline)) {
-        return null;
-      }
-
-      const now = new Date();
-      const totalSeconds = Math.abs(differenceInSeconds(deadline, now));
-      const isOverdue = isPast(deadline);
-
-      return {
-        days: Math.floor(totalSeconds / (60 * 60 * 24)),
-        hours: Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60)),
-        minutes: Math.floor((totalSeconds % (60 * 60)) / 60),
-        seconds: totalSeconds % 60,
-        isPast: isOverdue,
-      };
-    };
-
     // Initial calculation
     setTimeLeft(calculateTimeLeft());
 
@@ -69,9 +47,10 @@ const Countdown = ({ task }: { task: TaskApp }) => {
   }
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center gap-4">
       <div
-        className={`text-3xl font-bold ${timeLeft.isPast ? "text-destructive" : "text-primary"}`}
+        className={`text-4xl md:text-6xl font-header font-bold ${timeLeft.isPast ? "text-destructive" : "text-primary"}`}
+        suppressHydrationWarning
       >
         {value.toString().padStart(2, "0")}
       </div>
@@ -85,7 +64,10 @@ const Countdown = ({ task }: { task: TaskApp }) => {
     <Card
       className={`border-2 ${timeLeft.isPast ? "border-destructive" : "border-border"}`}
     >
-      <CardContent className="flex flex-col justify-between h-full gap-4">
+      <CardContent
+        className="flex flex-col justify-between h-full gap-4"
+        suppressHydrationWarning
+      >
         <div className="flex flex-col justify-between flex-1 gap-4">
           <div className="flex items-center gap-2">
             {timeLeft.isPast ? (
@@ -105,7 +87,7 @@ const Countdown = ({ task }: { task: TaskApp }) => {
             )}
           </div>
 
-          <div className="grid grid-cols-4 gap-4 flex-1 grid-rows-1">
+          <div className="grid grid-cols-4 gap-4 flex-1 grid-rows-1 max-w-xl w-full mx-auto">
             <TimeUnit value={timeLeft.days} label="Days" />
             <TimeUnit value={timeLeft.hours} label="Hours" />
             <TimeUnit value={timeLeft.minutes} label="Mins" />
