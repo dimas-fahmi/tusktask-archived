@@ -80,7 +80,7 @@ export interface TaskStore {
   /**
    * The parent task, used when creating a subtask.
    *
-   * used for subtask creation, to avoid confusion and conflict with active taks.
+   * used for subtask creation, to avoid confusion and conflict with active tasks.
    *
    */
   parentTask: Task | null;
