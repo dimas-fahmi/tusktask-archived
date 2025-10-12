@@ -1,18 +1,36 @@
 "use client";
 
-import { Task } from "@/src/db/schema/tasks";
 import { differenceInSeconds, isPast, isValid, parseISO } from "date-fns";
 import { useCallback } from "react";
 
-export const useCountdown = (task: Task) => {
-  const calculateTimeLeft = useCallback(() => {
-    const deadline =
-      typeof task.deadlineAt === "string"
-        ? parseISO(task.deadlineAt)
-        : task.deadlineAt;
+export interface UseCountdown {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  isPast: boolean;
+  totalSeconds: number;
+  diff: number;
+  isValid: boolean;
+}
+
+export const useCountdown = (date?: Date | string | null) => {
+  const calculateTimeLeft = useCallback((): UseCountdown => {
+    const result = {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      isPast: false,
+      totalSeconds: 0,
+      diff: 0,
+      isValid: false,
+    };
+
+    const deadline = typeof date === "string" ? parseISO(date) : date;
 
     if (!deadline || !isValid(deadline)) {
-      return null;
+      return result;
     }
 
     const now = new Date();
@@ -26,10 +44,11 @@ export const useCountdown = (task: Task) => {
       minutes: Math.floor((totalSeconds % (60 * 60)) / 60),
       seconds: totalSeconds % 60,
       isPast: isOverdue,
+      isValid: isValid(deadline),
       totalSeconds,
       diff,
     };
-  }, [task?.deadlineAt]);
+  }, [date]);
 
   return {
     calculateTimeLeft,

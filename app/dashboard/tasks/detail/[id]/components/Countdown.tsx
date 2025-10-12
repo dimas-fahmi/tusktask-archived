@@ -11,7 +11,7 @@ import { useCountdown } from "@/src/lib/hooks/ui/useCountdown";
 const Countdown = ({ task }: { task: TaskApp }) => {
   const { setRescheduleDialogOpen } = useTaskStore();
 
-  const { calculateTimeLeft } = useCountdown(task);
+  const { calculateTimeLeft } = useCountdown(task?.deadlineAt);
 
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
