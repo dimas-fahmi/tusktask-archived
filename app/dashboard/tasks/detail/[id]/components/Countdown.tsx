@@ -22,16 +22,13 @@ const Countdown = ({ task }: { task: TaskApp }) => {
   } | null>(calculateTimeLeft);
 
   useEffect(() => {
-    // Initial calculation
-    setTimeLeft(calculateTimeLeft());
-
     // Update every second
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [task.deadlineAt]);
+  }, [calculateTimeLeft]);
 
   if (!timeLeft) {
     return (
