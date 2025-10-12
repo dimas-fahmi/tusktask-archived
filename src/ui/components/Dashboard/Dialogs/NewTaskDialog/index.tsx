@@ -1,9 +1,36 @@
 "use client";
 
-import { Project } from "@/src/db/schema/projects";
-import { Task } from "@/src/db/schema/tasks";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { formatRelative } from "date-fns";
+import {
+  AlarmClock,
+  CircleAlert,
+  CircleQuestionMark,
+  ClockAlert,
+  Loader2Icon,
+  Network,
+  Save,
+  Settings2,
+  X,
+  Zap,
+} from "lucide-react";
+import { motion, type Variants } from "motion/react";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import type { TasksPostRequest } from "@/app/api/tasks/post";
+import { PRIORITIES } from "@/src/db/schema/configs";
+import type { Project } from "@/src/db/schema/projects";
+import type { Task } from "@/src/db/schema/tasks";
+import { DEFAULT_ICON } from "@/src/lib/configs";
+import { useCreateTask } from "@/src/lib/hooks/mutations/useCreateTask";
 import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import { naturalLanguageDateParser } from "@/src/lib/utils/naturalLanguageDateParser";
+import { queryKeys } from "@/src/lib/utils/queryKeys";
+import {
+  type NewTaskFormSchema,
+  newTaskFormSchema,
+} from "@/src/lib/zod/schemas/taskSchema";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
   Dialog,
@@ -21,42 +48,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/ui/shadcn/components/ui/select";
-import React, { useEffect, useState } from "react";
-import { motion, Variants } from "motion/react";
-import {
-  AlarmClock,
-  CircleAlert,
-  CircleQuestionMark,
-  ClockAlert,
-  Loader2Icon,
-  Network,
-  Save,
-  Settings2,
-  X,
-  Zap,
-} from "lucide-react";
-import { DatePicker } from "../../../DatePicker";
-import { Controller, useForm } from "react-hook-form";
-import RenderLucide from "../../../RenderLucide";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  NewTaskFormSchema,
-  newTaskFormSchema,
-} from "@/src/lib/zod/schemas/taskSchema";
-import { useCreateTask } from "@/src/lib/hooks/mutations/useCreateTask";
-import { TasksPostRequest } from "@/app/api/tasks/post";
-import PriorityButton from "./components/PriorityButton";
-import { PRIORITIES } from "@/src/db/schema/configs";
-import { formatRelative } from "date-fns";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/src/ui/shadcn/components/ui/tooltip";
+import { DatePicker } from "../../../DatePicker";
+import RenderLucide from "../../../RenderLucide";
 import NewTaskHelper from "../../../TooltipContents/NewTaskHelper";
-import { queryKeys } from "@/src/lib/utils/queryKeys";
-import { DEFAULT_ICON } from "@/src/lib/configs";
-import { naturalLanguageDateParser } from "@/src/lib/utils/naturalLanguageDateParser";
+import PriorityButton from "./components/PriorityButton";
 
 const settingsVariants: Variants = {
   hidden: { transition: { duration: 0.3 }, width: 0 },
@@ -232,7 +232,7 @@ const NewTaskDialog = () => {
       reset(formDefaultValues);
       setValue("projectId", activeProject?.id || "");
     }
-  }, [newTaskDialogOpen]);
+  }, [newTaskDialogOpen, activeProject?.id, formDefaultValues]);
 
   return (
     <Dialog open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>

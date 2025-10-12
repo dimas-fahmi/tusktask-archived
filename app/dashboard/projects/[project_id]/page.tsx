@@ -1,10 +1,10 @@
-import React, { Suspense } from "react";
-import { generateMetadata as gm } from "@/src/lib/utils/generateMetadata";
-import { StandardizeResponse } from "@/src/lib/utils/createResponse";
-import { Project } from "@/src/db/schema/projects";
-import ProjectPageIndex from "./ProjectPageIndex";
 import { redirect } from "next/navigation";
+import React from "react";
+import type { Project } from "@/src/db/schema/projects";
+import type { StandardizeResponse } from "@/src/lib/utils/createResponse";
+import { generateMetadata as gm } from "@/src/lib/utils/generateMetadata";
 import { getProject } from "@/src/lib/utils/serverQueries/getProject";
+import ProjectPageIndex from "./ProjectPageIndex";
 
 export async function generateMetadata({
   params,
@@ -42,9 +42,9 @@ const ProjectPage = async ({
   }
 
   return (
-    <Suspense>
+    <React.Suspense>
       <ProjectPageIndex projectFromServer={project} />
-    </Suspense>
+    </React.Suspense>
   );
 };
 
