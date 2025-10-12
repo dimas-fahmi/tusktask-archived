@@ -56,7 +56,7 @@ import {
 import NewTaskHelper from "../../../TooltipContents/NewTaskHelper";
 import { queryKeys } from "@/src/lib/utils/queryKeys";
 import { DEFAULT_ICON } from "@/src/lib/configs";
-import { naturalLanguangeDateParse } from "@/src/lib/utils/naturalLanguageDateParser";
+import { naturalLanguageDateParser } from "@/src/lib/utils/naturalLanguageDateParser";
 
 const settingsVariants: Variants = {
   hidden: { transition: { duration: 0.3 }, width: 0 },
@@ -134,7 +134,7 @@ const NewTaskDialog = () => {
   useEffect(() => {
     if (isDeadlineSetManually && isValidDeadline) return;
 
-    const { date: pd } = naturalLanguangeDateParse(name);
+    const { date: pd } = naturalLanguageDateParser(name);
     if (pd) {
       setValue("deadlineAt", pd);
       setTimeout(() => {

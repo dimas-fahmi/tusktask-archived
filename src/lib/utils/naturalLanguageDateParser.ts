@@ -4,7 +4,7 @@ import { NLP_INDONESIAN_RULE } from "../configs/parserReplacer/indonesians";
 
 export const REGISTERED_RULES: ReplacementRules = [...NLP_INDONESIAN_RULE];
 
-export const naturalLanguangeDateParse = (text?: string) => {
+export const naturalLanguageDateParser = (text?: string) => {
   if (!text) return { translatedText: null, date: null };
 
   const translatedText = replaceMultiple(text, REGISTERED_RULES, false);
