@@ -14,12 +14,12 @@ import CircularProgress from "../CircularProgress";
 import TaskScratchButton from "../TaskScratchButton";
 import type { TaskCardProps } from ".";
 
-const Card = React.forwardRef<HTMLButtonElement, TaskCardProps>(
+const Card = React.forwardRef<HTMLDivElement, TaskCardProps>(
   ({ task, ...props }, ref) => {
     const router = useRouter();
 
     return (
-      <button
+      <div
         ref={ref}
         className={cn(
           `${task?.completedAt ? "bg-primary text-primary-foreground" : ""} group/card border min-h-37 max-h-48 p-4 rounded-md cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-200 flex flex-col`,
@@ -128,7 +128,7 @@ const Card = React.forwardRef<HTMLButtonElement, TaskCardProps>(
             />
           </div>
         </div>
-      </button>
+      </div>
     );
   },
 );
