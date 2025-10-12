@@ -12,8 +12,7 @@ import InformationTable from "@/src/ui/components/Dashboard/InformationTable";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 
 const HeaderSection = ({ task }: { task?: TaskApp }) => {
-  const { setNewTaskDialogOpen, setParentTask, setActiveProject } =
-    useTaskStore();
+  const { openNewTaskDialog } = useTaskStore();
 
   return (
     <header className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -42,9 +41,8 @@ const HeaderSection = ({ task }: { task?: TaskApp }) => {
             </Button>
             <Button
               onClick={() => {
-                setActiveProject(task?.project);
-                setParentTask(task || null);
-                setNewTaskDialogOpen(true);
+                if (!task || !task?.project) return;
+                openNewTaskDialog(task?.project, task);
               }}
             >
               <PlusCircle /> New Subtask

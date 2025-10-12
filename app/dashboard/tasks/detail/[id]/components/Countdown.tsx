@@ -9,7 +9,7 @@ import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import { useCountdown } from "@/src/lib/hooks/ui/useCountdown";
 
 const Countdown = ({ task }: { task: TaskApp }) => {
-  const { setRescheduleDialogOpen } = useTaskStore();
+  const { openRescheduleDialog } = useTaskStore();
 
   const { calculateTimeLeft } = useCountdown(task?.deadlineAt);
 
@@ -97,7 +97,7 @@ const Countdown = ({ task }: { task: TaskApp }) => {
 
         <Button
           className="block w-full"
-          onClick={() => setRescheduleDialogOpen(true)}
+          onClick={() => openRescheduleDialog(task)}
         >
           Reschedule
         </Button>

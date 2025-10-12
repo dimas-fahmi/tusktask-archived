@@ -31,7 +31,7 @@ import PriorityIcon from "../PriorityIcon";
 
 const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
   // Pull states and setters from task context
-  const { setRescheduleDialogOpen, setActiveTask } = useTaskStore();
+  const { openRescheduleDialog } = useTaskStore();
 
   // Delete Mutation
   const { mutate: deleteTask, isPending: isDeletingTask } = useDeleteTask();
@@ -107,8 +107,7 @@ const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
         <ContextMenuItem
           disabled={task?.isPending}
           onClick={() => {
-            setActiveTask(task);
-            setRescheduleDialogOpen(true);
+            openRescheduleDialog(task);
           }}
         >
           <CalendarSync />
