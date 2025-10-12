@@ -1,10 +1,10 @@
-import type { TasksPatchRequest } from "@/app/api/tasks/patch";
 import type { QueryClient } from "@tanstack/react-query";
-import { queryKeys } from "../../queryKeys";
-import type { StandardizeResponse } from "../../createResponse";
+import type { TasksPatchRequest } from "@/app/api/tasks/patch";
 import type { Task } from "@/src/db/schema/tasks";
 import type { EagerUpdaterResult } from "@/src/lib/types/eagerUpdate";
 import type { TaskApp } from "@/src/lib/types/tasks";
+import type { StandardizeResponse } from "../../createResponse";
+import { queryKeys } from "../../queryKeys";
 
 const update = (
   req: TasksPatchRequest,

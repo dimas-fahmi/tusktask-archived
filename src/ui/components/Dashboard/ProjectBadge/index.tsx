@@ -1,7 +1,7 @@
-import { cn } from "@/src/ui/shadcn/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { type LucideIcon, Tag } from "lucide-react";
 import React from "react";
+import { cn } from "@/src/ui/shadcn/lib/utils";
 
 const projectBadgeVariants = cva("flex items-center rounded-md w-fit", {
   variants: {

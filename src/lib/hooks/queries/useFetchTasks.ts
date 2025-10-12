@@ -1,11 +1,11 @@
 import {
+  type UseQueryOptions,
   useQuery,
   useQueryClient,
-  type UseQueryOptions,
 } from "@tanstack/react-query";
-import { fetchTasks } from "../../utils/fetchers/fetchTasks";
 import type { TasksGetRequest } from "@/app/api/tasks/get";
 import type { StandardizeResponse } from "../../utils/createResponse";
+import { fetchTasks } from "../../utils/fetchers/fetchTasks";
 
 export const useFetchTasks = <T>(
   queryKey: string[],

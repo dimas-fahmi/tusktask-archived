@@ -31,9 +31,11 @@ const Collection = ({
         variant={variant}
       />
       <TaskAccordion.body>
-        {collection.map((item) => (
-          <TaskAccordion.item key={item.id} task={item} />
-        ))}
+        <TaskAccordion.itemContainer>
+          {collection.map((item) => (
+            <TaskAccordion.item key={item.id} task={item} />
+          ))}
+        </TaskAccordion.itemContainer>
       </TaskAccordion.body>
     </TaskAccordion.root>
   );

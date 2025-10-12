@@ -1,3 +1,4 @@
+import { relations, sql } from "drizzle-orm";
 import {
   foreignKey,
   index,
@@ -6,15 +7,14 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { priorityEnum, projectSchema, statusEnum } from "./configs";
-import { relations, sql } from "drizzle-orm";
 import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
-import { profiles } from "./profiles";
 import {
   createInsertSchema,
   createSelectSchema,
   createUpdateSchema,
 } from "drizzle-zod";
+import { priorityEnum, projectSchema, statusEnum } from "./configs";
+import { profiles } from "./profiles";
 import { projects } from "./projects";
 
 // MasterTasks Table (recurring mechanism)

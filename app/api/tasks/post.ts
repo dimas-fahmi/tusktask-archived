@@ -1,3 +1,6 @@
+import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+import { prettifyError, z } from "zod";
 import { db } from "@/src/db";
 import { type Project, projects } from "@/src/db/schema/projects";
 import { type InsertTask, tasks } from "@/src/db/schema/tasks";
@@ -8,9 +11,6 @@ import {
   type NewTaskFormSchema,
   newTaskFormSchema,
 } from "@/src/lib/zod/schemas/taskSchema";
-import { eq } from "drizzle-orm";
-import type { NextRequest } from "next/server";
-import { z, prettifyError } from "zod";
 
 const PATH = "API_TASKS_POST";
 

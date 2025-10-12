@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { StandardizeResponse } from "../../utils/createResponse";
 import type { ProjectApp } from "../../types/projects";
+import type { StandardizeResponse } from "../../utils/createResponse";
 
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();

@@ -1,9 +1,9 @@
+import type { AuthError } from "@supabase/supabase-js";
+import type { PostgresError } from "postgres";
+import { APP_URL, DEFAULT_EMAIL_COOLDOWN } from "@/src/lib/configs";
 import { createServiceClient } from "@/src/lib/supabase/instances/service";
 import type { EmailStatus } from "@/src/lib/types/supabase";
-import type { PostgresError } from "postgres";
 import { createResponse } from "@/src/lib/utils/createResponse";
-import { APP_URL, DEFAULT_EMAIL_COOLDOWN } from "@/src/lib/configs";
-import type { AuthError } from "@supabase/supabase-js";
 
 export async function signupResendHandler(email: string, PATH: string) {
   // Create Client

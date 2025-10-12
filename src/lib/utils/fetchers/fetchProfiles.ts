@@ -1,6 +1,6 @@
 import type { UsersProfilesGetRequest } from "@/app/api/users/profiles/get";
-import type { StandardizeResponse } from "../createResponse";
 import type { Profile } from "@/src/db/schema/profiles";
+import type { StandardizeResponse } from "../createResponse";
 import { objectToQueryString } from "../objectToQueryString";
 
 export async function fetchProfiles(

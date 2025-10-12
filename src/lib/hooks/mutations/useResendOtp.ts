@@ -1,5 +1,5 @@
-import type { UsersEmailResendPostRequest } from "@/app/api/users/email/[email]/resend/post";
 import { useMutation } from "@tanstack/react-query";
+import type { UsersEmailResendPostRequest } from "@/app/api/users/email/[email]/resend/post";
 import { APP_URL } from "../../configs";
 
 export const useResendOtp = () => {

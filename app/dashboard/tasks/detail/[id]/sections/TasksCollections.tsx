@@ -27,9 +27,11 @@ const TasksSection = ({
                 label={`${categorizedTasks.todos.length || "No"} Tasks`}
               />
               <TaskAccordion.body>
-                {categorizedTasks?.todos?.map((item) => (
-                  <TaskAccordion.item key={item?.id} task={item} />
-                ))}
+                <TaskAccordion.itemContainer>
+                  {categorizedTasks?.todos?.map((item) => (
+                    <TaskAccordion.item key={item?.id} task={item} />
+                  ))}
+                </TaskAccordion.itemContainer>
               </TaskAccordion.body>
             </TaskAccordion.root>
           )}
@@ -42,9 +44,11 @@ const TasksSection = ({
                 label={`${categorizedTasks.completed.length || "No"} Tasks`}
               />
               <TaskAccordion.body>
-                {categorizedTasks?.completed?.map((item) => (
-                  <TaskAccordion.item key={item?.id} task={item} />
-                ))}
+                <TaskAccordion.itemContainer>
+                  {categorizedTasks?.completed?.map((item) => (
+                    <TaskAccordion.item key={item?.id} task={item} />
+                  ))}
+                </TaskAccordion.itemContainer>
               </TaskAccordion.body>
             </TaskAccordion.root>
           )}

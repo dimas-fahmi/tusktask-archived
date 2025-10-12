@@ -1,8 +1,8 @@
+import type { NextRequest } from "next/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { emailSchema } from "@/src/lib/zod/schemas/authSchema";
-import type { NextRequest } from "next/server";
-import { signupResendHandler } from "./handlers/signupResendHandler";
 import { resetPasswordResendHandler } from "./handlers/resetPasswordResendHandler";
+import { signupResendHandler } from "./handlers/signupResendHandler";
 
 const PATH = "API_USERS_EMAIL_RESEND_POST";
 

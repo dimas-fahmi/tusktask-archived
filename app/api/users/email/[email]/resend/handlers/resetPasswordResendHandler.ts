@@ -1,9 +1,9 @@
+import type { AuthError } from "@supabase/supabase-js";
+import type { PostgresError } from "postgres";
 import { DEFAULT_EMAIL_COOLDOWN } from "@/src/lib/configs";
 import { createServiceClient } from "@/src/lib/supabase/instances/service";
 import type { EmailStatus } from "@/src/lib/types/supabase";
 import { createResponse } from "@/src/lib/utils/createResponse";
-import type { AuthError } from "@supabase/supabase-js";
-import type { PostgresError } from "postgres";
 
 export async function resetPasswordResendHandler(email: string, PATH: string) {
   // Initiate supabase instance

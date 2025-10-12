@@ -1,9 +1,9 @@
-import type { NextRequest } from "next/server";
-import { createResponse } from "@/src/lib/utils/createResponse";
 import { and, eq, ilike } from "drizzle-orm";
-import { profiles } from "@/src/db/schema/profiles";
-import { db } from "@/src/db";
+import type { NextRequest } from "next/server";
 import type { PostgresError } from "postgres";
+import { db } from "@/src/db";
+import { profiles } from "@/src/db/schema/profiles";
+import { createResponse } from "@/src/lib/utils/createResponse";
 
 export interface UsersProfilesGetRequest {
   username?: string;
