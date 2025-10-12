@@ -33,7 +33,7 @@ const HeaderSection = ({ task }: { task?: TaskApp }) => {
           <InformationTable
             deadline={task?.deadlineAt}
             priorityLevel={task?.taskPriority}
-            status={task?.taskPriority}
+            status={task?.taskStatus}
           />
 
           <div className="mt-5 grid grid-cols-2 gap-2">
