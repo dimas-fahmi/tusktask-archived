@@ -15,7 +15,7 @@ import NameAndDescriptionCard from "../components/Cards/NameAndDescriptionCard";
 
 const HeaderSection = ({ project }: { project?: Project }) => {
   // Pull states and setter from task store
-  const { setActiveProject, setNewTaskDialogOpen } = useTaskStore();
+  const { openNewTaskDialog } = useTaskStore();
 
   return (
     <header className="flex flex-col gap-6 md:grid md:grid-cols-[auto_420px]">
@@ -69,8 +69,8 @@ const HeaderSection = ({ project }: { project?: Project }) => {
             </Button>
             <Button
               onClick={() => {
-                setActiveProject(project);
-                setNewTaskDialogOpen(true);
+                if (!project) return;
+                openNewTaskDialog(project);
               }}
             >
               <PlusCircle /> New Task

@@ -27,7 +27,7 @@ const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
   const queryClient = useQueryClient();
 
   // Pull states from tasks store
-  const { setNewTaskDialogOpen, setActiveProject } = useTaskStore();
+  const { openNewTaskDialog } = useTaskStore();
 
   return (
     <div>
@@ -56,8 +56,8 @@ const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
         <ContextMenuItem
           disabled={project?.isPending}
           onClick={() => {
-            setActiveProject(project);
-            setNewTaskDialogOpen(true);
+            if (!project) return;
+            openNewTaskDialog(project);
           }}
         >
           <CirclePlus />
