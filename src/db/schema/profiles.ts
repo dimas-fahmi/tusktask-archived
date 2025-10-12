@@ -30,7 +30,7 @@ export const profiles = userSchema
       // Full Text Search
       index("FTS_USER_PROFILES_NAME").using(
         "gin",
-        sql`to_tsvector('simple', ${t.name})`
+        sql`to_tsvector('simple', ${t.name})`,
       ),
 
       // Policies
@@ -53,7 +53,7 @@ export const profiles = userSchema
         for: "all",
         using: sql``,
       }),
-    ]
+    ],
   )
   .enableRLS();
 

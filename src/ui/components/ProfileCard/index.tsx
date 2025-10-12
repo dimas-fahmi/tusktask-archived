@@ -1,20 +1,22 @@
 "use client";
 
+import { Ellipsis } from "lucide-react";
 import { useFetchUserProfile } from "@/src/lib/hooks/queries/useFetchUserProfile";
-import React from "react";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "../../shadcn/components/ui/avatar";
-import { Ellipsis } from "lucide-react";
 
 const ProfileCard = () => {
   // Profile
   const { data: profile } = useFetchUserProfile();
 
   return (
-    <button className="flex text-left cursor-pointer group/button items-center gap-2">
+    <button
+      type="button"
+      className="flex text-left cursor-pointer group/button items-center gap-2"
+    >
       {/* Content  */}
       {/* Avatar */}
       <Avatar className="w-14 h-14">

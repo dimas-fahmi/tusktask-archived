@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import React from "react";
+import type React from "react";
 import { Label } from "@/src/ui/shadcn/components/ui/label";
 import {
   SidebarGroup,

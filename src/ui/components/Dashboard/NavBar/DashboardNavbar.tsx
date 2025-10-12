@@ -1,5 +1,6 @@
 "use client";
 
+import { Bell, PanelLeft, SwatchBook } from "lucide-react";
 import { useFetchUserProfile } from "@/src/lib/hooks/queries/useFetchUserProfile";
 import { useThemeStore } from "@/src/lib/stores/ui/themeStore";
 import {
@@ -8,8 +9,6 @@ import {
   AvatarImage,
 } from "@/src/ui/shadcn/components/ui/avatar";
 import { useSidebar } from "@/src/ui/shadcn/components/ui/sidebar";
-import { Bell, PanelLeft, SwatchBook } from "lucide-react";
-import React from "react";
 
 const DashboardNavbar = () => {
   // User Profile
@@ -26,6 +25,7 @@ const DashboardNavbar = () => {
       {/* Left Side */}
       <div>
         <button
+          type="button"
           className="hidden md:block button-reactivity opacity-70"
           onClick={() => {
             setOpen(!open);
@@ -36,6 +36,7 @@ const DashboardNavbar = () => {
 
         <div className="md:hidden flex gap-2">
           <button
+            type="button"
             className="button-reactivity opacity-70 border px-2 rounded-md"
             onClick={() => {
               setOpenMobile(!openMobile);
@@ -55,6 +56,7 @@ const DashboardNavbar = () => {
       {/* Right Side */}
       <div className="flex items-center gap-4">
         <button
+          type="button"
           className="button-reactivity opacity-70"
           onClick={() => {
             setThemePickerDialogOpen(true);
@@ -62,10 +64,10 @@ const DashboardNavbar = () => {
         >
           <SwatchBook />
         </button>
-        <button className="button-reactivity opacity-70">
+        <button type="button" className="button-reactivity opacity-70">
           <Bell />
         </button>
-        <button className="button-reactivity">
+        <button type="button" className="button-reactivity">
           <Avatar className="w-10 h-10">
             {profile?.avatar && <AvatarImage src={profile?.avatar} />}
             <AvatarFallback>DF</AvatarFallback>

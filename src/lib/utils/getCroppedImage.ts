@@ -1,6 +1,6 @@
-import { Options } from "browser-image-compression";
+import type { Options } from "browser-image-compression";
 import z from "zod";
-import { CropperStatus } from "../stores/ui/cropperStore";
+import type { CropperStatus } from "../stores/ui/cropperStore";
 import { compressImage } from "./compressImage";
 
 const _qualityRange = z.number().min(0).max(0.8);
@@ -16,7 +16,7 @@ export const getCroppedImg = async (
   imageSrc: string,
   pixelCrop: { x: number; y: number; width: number; height: number },
   setStatus: (n: CropperStatus) => void,
-  settings?: GetCroppedImgSettings
+  settings?: GetCroppedImgSettings,
 ): Promise<{ url: string; blob: Blob; file: File }> => {
   // Settings
   const fileName = settings?.fileName ?? crypto.randomUUID();
@@ -54,7 +54,7 @@ export const getCroppedImg = async (
     0,
     0,
     pixelCrop.width,
-    pixelCrop.height
+    pixelCrop.height,
   );
 
   // Convert canvas to blob
@@ -70,7 +70,7 @@ export const getCroppedImg = async (
       canvas.toBlob(
         (b) => (b ? resolve(b) : reject(new Error("Failed to create blob"))),
         "image/webp",
-        baseQuality
+        baseQuality,
       );
     });
   } catch (_error) {
@@ -97,7 +97,7 @@ export const getCroppedImg = async (
         ...settings?.compressionOptions,
       },
       setStatus,
-      20
+      20,
     );
     setStatus({
       code: "on_process",

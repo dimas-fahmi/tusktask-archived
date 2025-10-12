@@ -1,4 +1,3 @@
-import React from "react";
 import { Separator } from "../../shadcn/components/ui/separator";
 
 const NewTaskHelper = () => {

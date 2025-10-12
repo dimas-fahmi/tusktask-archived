@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { createBrowserClient } from "../../supabase/instances/client";
-import { UserMetadata } from "../../types/supabase";
+import type { UserMetadata } from "../../types/supabase";
 import { useSession } from "../auth/useAuth";
 
 export const useMutateUserMetadata = () => {

@@ -1,10 +1,10 @@
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { and, eq, ilike } from "drizzle-orm";
 import { projects } from "@/src/db/schema/projects";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { db } from "@/src/db";
-import { OperationError } from "@/src/lib/errors";
+import type { OperationError } from "@/src/lib/errors";
 
 const PATH = "API_PROJECTS_GET";
 
@@ -18,7 +18,7 @@ export async function projectsGet(req: NextRequest) {
   // Extract parameters
   const url = req.nextUrl;
   const { id, name, include } = Object.fromEntries(
-    url.searchParams.entries()
+    url.searchParams.entries(),
   ) as ProjectsGetRequest;
 
   // Validate Session
@@ -31,7 +31,7 @@ export async function projectsGet(req: NextRequest) {
       401,
       "unauthorized",
       "Invalid session, login required",
-      undefined
+      undefined,
     );
   }
 
@@ -75,7 +75,7 @@ export async function projectsGet(req: NextRequest) {
       isFound ? 200 : 404,
       isFound ? "success" : "not_found",
       isFound ? "Success fetched projects" : "No such project",
-      response
+      response,
     );
   } catch (error) {
     return createResponse(
@@ -84,7 +84,7 @@ export async function projectsGet(req: NextRequest) {
       (error as OperationError)?.message ?? "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

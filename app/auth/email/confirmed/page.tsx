@@ -1,3 +1,7 @@
+import { CircleCheck } from "lucide-react";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { VERCEL_BLOB_HOST } from "@/src/lib/configs";
 import { generateMetadata } from "@/src/lib/utils/generateMetadata";
 import NavLink from "@/src/ui/components/NavLink";
@@ -5,11 +9,6 @@ import Discord from "@/src/ui/components/SVG/Logos/Discord";
 import Github from "@/src/ui/components/SVG/Logos/Github";
 import Google from "@/src/ui/components/SVG/Logos/Google";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { CircleCheck } from "lucide-react";
-import { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
 
 export const metadata: Metadata = generateMetadata({
   title: "Email Confirmed | TuskTask",

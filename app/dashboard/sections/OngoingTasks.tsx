@@ -1,11 +1,10 @@
 "use client";
 
-import { Task } from "@/src/db/schema/tasks";
+import { CirclePlus } from "lucide-react";
+import type { Task } from "@/src/db/schema/tasks";
 import { useFetchTasks } from "@/src/lib/hooks/queries/useFetchTasks";
 import TaskCard from "@/src/ui/components/Dashboard/TaskCard";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { CirclePlus } from "lucide-react";
-import React from "react";
 
 const OngoingTasks = () => {
   // Fetch Tasks

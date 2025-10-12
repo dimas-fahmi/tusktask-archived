@@ -1,5 +1,5 @@
-import React from "react";
-import { Task } from "@/src/db/schema/tasks";
+import type React from "react";
+import type { Task } from "@/src/db/schema/tasks";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -8,7 +8,7 @@ import {
 import Card from "./Card";
 import TaskCardContextMenu from "./TaskCardContextMenu";
 
-export interface TaskCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TaskCardProps extends React.HTMLAttributes<HTMLButtonElement> {
   task: Task;
 }
 

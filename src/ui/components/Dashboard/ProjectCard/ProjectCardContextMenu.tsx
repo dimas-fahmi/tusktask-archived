@@ -1,12 +1,3 @@
-import { useDeleteProject } from "@/src/lib/hooks/mutations/useDeleteProject";
-import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
-import { ProjectApp } from "@/src/lib/types/projects";
-import {
-  ContextMenuGroup,
-  ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuSeparator,
-} from "@/src/ui/shadcn/components/ui/context-menu";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Archive,
@@ -17,7 +8,15 @@ import {
   Trash,
 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { useDeleteProject } from "@/src/lib/hooks/mutations/useDeleteProject";
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import type { ProjectApp } from "@/src/lib/types/projects";
+import {
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+} from "@/src/ui/shadcn/components/ui/context-menu";
 
 const ProjectCardContextMenu = ({ project }: { project: ProjectApp }) => {
   // Delete Mutation

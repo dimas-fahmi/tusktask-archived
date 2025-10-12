@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import {
   APP_THEMES,
-  AppTheme,
+  type AppTheme,
   DEFAULT_COLOR_THEME,
   DEFAULT_FONT_THEME,
   FONT_THEMES,
-  FontTheme,
+  type FontTheme,
 } from "../../configs";
 
 export interface ThemeStore {

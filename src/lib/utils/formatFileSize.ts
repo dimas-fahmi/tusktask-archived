@@ -5,8 +5,8 @@ export function formatFileSize(bytes?: number): string {
   const MB = KB * 1024;
 
   if (bytes >= MB) {
-    return (bytes / MB).toFixed(1) + "MB";
+    return `${(bytes / MB).toFixed(1)}MB`;
   } else {
-    return Math.round(bytes / KB) + "KB";
+    return `${Math.round(bytes / KB)}KB`;
   }
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import { ProjectsPatchRequest } from "@/app/api/projects/patch";
-import { QueryClient } from "@tanstack/react-query";
+import type { ProjectsPatchRequest } from "@/app/api/projects/patch";
+import type { QueryClient } from "@tanstack/react-query";
 import { queryKeys } from "../../queryKeys";
-import { StandardizeResponse } from "../../createResponse";
-import { Project } from "@/src/db/schema/projects";
+import type { StandardizeResponse } from "../../createResponse";
+import type { Project } from "@/src/db/schema/projects";
 
 const update = (req: ProjectsPatchRequest, queryClient: QueryClient) => {
   const queryKey = queryKeys.projects.detail(req?.id);
@@ -33,7 +33,7 @@ const update = (req: ProjectsPatchRequest, queryClient: QueryClient) => {
     document.title = `${newProject?.name || oldProject?.name} | TuskTask`;
 
     const newList = oldData?.result?.map((item) =>
-      item?.id === req?.id ? newProject : item
+      item?.id === req?.id ? newProject : item,
     );
 
     return {

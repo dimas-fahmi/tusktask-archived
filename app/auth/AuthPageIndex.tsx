@@ -1,19 +1,19 @@
 "use client";
 
-import { VERCEL_BLOB_HOST } from "@/src/lib/configs";
-import Input from "@/src/ui/components/Inputs/Input";
-import NavLink from "@/src/ui/components/NavLink";
-import { Button } from "@/src/ui/shadcn/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { signInSchema } from "@/src/lib/zod/schemas/authSchema";
+import { VERCEL_BLOB_HOST } from "@/src/lib/configs";
 import { useOAuth, useSignIn } from "@/src/lib/hooks/auth/useAuth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
+import { signInSchema } from "@/src/lib/zod/schemas/authSchema";
+import Input from "@/src/ui/components/Inputs/Input";
+import NavLink from "@/src/ui/components/NavLink";
 import OAuthBar from "@/src/ui/components/OAuthBar";
+import AuthAlert from "@/src/ui/components/Prefabs/AuthAlert";
+import { Button } from "@/src/ui/shadcn/components/ui/button";
 
 const AuthPageIndex = ({ code }: { code: string }) => {
   // Loading State

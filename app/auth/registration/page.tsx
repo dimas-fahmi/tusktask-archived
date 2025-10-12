@@ -1,10 +1,9 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { VERCEL_BLOB_HOST } from "@/src/lib/configs";
 import { generateMetadata } from "@/src/lib/utils/generateMetadata";
 import NavLink from "@/src/ui/components/NavLink";
-import { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
 import RegistrationPageIndex from "./RegistrationPageIndex";
 
 export const metadata: Metadata = generateMetadata({

@@ -2,7 +2,6 @@
 
 import Accordion from "@/src/ui/components/Accordion";
 import SectionHeader from "@/src/ui/components/SectionHeader";
-import React from "react";
 
 const Features = () => {
   return (

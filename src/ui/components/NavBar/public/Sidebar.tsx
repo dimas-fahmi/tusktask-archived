@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
-import { motion } from "motion/react";
 import { PanelLeftClose } from "lucide-react";
-import { usePublicSidebarStore } from "@/src/lib/stores/ui/publicSidebar";
-import { NAVIGATIONS } from "@/src/lib/configs";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NAVIGATIONS } from "@/src/lib/configs";
+import { usePublicSidebarStore } from "@/src/lib/stores/ui/publicSidebar";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 
 const PublicSidebar = () => {
@@ -27,7 +26,7 @@ const PublicSidebar = () => {
         {/* Sidebar header */}
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-header font-bold">TuskTask</h1>
-          <button onClick={() => setOpen(false)}>
+          <button type="button" onClick={() => setOpen(false)}>
             <PanelLeftClose />
           </button>
         </header>
@@ -42,6 +41,7 @@ const PublicSidebar = () => {
                   ? "bg-secondary text-secondary-foreground"
                   : ""
               } border py-2 rounded-4xl text-sm px-4`}
+              // biome-ignore lint/suspicious/noArrayIndexKey: it's fine
               key={index}
             >
               {item.title}
@@ -60,7 +60,8 @@ const PublicSidebar = () => {
       </motion.div>
 
       {/* Overlay */}
-      <div
+      <button
+        type="button"
         onClick={() => setOpen(false)}
         className={`${
           open ? "opacity-50" : "opacity-0 pointer-events-none"

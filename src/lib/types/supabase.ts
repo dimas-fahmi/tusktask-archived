@@ -1,4 +1,4 @@
-import { ONBOARDING_STEPS } from "../configs";
+import type { ONBOARDING_STEPS } from "../configs";
 
 export type RegistrationPhase = (typeof ONBOARDING_STEPS)[number];
 

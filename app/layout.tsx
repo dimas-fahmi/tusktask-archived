@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import type React from "react";
+import { useEffect } from "react";
 import "@/src/ui/css/globals.tailwind.css";
-import { fontsVariables } from "@/src/ui/fonts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Toaster } from "@/src/ui/shadcn/components/ui/sonner";
-import { useThemeStore } from "@/src/lib/stores/ui/themeStore";
 import { APP_THEMES_ID } from "@/src/lib/configs";
+import { useThemeStore } from "@/src/lib/stores/ui/themeStore";
+import { fontsVariables } from "@/src/ui/fonts";
+import { Toaster } from "@/src/ui/shadcn/components/ui/sonner";
 
 // QueryClient Initialization
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ export default function RootLayout({
       const html = document.documentElement;
       APP_THEMES_ID.map((item) => {
         html.classList.remove(item);
+        return false;
       });
 
       html.classList.add(activeTheme.id);

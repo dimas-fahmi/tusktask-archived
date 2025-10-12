@@ -1,5 +1,4 @@
-import React from "react";
-import { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
+import type { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
 import { TaskPageOngoingSituation } from "../components/charts/TaskPageOngoingSituation";
 
 const StatsSection = ({

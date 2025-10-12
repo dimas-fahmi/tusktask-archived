@@ -1,5 +1,7 @@
 "use client";
 
+import { ChartBar, Diamond } from "lucide-react";
+import { motion, type Variants } from "motion/react";
 import * as React from "react";
 import {
   Bar,
@@ -14,7 +16,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
+import { PRIORITIES } from "@/src/db/schema/configs";
+import type { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
 import {
   Card,
   CardContent,
@@ -23,7 +26,7 @@ import {
   CardTitle,
 } from "@/src/ui/shadcn/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
@@ -38,10 +41,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/ui/shadcn/components/ui/select";
-import { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
-import { motion, Variants } from "motion/react";
-import { ChartBar, Diamond } from "lucide-react";
-import { PRIORITIES } from "@/src/db/schema/configs";
 
 export const description =
   "An interactive pie chart of ongoing tasks situation";
@@ -119,7 +118,7 @@ export function PrioritySituation({
       collection: "medium",
       label: "Medium",
       tasks: categorizedTasks.mediumPriority?.filter(
-        (item) => !item?.completedAt
+        (item) => !item?.completedAt,
       )?.length,
       fill: "var(--color-medium)",
     },
@@ -134,7 +133,7 @@ export function PrioritySituation({
       collection: "urgent",
       label: "Urgent",
       tasks: categorizedTasks.urgentPriority?.filter(
-        (item) => !item?.completedAt
+        (item) => !item?.completedAt,
       )?.length,
       fill: "var(--color-urgent)",
     },
@@ -149,11 +148,11 @@ export function PrioritySituation({
 
   const activeIndex = React.useMemo(
     () => situationData.findIndex((item) => item.collection === activeFilter),
-    [activeFilter, categorizedTasks]
+    [activeFilter, situationData.findIndex],
   );
   const collections = React.useMemo(
     () => situationData.map((item) => item.collection),
-    []
+    [situationData.map],
   );
 
   return (
@@ -178,6 +177,7 @@ export function PrioritySituation({
 
               return (
                 <button
+                  type="button"
                   key={value}
                   onClick={() => setMode(value as "bar" | "pie")}
                   className={`${

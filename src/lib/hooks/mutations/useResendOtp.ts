@@ -1,4 +1,4 @@
-import { UsersEmailResendPostRequest } from "@/app/api/users/email/[email]/resend/post";
+import type { UsersEmailResendPostRequest } from "@/app/api/users/email/[email]/resend/post";
 import { useMutation } from "@tanstack/react-query";
 import { APP_URL } from "../../configs";
 
@@ -26,7 +26,7 @@ export const useResendOtp = () => {
             "content-type": "application/json",
           },
           body: JSON.stringify({ type }),
-        }
+        },
       );
 
       const result = await response.json();

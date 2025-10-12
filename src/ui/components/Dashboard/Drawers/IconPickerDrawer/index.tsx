@@ -6,7 +6,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/src/ui/shadcn/components/ui/drawer";
-import React from "react";
 import IconPicker from "../../IconPicker";
 
 const IconPickerDrawer = ({ onChange }: { onChange?: (n: string) => void }) => {

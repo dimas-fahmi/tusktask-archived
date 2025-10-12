@@ -1,7 +1,6 @@
-import { Button } from "@/src/ui/shadcn/components/ui/button";
 import Image from "next/image";
-import React from "react";
 import Link from "next/link";
+import { Button } from "@/src/ui/shadcn/components/ui/button";
 
 const HeroSection = () => {
   return (

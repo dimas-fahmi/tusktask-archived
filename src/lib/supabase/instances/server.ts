@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/useIterableCallbackReturn: IT'S FINE ASSHOLE, TF SHOULD I RETURN */
 import { createServerClient as csc } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
@@ -18,7 +19,7 @@ export async function createServerClient() {
       setAll(cookiesToSet) {
         try {
           cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
+            cookieStore.set(name, value, options),
           );
         } catch {
           // The `setAll` method was called from a Server Component.

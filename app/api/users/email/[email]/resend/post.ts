@@ -1,6 +1,6 @@
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { emailSchema } from "@/src/lib/zod/schemas/authSchema";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { signupResendHandler } from "./handlers/signupResendHandler";
 import { resetPasswordResendHandler } from "./handlers/resetPasswordResendHandler";
 
@@ -14,7 +14,7 @@ export interface UsersEmailResendPostRequest {
 
 export async function usersEmailResendPost(
   req: NextRequest,
-  context: { params: Promise<{ email: string }> }
+  context: { params: Promise<{ email: string }> },
 ) {
   // Parse Body
   let body: UsersEmailResendPostRequest;
@@ -26,7 +26,7 @@ export async function usersEmailResendPost(
       400,
       "bad_request",
       "Request is not properly formed, expected: JSON",
-      undefined
+      undefined,
     );
   }
 
@@ -41,7 +41,7 @@ export async function usersEmailResendPost(
       400,
       "bad_request",
       "Invalid or unsupported resend type",
-      undefined
+      undefined,
     );
   }
 
@@ -51,7 +51,7 @@ export async function usersEmailResendPost(
       400,
       "bad_request",
       "Missing email parameter",
-      undefined
+      undefined,
     );
   }
 
@@ -68,7 +68,7 @@ export async function usersEmailResendPost(
         500,
         "not_yet_implemented",
         "This Endpoint is not yet implemented",
-        undefined
+        undefined,
       );
     case "signup":
       return signupResendHandler(email, PATH);
@@ -79,7 +79,7 @@ export async function usersEmailResendPost(
         400,
         "bad_request",
         "Invalid or unsupported resend type",
-        undefined
+        undefined,
       );
   }
 }

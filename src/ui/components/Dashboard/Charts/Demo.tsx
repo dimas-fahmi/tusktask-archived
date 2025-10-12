@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/src/ui/shadcn/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,

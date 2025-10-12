@@ -1,10 +1,15 @@
+/** biome-ignore-all lint/a11y/noSvgWithoutTitle: JUST A FUCKING CIRCLE */
+import { motion } from "motion/react";
+import Image from "next/image";
+import { useState } from "react";
 import {
   APP_THEMES,
   APP_THEMES_ID,
-  FONT_THEMES,
   FONT_THEME_CLASSES,
+  FONT_THEMES,
 } from "@/src/lib/configs";
 import { useThemeStore } from "@/src/lib/stores/ui/themeStore";
+import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,10 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/shadcn/components/ui/dialog";
-import Image from "next/image";
-import React, { useState } from "react";
-import { motion } from "motion/react";
-import { Button } from "@/src/ui/shadcn/components/ui/button";
 
 type TabType = "color" | "font";
 
@@ -59,6 +60,7 @@ const ThemePickerDialog = () => {
         {/* Tabs */}
         <div className="flex gap-1 border-b relative font-header">
           <button
+            type="button"
             onClick={() => setActiveTab("color")}
             className={`px-4 flex-1 py-2.5 font-medium transition-colors relative z-10 ${
               activeTab === "color"
@@ -69,6 +71,7 @@ const ThemePickerDialog = () => {
             Color Themes
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab("font")}
             className={`px-4 flex-1 py-2.5 font-medium transition-colors relative z-10 ${
               activeTab === "font"
@@ -114,6 +117,7 @@ const ThemePickerDialog = () => {
                   transition={{ delay: index * 0.1, duration: 0.3 }}
                 >
                   <button
+                    type="button"
                     onClick={() => handleThemeSelect(themeId)}
                     className={`
                       relative w-full rounded-lg overflow-hidden transition-all duration-300 cursor-pointer

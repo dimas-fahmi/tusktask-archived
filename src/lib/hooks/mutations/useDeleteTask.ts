@@ -29,12 +29,12 @@ export const useDeleteTask = () => {
         tasksProject: eagerUpdaterTasksProject.del(
           data?.id,
           data?.projectId,
-          queryClient
+          queryClient,
         ),
         deleteSubtasksFromList: eagerUpdaterTaskDetail.deleteSubtaskFromList(
           data?.id,
           queryClient,
-          data?.parentTaskId
+          data?.parentTaskId,
         ),
       };
     },
@@ -43,14 +43,14 @@ export const useDeleteTask = () => {
       if (onMutateResult?.tasksProject?.oldData) {
         queryClient.setQueryData(
           onMutateResult?.tasksProject?.queryKey,
-          onMutateResult?.tasksProject?.oldData
+          onMutateResult?.tasksProject?.oldData,
         );
       }
 
       if (onMutateResult?.deleteSubtasksFromList?.oldData) {
         queryClient.setQueryData(
           onMutateResult?.deleteSubtasksFromList?.queryKey,
-          onMutateResult?.deleteSubtasksFromList?.oldData
+          onMutateResult?.deleteSubtasksFromList?.oldData,
         );
       }
     },

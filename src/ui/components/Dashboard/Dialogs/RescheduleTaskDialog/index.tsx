@@ -1,6 +1,21 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AlarmClock,
+  Calendar,
+  Clock,
+  ClockAlert,
+  Gamepad2,
+  Martini,
+  Zap,
+} from "lucide-react";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useUpdateTask } from "@/src/lib/hooks/mutations/useUpdateTasks";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import { newTaskFormSchema } from "@/src/lib/zod/schemas/taskSchema";
+import { Button } from "@/src/ui/shadcn/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,22 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/ui/shadcn/components/ui/dialog";
-import React, { useEffect } from "react";
 import { DatePicker } from "../../../DatePicker";
-import { Controller, useForm } from "react-hook-form";
-import {
-  AlarmClock,
-  ClockAlert,
-  Gamepad2,
-  Martini,
-  Zap,
-  Clock,
-  Calendar,
-} from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { newTaskFormSchema } from "@/src/lib/zod/schemas/taskSchema";
-import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { useUpdateTask } from "@/src/lib/hooks/mutations/useUpdateTasks";
 
 const RescheduleTaskDialog = () => {
   // Pull states and setters from task store
@@ -40,7 +40,7 @@ const RescheduleTaskDialog = () => {
     formState: { isValid },
   } = useForm({
     resolver: zodResolver(
-      newTaskFormSchema.pick({ deadlineAt: true, reminderAt: true })
+      newTaskFormSchema.pick({ deadlineAt: true, reminderAt: true }),
     ),
     mode: "onChange",
     defaultValues: {
@@ -64,7 +64,7 @@ const RescheduleTaskDialog = () => {
     if (!rescheduleDialogOpen) {
       reset({ deadlineAt: null, reminderAt: null });
     }
-  }, [rescheduleDialogOpen]);
+  }, [rescheduleDialogOpen, reset]);
 
   // Mutate task update
   const { mutate: updateTask, isPending: isUpdatingTask } = useUpdateTask(
@@ -73,7 +73,7 @@ const RescheduleTaskDialog = () => {
       onMutate: () => {
         setRescheduleDialogOpen(false);
       },
-    }
+    },
   );
 
   // Helper functions for date calculations
@@ -266,7 +266,7 @@ const RescheduleTaskDialog = () => {
                     setValue(
                       "reminderAt",
                       getDateBeforeDeadline(deadline, 24),
-                      { shouldValidate: true }
+                      { shouldValidate: true },
                     );
                   }
                 }}

@@ -1,12 +1,12 @@
 "use client";
 
-import { TaskApp } from "@/src/lib/types/tasks";
-import { Card, CardContent } from "@/src/ui/shadcn/components/ui/card";
-import React, { useState, useEffect } from "react";
-import { Clock, AlertCircle } from "lucide-react";
-import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import { AlertCircle, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useCountdown } from "@/src/lib/hooks/ui/useCountdown";
+import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
+import type { TaskApp } from "@/src/lib/types/tasks";
+import { Button } from "@/src/ui/shadcn/components/ui/button";
+import { Card, CardContent } from "@/src/ui/shadcn/components/ui/card";
 
 const Countdown = ({ task }: { task: TaskApp }) => {
   const { openRescheduleDialog } = useTaskStore();

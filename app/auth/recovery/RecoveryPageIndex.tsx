@@ -1,9 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Mail } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { DEFAULT_EMAIL_COOLDOWN, VERCEL_BLOB_HOST } from "@/src/lib/configs";
 import { useResendOtp } from "@/src/lib/hooks/mutations/useResendOtp";
 import { useFetchEmailStatus } from "@/src/lib/hooks/queries/useFetchEmailStatus";
-import { AuthResponse } from "@/src/lib/supabase/auth/actions";
+import type { AuthResponse } from "@/src/lib/supabase/auth/actions";
 import { formatTime } from "@/src/lib/utils/formatTime";
 import { emailSchema } from "@/src/lib/zod/schemas/authSchema";
 import Input from "@/src/ui/components/Inputs/Input";
@@ -12,14 +20,6 @@ import Discord from "@/src/ui/components/SVG/Logos/Discord";
 import Github from "@/src/ui/components/SVG/Logos/Github";
 import Google from "@/src/ui/components/SVG/Logos/Google";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 const RecoveryPageIndex = () => {
   // Router initialization
@@ -55,7 +55,7 @@ const RecoveryPageIndex = () => {
     }, 1000);
 
     return () => clearTimeout(debouncer);
-  }, [email, setEmailKey, setIsTyping]);
+  }, [email]);
 
   // Fetch EmailStatus
   const { data, isFetching, refetch } = useFetchEmailStatus(emailKey);
@@ -81,7 +81,7 @@ const RecoveryPageIndex = () => {
       const diff = present.getTime() - recoverySentAt.getTime();
       setTimeLeft(DEFAULT_EMAIL_COOLDOWN - diff);
     }
-  }, [emailStatus, setTimeLeft]);
+  }, [emailStatus]);
 
   useEffect(() => {
     if (timeLeft < 1) return;
@@ -91,7 +91,7 @@ const RecoveryPageIndex = () => {
     }, 1000);
 
     return () => clearTimeout(countdown);
-  }, [timeLeft, setTimeLeft]);
+  }, [timeLeft]);
 
   // Mutation
   const { mutate: send, isPending: isSending } = useResendOtp();
@@ -132,13 +132,13 @@ const RecoveryPageIndex = () => {
               {
                 onError: (error) => {
                   router.push(
-                    `/auth/recovery/reset?code=${(error as unknown as AuthResponse)?.code ?? "unknown_error"}&message=${encodeURIComponent((error as unknown as AuthResponse)?.message ?? "Unknown error")}`
+                    `/auth/recovery/reset?code=${(error as unknown as AuthResponse)?.code ?? "unknown_error"}&message=${encodeURIComponent((error as unknown as AuthResponse)?.message ?? "Unknown error")}`,
                   );
                 },
                 onSettled: () => {
                   refetch();
                 },
-              }
+              },
             );
           })}
         >

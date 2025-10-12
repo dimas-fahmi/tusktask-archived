@@ -1,7 +1,7 @@
 "use client";
 
 import { useUpdateTask } from "@/src/lib/hooks/mutations/useUpdateTasks";
-import { TaskApp } from "@/src/lib/types/tasks";
+import type { TaskApp } from "@/src/lib/types/tasks";
 import {
   Tooltip,
   TooltipContent,
@@ -63,19 +63,19 @@ const TaskScratchButton = React.forwardRef<
           className={cn(
             `group relative w-6 h-6 cursor-pointer opacity-50 hover:opacity-100 transition-all duration-300`,
             classes?.buttonClassNames,
-            props?.className
+            props?.className,
           )}
         >
           <Circle
             className={cn(
               `${task?.completedAt ? "opacity-0 group-hover:opacity-100" : ""} absolute inset-0 transition-all duration-200`,
-              classes?.iconClassNames
+              classes?.iconClassNames,
             )}
           />
           <CircleCheckBig
             className={cn(
               `${task?.completedAt ? "opacity-100 group-hover:opacity-50" : "opacity-0 group-hover:opacity-100"} absolute inset-0 transition-all duration-200`,
-              classes?.iconClassNames
+              classes?.iconClassNames,
             )}
           />
         </button>

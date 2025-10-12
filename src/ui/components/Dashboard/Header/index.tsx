@@ -1,8 +1,7 @@
 "use client";
 
-import { useSidebar } from "@/src/ui/shadcn/components/ui/sidebar";
 import { Settings2 } from "lucide-react";
-import React from "react";
+import { useSidebar } from "@/src/ui/shadcn/components/ui/sidebar";
 
 const Header = () => {
   // Pull setters
@@ -21,6 +20,7 @@ const Header = () => {
         />
 
         <button
+          type="button"
           className="md:hidden flex items-center justify-center bg-primary text-primary-foreground p-2 h-10 w-10 rounded-full"
           onClick={() => {
             setOpenMobile(true);

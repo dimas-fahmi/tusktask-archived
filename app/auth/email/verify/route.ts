@@ -1,5 +1,5 @@
 import { APP_URL } from "@/src/lib/configs";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   // Extract Parameters
@@ -12,31 +12,31 @@ export async function GET(req: NextRequest) {
   if (!origin) {
     return NextResponse.redirect(
       "/auth?code=server_error&message=" +
-        encodeURIComponent("Missing app URL configuration")
+        encodeURIComponent("Missing app URL configuration"),
     );
   }
 
   if (!supabaseURL) {
     return NextResponse.redirect(
-      `${origin}/auth?code=server_error&message=${encodeURIComponent("Missing Supabase URL configuration")}`
+      `${origin}/auth?code=server_error&message=${encodeURIComponent("Missing Supabase URL configuration")}`,
     );
   }
 
   if (!token) {
     return NextResponse.redirect(
-      `${origin}/auth?code=bad_request&message=${encodeURIComponent("Missing token parameter")}`
+      `${origin}/auth?code=bad_request&message=${encodeURIComponent("Missing token parameter")}`,
     );
   }
 
   if (!type) {
     return NextResponse.redirect(
-      `${origin}/auth?code=bad_request&message=${encodeURIComponent("Missing type parameter")}`
+      `${origin}/auth?code=bad_request&message=${encodeURIComponent("Missing type parameter")}`,
     );
   }
 
   if (!email) {
     return NextResponse.redirect(
-      `${origin}/auth?code=bad_request&message=${encodeURIComponent("Missing email parameter")}`
+      `${origin}/auth?code=bad_request&message=${encodeURIComponent("Missing email parameter")}`,
     );
   }
 

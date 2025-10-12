@@ -1,7 +1,6 @@
-import React from "react";
-import { FieldValues, Path, UseFormSetValue } from "react-hook-form";
-import { NewTaskFormSchema } from "@/src/lib/zod/schemas/taskSchema";
-import { PRIORITIES } from "@/src/db/schema/configs";
+import type { FieldValues, Path, UseFormSetValue } from "react-hook-form";
+import type { PRIORITIES } from "@/src/db/schema/configs";
+import type { NewTaskFormSchema } from "@/src/lib/zod/schemas/taskSchema";
 
 export interface PriorityButtonProps<T extends FieldValues> {
   priority?: string;

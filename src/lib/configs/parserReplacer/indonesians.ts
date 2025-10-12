@@ -1,4 +1,4 @@
-import { ReplacementRules } from "../../utils/replaceMultiple";
+import type { ReplacementRules } from "../../utils/replaceMultiple";
 
 export const NLP_INDONESIAN_RULE: ReplacementRules = [
   // 🔹 Time-related words

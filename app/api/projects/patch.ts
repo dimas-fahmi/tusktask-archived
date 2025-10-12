@@ -1,11 +1,15 @@
 import { db } from "@/src/db";
-import { Project, projects, ProjectSchema } from "@/src/db/schema/projects";
+import {
+  type Project,
+  projects,
+  ProjectSchema,
+} from "@/src/db/schema/projects";
 import { OperationError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import z, { prettifyError } from "zod";
 
 const PATH = "API_PROJECTS_PATCH";
@@ -26,7 +30,7 @@ export async function projectsPatch(req: NextRequest) {
       401,
       "unauthorized",
       "Session invalid, login required",
-      undefined
+      undefined,
     );
   }
 
@@ -39,7 +43,7 @@ export async function projectsPatch(req: NextRequest) {
       400,
       "bad_request",
       "Malformed request, expected: Raw JSON",
-      undefined
+      undefined,
     );
   }
 
@@ -51,7 +55,7 @@ export async function projectsPatch(req: NextRequest) {
       400,
       "bad_request",
       "Missing important parameters: Id",
-      undefined
+      undefined,
     );
   }
 
@@ -60,7 +64,7 @@ export async function projectsPatch(req: NextRequest) {
       400,
       "bad_request",
       "Missing important parameters: newValues",
-      undefined
+      undefined,
     );
   }
 
@@ -77,7 +81,7 @@ export async function projectsPatch(req: NextRequest) {
       400,
       "bad_request",
       prettifyError(validation.error),
-      undefined
+      undefined,
     );
   }
 
@@ -93,21 +97,21 @@ export async function projectsPatch(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when fetching project's information"
+          "Failed when fetching project's information",
         );
       }
 
       if (!project) {
         throw new OperationError(
           "bad_request",
-          "No projects with provided id is found"
+          "No projects with provided id is found",
         );
       }
 
       if (project?.ownerId !== user.id) {
         throw new OperationError(
           "unauthorized",
-          "Not the owner of the project"
+          "Not the owner of the project",
         );
       }
 
@@ -121,7 +125,7 @@ export async function projectsPatch(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when updating project"
+          "Failed when updating project",
         );
       }
     });
@@ -131,7 +135,7 @@ export async function projectsPatch(req: NextRequest) {
       200,
       "success_update_project",
       "Project's updated",
-      response
+      response,
     );
   } catch (error) {
     if (error instanceof OperationError) {
@@ -151,7 +155,7 @@ export async function projectsPatch(req: NextRequest) {
       "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

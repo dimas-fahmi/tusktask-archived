@@ -1,13 +1,13 @@
-import { UsersProfilesGetRequest } from "@/app/api/users/profiles/get";
-import { StandardizeResponse } from "../createResponse";
-import { Profile } from "@/src/db/schema/profiles";
+import type { UsersProfilesGetRequest } from "@/app/api/users/profiles/get";
+import type { StandardizeResponse } from "../createResponse";
+import type { Profile } from "@/src/db/schema/profiles";
 import { objectToQueryString } from "../objectToQueryString";
 
 export async function fetchProfiles(
-  req: UsersProfilesGetRequest
+  req: UsersProfilesGetRequest,
 ): Promise<StandardizeResponse<Profile[]>> {
   const response = await fetch(
-    `/api/users/profiles?${objectToQueryString(req as Record<string, string>)}`
+    `/api/users/profiles?${objectToQueryString(req as Record<string, string>)}`,
   );
 
   const result = await response.json();

@@ -77,12 +77,8 @@
           "tableFrom": "profiles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -94,18 +90,14 @@
           "name": "PLC_USER_PROFILES_SELECT_AUTHENTICATED",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": ""
         },
         "PLC_USER_PROFILES_UPDATE_SELF": {
           "name": "PLC_USER_PROFILES_UPDATE_SELF",
           "as": "PERMISSIVE",
           "for": "UPDATE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(SELECT auth.uid()) = \"user\".\"profiles\".\"user_id\"",
           "withCheck": "(SELECT auth.uid()) = \"user\".\"profiles\".\"user_id\""
         },
@@ -113,9 +105,7 @@
           "name": "PLC_USER_PROFILES_ALL_SERVICE",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "service_role"
-          ],
+          "to": ["service_role"],
           "using": ""
         }
       },
@@ -240,12 +230,8 @@
           "tableFrom": "projects",
           "tableTo": "profiles",
           "schemaTo": "user",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -257,9 +243,7 @@
           "name": "PLC_PROJECT_PROJECTS_ALL_SELF",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select auth.uid()) = \"project\".\"projects\".\"owner_id\"",
           "withCheck": "(select auth.uid()) = \"project\".\"projects\".\"owner_id\""
         },
@@ -267,9 +251,7 @@
           "name": "PLC_PROJECT_PROJECTS_ALL_SERVICE",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "service_role"
-          ],
+          "to": ["service_role"],
           "using": ""
         }
       },
@@ -357,12 +339,8 @@
           "tableFrom": "master_tasks",
           "tableTo": "profiles",
           "schemaTo": "user",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -374,9 +352,7 @@
           "name": "PLC_PROJECT_MASTER_TASKS_ALL_SELF",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select auth.uid()) = \"project\".\"master_tasks\".\"owner_id\"",
           "withCheck": "(select auth.uid()) = \"project\".\"master_tasks\".\"owner_id\""
         },
@@ -384,9 +360,7 @@
           "name": "PLC_PROJECT_MASTER_TASKS_ALL_SERVICE",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "service_role"
-          ],
+          "to": ["service_role"],
           "using": ""
         }
       },
@@ -586,12 +560,8 @@
           "tableFrom": "tasks",
           "tableTo": "profiles",
           "schemaTo": "user",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -600,12 +570,8 @@
           "tableFrom": "tasks",
           "tableTo": "projects",
           "schemaTo": "project",
-          "columnsFrom": [
-            "project_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["project_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -614,12 +580,8 @@
           "tableFrom": "tasks",
           "tableTo": "master_tasks",
           "schemaTo": "project",
-          "columnsFrom": [
-            "master_task"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["master_task"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -628,12 +590,8 @@
           "tableFrom": "tasks",
           "tableTo": "tasks",
           "schemaTo": "project",
-          "columnsFrom": [
-            "parent_task"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_task"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -645,9 +603,7 @@
           "name": "PLC_PROJECT_TASKS_ALL_SELF",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(select auth.uid()) = \"project\".\"tasks\".\"owner_id\"",
           "withCheck": "(select auth.uid()) = \"project\".\"tasks\".\"owner_id\""
         },
@@ -655,9 +611,7 @@
           "name": "PLC_PROJECT_TASKS_ALL_SERVICE",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "service_role"
-          ],
+          "to": ["service_role"],
           "using": ""
         }
       },
@@ -669,39 +623,22 @@
     "project.priority_enum": {
       "name": "priority_enum",
       "schema": "project",
-      "values": [
-        "low",
-        "medium",
-        "high"
-      ]
+      "values": ["low", "medium", "high"]
     },
     "project.project_status": {
       "name": "project_status",
       "schema": "project",
-      "values": [
-        "on_process",
-        "completed",
-        "archived"
-      ]
+      "values": ["on_process", "completed", "archived"]
     },
     "project.project_type": {
       "name": "project_type",
       "schema": "project",
-      "values": [
-        "primary",
-        "generic",
-        "co-op"
-      ]
+      "values": ["primary", "generic", "co-op"]
     },
     "project.task_status": {
       "name": "task_status",
       "schema": "project",
-      "values": [
-        "pending",
-        "archived",
-        "on_process",
-        "completed"
-      ]
+      "values": ["pending", "archived", "on_process", "completed"]
     }
   },
   "schemas": {

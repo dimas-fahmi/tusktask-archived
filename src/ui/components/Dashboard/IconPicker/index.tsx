@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from "react";
 import * as icons from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo, useState } from "react";
 import lucide from "./lucide.json";
 
 // Get Icon Names
@@ -62,7 +62,9 @@ const IconPicker = ({ setIconName }: IconPickerProps) => {
       <div className="flex gap-2 mb-4">
         {DEFAULT_KEYWORDS.map((item, index) => (
           <button
+            type="button"
             className={`${item.toLocaleLowerCase() === search.toLowerCase() ? "bg-primary text-primary-foreground" : "button-reactivity"} border cursor-pointer flex items-center p-2 rounded-md flex-1 justify-center disabled:opacity-50 capitalize text-xs`}
+            // biome-ignore lint/suspicious/noArrayIndexKey: better than value
             key={index}
             onClick={() => {
               setSearch(item);
@@ -84,7 +86,8 @@ const IconPicker = ({ setIconName }: IconPickerProps) => {
           ];
 
           return (
-            <div
+            <button
+              type="button"
               key={name}
               className={`hover:bg-primary/30 hover:text-primary flex flex-col items-center justify-center p-3 rounded-lg  transition-colors duration-200 group cursor-pointer`}
               title={name}
@@ -93,7 +96,7 @@ const IconPicker = ({ setIconName }: IconPickerProps) => {
               }}
             >
               <Icon className="w-6 h-6" />
-            </div>
+            </button>
           );
         })}
 
@@ -109,6 +112,7 @@ const IconPicker = ({ setIconName }: IconPickerProps) => {
         className={`flex items-center justify-between gap-4 mt-4 ${page > 1 ? "opacity-100" : "opacity-50"}`}
       >
         <button
+          type="button"
           onClick={goToPrevPage}
           disabled={page === 1 || !filteredIcons.length}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:cursor-not-allowed transition-colors"
@@ -122,6 +126,7 @@ const IconPicker = ({ setIconName }: IconPickerProps) => {
         </span>
 
         <button
+          type="button"
           onClick={goToNextPage}
           disabled={page === totalPages || !filteredIcons.length}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

@@ -2,7 +2,7 @@
 
 import { createServerClient } from "../instances/server";
 import { registrationSchema, signInSchema } from "../../zod/schemas/authSchema";
-import { Session } from "@supabase/supabase-js";
+import type { Session } from "@supabase/supabase-js";
 import { prettifyError } from "zod";
 import { parseAuthError } from "../../utils/parseAuthError";
 
@@ -34,7 +34,7 @@ export async function getSession() {
 
 export async function signIn(
   email: string,
-  password: string
+  password: string,
 ): Promise<AuthResponse> {
   // Create Supabase Instance
   const supabase = await createServerClient();

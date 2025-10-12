@@ -1,4 +1,4 @@
-import { cva, VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 import { cn } from "../shadcn/lib/utils";
 
@@ -23,7 +23,7 @@ const headingVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 export interface HeadingProps
@@ -37,7 +37,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       className={cn(headingVariants({ variant, size }), className)}
       {...props}
     />
-  )
+  ),
 );
 
 Heading.displayName = "Heading";

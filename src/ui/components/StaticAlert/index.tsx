@@ -1,8 +1,9 @@
 "use client";
 
-import { cva, VariantProps } from "class-variance-authority";
-import { ChevronUp, CircleAlert, LucideIcon } from "lucide-react";
-import React, { useState } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { ChevronUp, CircleAlert, type LucideIcon } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { cn } from "../../shadcn/lib/utils";
 import { motion } from "motion/react";
 
@@ -57,7 +58,7 @@ const StaticAlert = ({
       <header
         className={cn(
           "flex gap-2 items-center justify-between",
-          classes?.header
+          classes?.header,
         )}
       >
         {/* Header Content */}
@@ -88,7 +89,7 @@ const StaticAlert = ({
           <CloseIcon
             className={cn(
               `${hidden ? "rotate-z-180" : ""} transition-all duration-300 w-4 h-4`,
-              classes?.alertCloseButtonIcon
+              classes?.alertCloseButtonIcon,
             )}
           />
         </button>

@@ -1,9 +1,9 @@
 import { DEFAULT_EMAIL_COOLDOWN } from "@/src/lib/configs";
 import { createServiceClient } from "@/src/lib/supabase/instances/service";
-import { EmailStatus } from "@/src/lib/types/supabase";
+import type { EmailStatus } from "@/src/lib/types/supabase";
 import { createResponse } from "@/src/lib/utils/createResponse";
-import { AuthError } from "@supabase/supabase-js";
-import { PostgresError } from "postgres";
+import type { AuthError } from "@supabase/supabase-js";
+import type { PostgresError } from "postgres";
 
 export async function resetPasswordResendHandler(email: string, PATH: string) {
   // Initiate supabase instance
@@ -27,7 +27,7 @@ export async function resetPasswordResendHandler(email: string, PATH: string) {
       500,
       (error as PostgresError)?.code ?? "unknown_message",
       (error as PostgresError)?.message ?? "Unknown error",
-      undefined
+      undefined,
     );
   }
 
@@ -48,7 +48,7 @@ export async function resetPasswordResendHandler(email: string, PATH: string) {
         429,
         "too_many_request",
         "Not yet passed cooldown",
-        undefined
+        undefined,
       );
     }
   }
@@ -65,7 +65,7 @@ export async function resetPasswordResendHandler(email: string, PATH: string) {
       200,
       "success_reset_password_sent",
       "Reset password instructions successfully sent",
-      undefined
+      undefined,
     );
   } catch (error) {
     return createResponse(
@@ -74,7 +74,7 @@ export async function resetPasswordResendHandler(email: string, PATH: string) {
       (error as AuthError)?.message ?? "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

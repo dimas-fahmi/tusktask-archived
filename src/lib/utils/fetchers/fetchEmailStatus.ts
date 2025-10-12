@@ -1,9 +1,9 @@
 import { APP_URL } from "../../configs";
-import { EmailStatus } from "../../types/supabase";
-import { StandardizeResponse } from "../createResponse";
+import type { EmailStatus } from "../../types/supabase";
+import type { StandardizeResponse } from "../createResponse";
 
 export const fetchEmailStatus = async (
-  email?: string | null
+  email?: string | null,
 ): Promise<StandardizeResponse<EmailStatus> | undefined> => {
   if (!email) return undefined;
 

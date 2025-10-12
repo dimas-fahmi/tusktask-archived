@@ -1,6 +1,6 @@
 import { parseCookies } from "../parseCookies";
 import { fetchUserTasks } from "../fetchers/fetchUserTasks";
-import { Task } from "@/src/db/schema/tasks";
+import type { Task } from "@/src/db/schema/tasks";
 
 export async function getTask(id: string) {
   const cookieString = await parseCookies();
@@ -16,7 +16,7 @@ export async function getTask(id: string) {
         revalidate: 60 * 60 * 1, // revalidate every 1 hour
         tags: ["tasks", `task-${id}`],
       },
-    }
+    },
   );
 
   return response;

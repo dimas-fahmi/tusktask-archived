@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
-import { cva, VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../shadcn/lib/utils";
 
 export const linkButtonVariants = cva(
@@ -20,7 +20,7 @@ export const linkButtonVariants = cva(
     defaultVariants: {
       variant: "primary",
     },
-  }
+  },
 );
 
 export interface LinkButtonProps
@@ -47,7 +47,7 @@ const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
         </div>
       </Link>
     );
-  }
+  },
 );
 
 LinkButton.displayName = "LinkButton";

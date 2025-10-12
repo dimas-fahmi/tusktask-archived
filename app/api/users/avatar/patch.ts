@@ -1,5 +1,9 @@
+import { del, type PutBlobResult, put } from "@vercel/blob";
+import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+import sharp, { type Metadata } from "sharp";
 import { db } from "@/src/db";
-import { Profile, profiles } from "@/src/db/schema/profiles";
+import { type Profile, profiles } from "@/src/db/schema/profiles";
 import {
   ALLOWED_IMAGE_MAX_MIME_SIZE,
   ALLOWED_IMAGE_MIME_TYPES,
@@ -8,10 +12,6 @@ import {
 import { OperationError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
-import { eq } from "drizzle-orm";
-import { NextRequest } from "next/server";
-import sharp, { Metadata } from "sharp";
-import { del, put, PutBlobResult } from "@vercel/blob";
 
 export async function usersAvatarPatch(req: NextRequest) {
   // Validate Session
@@ -25,12 +25,12 @@ export async function usersAvatarPatch(req: NextRequest) {
       401,
       "unauthorized",
       "Invalid session, please sign in.",
-      undefined
+      undefined,
     );
   }
 
   // Parse Body
-  let body;
+  let body: FormData;
   try {
     body = await req.formData();
   } catch (_error) {
@@ -38,7 +38,7 @@ export async function usersAvatarPatch(req: NextRequest) {
       400,
       "bad_request",
       "Invalid request, expected a body: FormData",
-      undefined
+      undefined,
     );
   }
 
@@ -50,7 +50,7 @@ export async function usersAvatarPatch(req: NextRequest) {
       400,
       "bad_request",
       "No image is provided",
-      undefined
+      undefined,
     );
   }
 
@@ -60,7 +60,7 @@ export async function usersAvatarPatch(req: NextRequest) {
       400,
       "bad_request",
       `Only ${ALLOWED_IMAGE_MIME_TYPES.join(" - ")} are allowed`,
-      undefined
+      undefined,
     );
   }
 
@@ -70,7 +70,7 @@ export async function usersAvatarPatch(req: NextRequest) {
       400,
       "bad_request",
       `File is over size limit, maximum size is ${Math.floor(ALLOWED_IMAGE_MAX_MIME_SIZE / 1024 / 1024)}MB`,
-      undefined
+      undefined,
     );
   }
 
@@ -105,7 +105,7 @@ export async function usersAvatarPatch(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when fetching user's profile"
+          "Failed when fetching user's profile",
         );
       }
 
@@ -116,13 +116,13 @@ export async function usersAvatarPatch(req: NextRequest) {
       // 2. Check if user's avatar is hosted on bucket server, if so delete first
       const currentAvatar = profile.avatar;
 
-      if (currentAvatar && currentAvatar.includes(VERCEL_BLOB_ID)) {
+      if (currentAvatar?.includes(VERCEL_BLOB_ID)) {
         try {
           await del(currentAvatar);
         } catch (_error) {
           throw new OperationError(
             "bucket_error",
-            "Failed when deleting user's old avatar, operation is aborted."
+            "Failed when deleting user's old avatar, operation is aborted.",
           );
         }
       }
@@ -135,12 +135,12 @@ export async function usersAvatarPatch(req: NextRequest) {
           processedBuffer,
           {
             access: "public",
-          }
+          },
         );
       } catch (_error) {
         throw new OperationError(
           "bucket_error",
-          "Failed when uploading new user's old avatar, operation is aborted"
+          "Failed when uploading new user's old avatar, operation is aborted",
         );
       }
 
@@ -157,7 +157,7 @@ export async function usersAvatarPatch(req: NextRequest) {
       } catch (_error) {
         throw new OperationError(
           "database_error",
-          "Failed when updating user's avatar"
+          "Failed when updating user's avatar",
         );
       }
 
@@ -168,7 +168,7 @@ export async function usersAvatarPatch(req: NextRequest) {
       200,
       "success_update_avatar",
       "New avatar is uploaded and stored",
-      response
+      response,
     );
   } catch (error) {
     const isOE = error instanceof OperationError;
@@ -176,7 +176,7 @@ export async function usersAvatarPatch(req: NextRequest) {
       500,
       isOE ? error.code : "unknown_error",
       isOE ? error.message : "Unknown Error",
-      undefined
+      undefined,
     );
   }
 }

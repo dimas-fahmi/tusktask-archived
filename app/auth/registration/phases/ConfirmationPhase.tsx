@@ -1,14 +1,14 @@
 "use client";
 
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { DEFAULT_NO_IMAGE_SQUARE } from "@/src/lib/configs";
 import { useSession } from "@/src/lib/hooks/auth/useAuth";
 import { useMutateUserMetadata } from "@/src/lib/hooks/mutations/useMutateUserMetadata";
 import { useFetchProfile } from "@/src/lib/hooks/queries/useFetchProfile";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Skeleton } from "@/src/ui/shadcn/components/ui/skeleton";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
 
 const ConfirmationPhase = () => {
   // Loading State
@@ -20,7 +20,7 @@ const ConfirmationPhase = () => {
   // Pull User's profile
   const { data: profile } = useFetchProfile(
     { id: session?.user?.id },
-    session?.user?.id ? true : false
+    !!session?.user?.id,
   );
 
   // Mutate Metadata
@@ -67,7 +67,7 @@ const ConfirmationPhase = () => {
                     onError: () => {
                       setIsLoading(false); // Set false if somehing goes wrong
                     },
-                  }
+                  },
                 );
               }}
             >

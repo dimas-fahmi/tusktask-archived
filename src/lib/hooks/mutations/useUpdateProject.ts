@@ -2,15 +2,15 @@
 
 import {
   useMutation,
-  UseMutationOptions,
+  type UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query";
-import { StandardizeResponse } from "../../utils/createResponse";
-import { Project } from "@/src/db/schema/projects";
-import { OperationError } from "../../errors";
-import { ProjectsPatchRequest } from "@/app/api/projects/patch";
+import type { StandardizeResponse } from "../../utils/createResponse";
+import type { Project } from "@/src/db/schema/projects";
+import type { OperationError } from "../../errors";
+import type { ProjectsPatchRequest } from "@/app/api/projects/patch";
 import { eagerUpdaterProjectsDetail } from "../../utils/eagerUpdater/projects/detail";
-import { EagerUpdaterResult } from "../../types/eagerUpdate";
+import type { EagerUpdaterResult } from "../../types/eagerUpdate";
 
 export interface UseUpdateProjectContext {
   projectDetail?: EagerUpdaterResult<Project[]>;
@@ -26,7 +26,7 @@ export const useUpdateProject = <TContext extends UseUpdateProjectContext>(
       TContext
     >,
     "mutationKey" | "mutationFn"
-  >
+  >,
 ) => {
   const queryClient = useQueryClient();
 
@@ -58,7 +58,7 @@ export const useUpdateProject = <TContext extends UseUpdateProjectContext>(
         // Default optimistics update here...
         projectDetail: eagerUpdaterProjectsDetail.update(
           variables,
-          queryClient
+          queryClient,
         ),
 
         // Extensions
@@ -71,7 +71,7 @@ export const useUpdateProject = <TContext extends UseUpdateProjectContext>(
       if (onMutateResult?.projectDetail) {
         queryClient.setQueryData(
           onMutateResult?.projectDetail?.queryKey,
-          onMutateResult?.projectDetail?.oldData
+          onMutateResult?.projectDetail?.oldData,
         );
       }
     },

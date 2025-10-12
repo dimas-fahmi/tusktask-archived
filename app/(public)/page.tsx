@@ -1,4 +1,3 @@
-import React from "react";
 import type { Metadata } from "next";
 import { generateMetadata } from "@/src/lib/utils/generateMetadata";
 import LandingPageIndex from "./LandingPageIndex";

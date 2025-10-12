@@ -1,33 +1,33 @@
 "use client";
 
-import React from "react";
-import CircularProgress from "../CircularProgress";
-import { Clock } from "lucide-react";
-import { TaskCardProps } from ".";
 import { formatDate, formatDistance } from "date-fns";
+import { Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
-import TaskScratchButton from "../TaskScratchButton";
+import React from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/src/ui/shadcn/components/ui/tooltip";
 import { cn } from "@/src/ui/shadcn/lib/utils";
+import CircularProgress from "../CircularProgress";
+import TaskScratchButton from "../TaskScratchButton";
+import type { TaskCardProps } from ".";
 
-const Card = React.forwardRef<HTMLDivElement, TaskCardProps>(
+const Card = React.forwardRef<HTMLButtonElement, TaskCardProps>(
   ({ task, ...props }, ref) => {
     const router = useRouter();
 
     return (
-      <div
+      <button
+        ref={ref}
+        className={cn(
+          `${task?.completedAt ? "bg-primary text-primary-foreground" : ""} group/card border min-h-37 max-h-48 p-4 rounded-md cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-200 flex flex-col`,
+        )}
+        {...props}
         onClick={() => {
           router.push(`/dashboard/tasks/detail/${task?.id}`);
         }}
-        ref={ref}
-        className={cn(
-          `${task?.completedAt ? "bg-primary text-primary-foreground" : ""} group/card border min-h-37 max-h-48 p-4 rounded-md cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-200 flex flex-col`
-        )}
-        {...props}
       >
         {/* Priority */}
         <div className="text-xs mb-2 flex items-center justify-between">
@@ -97,7 +97,7 @@ const Card = React.forwardRef<HTMLDivElement, TaskCardProps>(
                           new Date(),
                           {
                             addSuffix: true,
-                          }
+                          },
                         )}
                       </span>
                     </div>
@@ -128,9 +128,9 @@ const Card = React.forwardRef<HTMLDivElement, TaskCardProps>(
             />
           </div>
         </div>
-      </div>
+      </button>
     );
-  }
+  },
 );
 
 Card.displayName = "TaksCard";

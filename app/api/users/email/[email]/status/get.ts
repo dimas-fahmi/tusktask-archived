@@ -1,14 +1,14 @@
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { emailSchema } from "@/src/lib/zod/schemas/authSchema";
 import { createServiceClient } from "@/src/lib/supabase/instances/service";
-import { PostgresError } from "postgres";
+import type { PostgresError } from "postgres";
 
 const PATH = "API_USERS_EMAIL_STATUS_GET";
 
 export async function usersEmailStatusGet(
   _req: NextRequest,
-  context: { params: Promise<{ email: string }> }
+  context: { params: Promise<{ email: string }> },
 ) {
   // Extract Params
   const { email } = await context.params;
@@ -19,7 +19,7 @@ export async function usersEmailStatusGet(
       400,
       "bad_request",
       "Missing email parameter",
-      undefined
+      undefined,
     );
   }
 
@@ -48,7 +48,7 @@ export async function usersEmailStatusGet(
       isFound ? 200 : 404,
       isFound ? "success" : "not_found",
       isFound ? "Record found" : "Record not found",
-      isFound ? data[0] : undefined
+      isFound ? data[0] : undefined,
     );
   } catch (error) {
     return createResponse(
@@ -57,7 +57,7 @@ export async function usersEmailStatusGet(
       (error as PostgresError)?.message ?? "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

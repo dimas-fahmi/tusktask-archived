@@ -44,7 +44,7 @@ export const projects = projectSchema
       // Full Text Search
       index("FTS_PROJECT_PROJECTS_NAME").using(
         "gin",
-        sql`to_tsvector('simple', ${t.name})`
+        sql`to_tsvector('simple', ${t.name})`,
       ),
 
       // Policies
@@ -61,7 +61,7 @@ export const projects = projectSchema
         for: "all",
         using: sql``,
       }),
-    ]
+    ],
   )
   .enableRLS();
 

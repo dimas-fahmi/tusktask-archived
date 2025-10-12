@@ -13,7 +13,7 @@
 export function truncateString(
   input: string,
   wordLimit: number,
-  addEllipsis: boolean
+  addEllipsis: boolean,
 ): string {
   if (!input) return "";
 

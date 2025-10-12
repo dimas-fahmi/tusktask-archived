@@ -1,5 +1,7 @@
 "use client";
 
+import { ChartBar, PieChartIcon } from "lucide-react";
+import { motion, type Variants } from "motion/react";
 import * as React from "react";
 import {
   Bar,
@@ -14,8 +16,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { PieSectorDataItem } from "recharts/types/polar/Pie";
-
+import type { PieSectorDataItem } from "recharts/types/polar/Pie";
+import type { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
 import {
   Card,
   CardContent,
@@ -24,7 +26,7 @@ import {
   CardTitle,
 } from "@/src/ui/shadcn/components/ui/card";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartStyle,
   ChartTooltip,
@@ -37,9 +39,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/ui/shadcn/components/ui/select";
-import { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
-import { motion, Variants } from "motion/react";
-import { ChartBar, PieChartIcon } from "lucide-react";
 
 export const description =
   "An interactive pie chart of ongoing tasks situation";
@@ -161,13 +160,16 @@ export function OngoingSituation({
     archived: "Showing tasks that have been archived and stored",
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Needed!
   const activeIndex = React.useMemo(
     () => situationData.findIndex((item) => item.collection === filter),
-    [activeFilter, categorizedTasks, filter]
+    [activeFilter, categorizedTasks, filter],
   );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Needed!
   const collections = React.useMemo(
     () => situationData.map((item) => item.collection),
-    []
+    [],
   );
 
   const isNotRenderable =
@@ -198,6 +200,7 @@ export function OngoingSituation({
 
               return (
                 <button
+                  type="button"
                   key={value}
                   onClick={() => setMode(value as "bar" | "pie")}
                   className={`${

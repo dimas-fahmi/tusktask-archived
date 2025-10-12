@@ -1,4 +1,4 @@
-import { Project } from "@/src/db/schema/projects";
+import type { Project } from "@/src/db/schema/projects";
 import { fetchUserProjects } from "../fetchers/fetchUserProjects";
 import { parseCookies } from "../parseCookies";
 
@@ -16,7 +16,7 @@ export async function getProject(id: string) {
         revalidate: 60 * 60 * 1, // revalidate every 1 hour
         tags: ["projects", `project-${id}`],
       },
-    }
+    },
   );
 
   return response;

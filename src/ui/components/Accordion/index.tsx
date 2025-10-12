@@ -1,8 +1,8 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
-import React, { createContext, useContext, useId, useState } from "react";
 import { motion } from "motion/react";
+import React, { createContext, useContext, useId, useState } from "react";
 import { cn } from "../../shadcn/lib/utils";
 
 // Accordion Context Interface
@@ -44,7 +44,7 @@ const AccordionRoot = React.forwardRef<HTMLDivElement, AccordionRootProps>(
         </div>
       </AccordionContext.Provider>
     );
-  }
+  },
 );
 
 AccordionRoot.displayName = "AccordionRoot";
@@ -80,6 +80,7 @@ const AccordionItem = ({ content, title, index }: AccordionItemProps) => {
     >
       {/* Accordion Trigger */}
       <button
+        type="button"
         className="w-full min-h-[120px] max-h-[120px] flex justify-between cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();

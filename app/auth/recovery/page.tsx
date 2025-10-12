@@ -1,6 +1,5 @@
+import type { Metadata } from "next";
 import { generateMetadata } from "@/src/lib/utils/generateMetadata";
-import { Metadata } from "next";
-import React from "react";
 import RecoveryPageIndex from "./RecoveryPageIndex";
 
 export const metadata: Metadata = generateMetadata({

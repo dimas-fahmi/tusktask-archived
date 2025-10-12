@@ -1,10 +1,10 @@
-import { TasksGetRequest } from "@/app/api/tasks/get";
-import { StandardizeResponse } from "../createResponse";
+import type { TasksGetRequest } from "@/app/api/tasks/get";
+import type { StandardizeResponse } from "../createResponse";
 import { objectToQueryString } from "../objectToQueryString";
 import { APP_URL } from "../../configs";
 
 export async function fetchTasks<T>(
-  req?: TasksGetRequest
+  req?: TasksGetRequest,
 ): Promise<StandardizeResponse<T>> {
   const queryString = objectToQueryString(req as Record<string, string>);
   const response = await fetch(`${APP_URL}/api/tasks?${queryString}`);

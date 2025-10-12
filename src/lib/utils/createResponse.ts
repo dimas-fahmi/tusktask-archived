@@ -46,7 +46,7 @@ export const createResponse = <T>(
   message: string,
   result: T,
   log = false,
-  path?: string
+  path?: string,
 ): ReturnType<typeof NextResponse.json<StandardizeResponse<T>>> => {
   const response: StandardizeResponse<T> = { status, code, message, result };
 

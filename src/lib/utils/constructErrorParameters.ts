@@ -1,4 +1,4 @@
-import { AuthResponse } from "../supabase/auth/actions";
+import type { AuthResponse } from "../supabase/auth/actions";
 
 export function constructAuthResponse(error: unknown) {
   return `code=${(error as AuthResponse)?.code ?? "unknown_error"}&message=${encodeURIComponent((error as AuthResponse)?.message ?? "Unknown error")}`;

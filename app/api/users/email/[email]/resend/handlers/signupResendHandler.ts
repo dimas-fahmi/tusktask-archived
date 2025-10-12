@@ -1,9 +1,9 @@
 import { createServiceClient } from "@/src/lib/supabase/instances/service";
-import { EmailStatus } from "@/src/lib/types/supabase";
-import { PostgresError } from "postgres";
+import type { EmailStatus } from "@/src/lib/types/supabase";
+import type { PostgresError } from "postgres";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { APP_URL, DEFAULT_EMAIL_COOLDOWN } from "@/src/lib/configs";
-import { AuthError } from "@supabase/supabase-js";
+import type { AuthError } from "@supabase/supabase-js";
 
 export async function signupResendHandler(email: string, PATH: string) {
   // Create Client
@@ -26,7 +26,7 @@ export async function signupResendHandler(email: string, PATH: string) {
         404,
         "not_found",
         "Email is not found on database",
-        undefined
+        undefined,
       );
     }
 
@@ -37,7 +37,7 @@ export async function signupResendHandler(email: string, PATH: string) {
       (error as PostgresError)?.code ?? "unknown_error",
       (error as PostgresError)?.message ??
         "Unknown Error while fetching email status",
-      undefined
+      undefined,
     );
   }
 
@@ -47,7 +47,7 @@ export async function signupResendHandler(email: string, PATH: string) {
       400,
       "bad_request",
       "Email already confirmed",
-      undefined
+      undefined,
     );
   }
 
@@ -69,7 +69,7 @@ export async function signupResendHandler(email: string, PATH: string) {
         429,
         "too_many_request",
         "Not yet passed cooldown",
-        undefined
+        undefined,
       );
     }
   }
@@ -96,7 +96,7 @@ export async function signupResendHandler(email: string, PATH: string) {
       (error as AuthError)?.message ?? "Unknown error",
       undefined,
       true,
-      `${PATH}:${JSON.stringify(error)}`
+      `${PATH}:${JSON.stringify(error)}`,
     );
   }
 }

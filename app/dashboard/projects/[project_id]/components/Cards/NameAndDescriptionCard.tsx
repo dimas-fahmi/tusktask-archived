@@ -1,18 +1,18 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Pencil, PencilOff } from "lucide-react";
+import { motion, type Variants } from "motion/react";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { DEFAULT_ICON } from "@/src/lib/configs";
+import { useUpdateProject } from "@/src/lib/hooks/mutations/useUpdateProject";
 import { useIconPickerStore } from "@/src/lib/stores/ui/iconPickerStore";
-import { ProjectApp } from "@/src/lib/types/projects";
+import type { ProjectApp } from "@/src/lib/types/projects";
+import { projectFormSchema } from "@/src/lib/zod/schemas/projectSchema";
 import RenderLucide from "@/src/ui/components/RenderLucide";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Card, CardContent } from "@/src/ui/shadcn/components/ui/card";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { motion, Variants } from "motion/react";
-import { Pencil, PencilOff } from "lucide-react";
-import { useUpdateProject } from "@/src/lib/hooks/mutations/useUpdateProject";
-import { projectFormSchema } from "@/src/lib/zod/schemas/projectSchema";
-import { DEFAULT_ICON } from "@/src/lib/configs";
 
 export const motionVariants = {
   hidden: {
@@ -82,7 +82,7 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
       setValue("description", project?.description || undefined);
     }
     setPickedIcon(project?.icon || DEFAULT_ICON);
-  }, [project]);
+  }, [project, setPickedIcon, setValue]);
 
   useEffect(() => {
     if (pickedIcon) {
@@ -103,131 +103,131 @@ const NameAndDescriptionCard = ({ project }: { project?: ProjectApp }) => {
         icon: pickedIcon,
       });
     }
-  }, [editMode, pickedIcon, setPickedIcon]);
+  }, [editMode, pickedIcon, project?.description, project?.name, reset]);
 
   return (
-    <>
-      <Card>
-        <CardContent className="h-full group/card">
-          <form
-            onSubmit={handleSubmit((data) => {
-              if (!isValid || isUpdatingProject) return;
-              if (project) {
-                updateProject(
-                  {
-                    id: project?.id,
-                    newValues: {
-                      ...data,
-                    },
+    <Card>
+      <CardContent className="h-full group/card">
+        <form
+          onSubmit={handleSubmit((data) => {
+            if (!isValid || isUpdatingProject) return;
+            if (project) {
+              updateProject(
+                {
+                  id: project?.id,
+                  newValues: {
+                    ...data,
                   },
-                  {
-                    onError: () => {
-                      setEditMode(true);
-                    },
-                  }
-                );
-
-                setEditMode(false);
-              }
-            })}
-            className="flex flex-col justify-between h-full gap-4"
-          >
-            <div className="flex flex-col flex-1 overflow-hidden">
-              <div className="flex items-center gap-1.5 text-4xl font-header py-2">
-                <RenderLucide
-                  iconName={icon ?? project?.icon ?? DEFAULT_ICON}
-                  className={`${editMode ? "border-border cursor-pointer" : "border-transparent"} border p-1 rounded-md box-content w-10 h-10`}
-                  onClick={() => {
+                },
+                {
+                  onError: () => {
                     setEditMode(true);
-                    setIconPickerDrawerOpen(true);
-                  }}
-                />
-                {!editMode ? (
-                  <h1
-                    onClick={() => {
-                      setEditMode(true);
-                    }}
-                  >
-                    {project?.name || "Untitled"}
-                  </h1>
-                ) : (
-                  <Controller
-                    control={control}
-                    name="name"
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        autoFocus={true}
-                        autoComplete="off"
-                        placeholder="Project Name"
-                        className="border-1 p-1 w-full px-4 rounded-md outline-0"
-                      />
-                    )}
-                  />
-                )}
-              </div>
+                  },
+                },
+              );
 
-              {editMode ? (
-                <Controller
-                  control={control}
-                  name="description"
-                  render={({
-                    field: { value, onChange, name, ...fieldProps },
-                  }) => (
-                    <textarea
-                      value={value || ""}
-                      onChange={onChange}
-                      name={name}
-                      {...fieldProps}
-                      className="w-full outline-0 resize-none field-sizing-content max-h-52 scrollbar-none p-4 border rounded-md h-full"
-                      placeholder="Project description"
-                    />
-                  )}
-                />
-              ) : (
-                <p
-                  className="text-sm opacity-70 mt-4"
+              setEditMode(false);
+            }
+          })}
+          className="flex flex-col justify-between h-full gap-4"
+        >
+          <div className="flex flex-col flex-1 overflow-hidden">
+            <div className="flex items-center gap-1.5 text-4xl font-header py-2">
+              <RenderLucide
+                iconName={icon ?? project?.icon ?? DEFAULT_ICON}
+                className={`${editMode ? "border-border cursor-pointer" : "border-transparent"} border p-1 rounded-md box-content w-10 h-10`}
+                onClick={() => {
+                  setEditMode(true);
+                  setIconPickerDrawerOpen(true);
+                }}
+              />
+              {!editMode ? (
+                <button
+                  type="button"
+                  className="text-left"
                   onClick={() => {
                     setEditMode(true);
                   }}
                 >
-                  {project?.description || "No description"}
-                </p>
+                  {project?.name || "Untitled"}
+                </button>
+              ) : (
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      autoComplete="off"
+                      placeholder="Project Name"
+                      className="border-1 p-1 w-full px-4 rounded-md outline-0"
+                    />
+                  )}
+                />
               )}
             </div>
 
-            <div className="flex items-center justify-between">
+            {editMode ? (
+              <Controller
+                control={control}
+                name="description"
+                render={({
+                  field: { value, onChange, name, ...fieldProps },
+                }) => (
+                  <textarea
+                    value={value || ""}
+                    onChange={onChange}
+                    name={name}
+                    {...fieldProps}
+                    className="w-full outline-0 resize-none field-sizing-content max-h-52 scrollbar-none p-4 border rounded-md h-full"
+                    placeholder="Project description"
+                  />
+                )}
+              />
+            ) : (
+              <button
+                type="button"
+                className="text-sm opacity-70 text-left mt-4"
+                onClick={() => {
+                  setEditMode(true);
+                }}
+              >
+                {project?.description || "No description"}
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Button
+              type="button"
+              variant={"outline"}
+              onClick={() => {
+                setEditMode(!editMode);
+              }}
+              className="opacity-0 group-hover/card:opacity-100"
+            >
+              {!editMode ? <Pencil /> : <PencilOff />}
+            </Button>
+            <motion.div
+              variants={motionVariants}
+              animate={editMode ? "visible" : "hidden"}
+              className="flex justify-end gap-2"
+            >
               <Button
                 type="button"
                 variant={"outline"}
                 onClick={() => {
-                  setEditMode(!editMode);
+                  setEditMode(false);
                 }}
-                className="opacity-0 group-hover/card:opacity-100"
               >
-                {!editMode ? <Pencil /> : <PencilOff />}
+                Cancel
               </Button>
-              <motion.div
-                variants={motionVariants}
-                animate={editMode ? "visible" : "hidden"}
-                className="flex justify-end gap-2"
-              >
-                <Button
-                  type="button"
-                  variant={"outline"}
-                  onClick={() => {
-                    setEditMode(false);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button disabled={!isValid || isUpdatingProject}>Save</Button>
-              </motion.div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </>
+              <Button disabled={!isValid || isUpdatingProject}>Save</Button>
+            </motion.div>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 

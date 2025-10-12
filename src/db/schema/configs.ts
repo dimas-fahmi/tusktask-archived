@@ -15,5 +15,5 @@ export const statusEnum = projectSchema.enum("status", STATUSES);
 export const PROJECT_TYPES = ["primary", "generic", "co-op"] as const;
 export const projectTypeEnum = projectSchema.enum(
   "project_type",
-  PROJECT_TYPES
+  PROJECT_TYPES,
 );
