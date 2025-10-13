@@ -84,12 +84,16 @@ export const getFilteredCTsDescription = (
     situationKey = undefined;
   }
 
+  if (situationKey === "overdueSoon") {
+    situationKey = "Overdue Soon";
+  }
+
   if (!situationKey && !priorityLevel) {
     // Case 1: No filters applied
     return "Showing all tasks";
   }
 
-  let description = "Filtering ";
+  let description = "Showing ";
 
   if (situationKey && priorityLevel) {
     // Case 2: Both filters applied
@@ -102,6 +106,7 @@ export const getFilteredCTsDescription = (
   } else if (priorityLevel) {
     // Case 4: Only priority applied
     // e.g., "Filtering tasks with urgent priority"
+
     description += `tasks with ${priorityLevel} priority`;
   }
 

@@ -12,6 +12,8 @@ export interface CategorizedTasks {
   highPriority: TaskApp[];
   urgentPriority: TaskApp[];
   todos: TaskApp[];
+  onProcess: TaskApp[];
+  noDeadlines: TaskApp[];
 }
 
 export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
@@ -27,6 +29,8 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
     highPriority: [],
     urgentPriority: [],
     todos: [],
+    noDeadlines: [],
+    onProcess: [],
   };
 
   if (!tasks || !Array.isArray(tasks) || !tasks.length) {
@@ -115,6 +119,14 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
   categorizedTasks.todos = tasks?.filter((item) => {
     return !item?.completedAt && item?.taskStatus !== "archived";
   });
+
+  categorizedTasks.onProcess = tasks?.filter(
+    (item) => item?.taskStatus === "on_process" && !item?.completedAt,
+  );
+
+  categorizedTasks.noDeadlines = tasks?.filter(
+    (item) => !item?.completedAt && !item?.deadlineAt,
+  );
 
   // Priority
   categorizedTasks.lowPriority = tasks.filter(
