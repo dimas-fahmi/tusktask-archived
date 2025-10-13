@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDate, formatDistance } from "date-fns";
-import { Clock, LoaderPinwheel } from "lucide-react";
+import { Clock, LoaderPinwheel, Network } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import {
@@ -32,6 +32,16 @@ const Card = React.forwardRef<HTMLDivElement, TaskCardProps>(
         {/* Priority */}
         <div className="text-xs mb-2 flex items-center justify-between">
           <div className="flex gap-2">
+            {task?.parentTask && (
+              <div className="flex items-center justify-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Network className="w-5 h-5" />
+                  </TooltipTrigger>
+                  <TooltipContent>Subtask</TooltipContent>
+                </Tooltip>
+              </div>
+            )}
             {task?.taskStatus === "on_process" && !task?.completedAt && (
               <div className="flex items-center justify-center">
                 <Tooltip>
