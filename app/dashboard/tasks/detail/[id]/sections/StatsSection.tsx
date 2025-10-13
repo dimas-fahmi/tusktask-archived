@@ -81,9 +81,11 @@ const StatsSection = ({
               transition={{ duration: 0.3 }}
             >
               <TaskAccordion.itemContainer>
-                {filtered?.map((item) => (
-                  <TaskAccordion.item key={item?.id} task={item} />
-                ))}
+                {filtered
+                  ?.filter((item) => !item?.completedAt)
+                  ?.map((item) => (
+                    <TaskAccordion.item key={item?.id} task={item} />
+                  ))}
               </TaskAccordion.itemContainer>
             </motion.div>
           </TaskAccordion.body>
