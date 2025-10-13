@@ -1,5 +1,5 @@
 import type React from "react";
-import type { Task } from "@/src/db/schema/tasks";
+import type { TaskApp } from "@/src/lib/types/tasks";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -9,10 +9,10 @@ import Card from "./Card";
 import TaskCardContextMenu from "./TaskCardContextMenu";
 
 export interface TaskCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  task: Task;
+  task: TaskApp;
 }
 
-const TaskCard = ({ task }: { task: Task }) => {
+const TaskCard = ({ task }: { task: TaskApp }) => {
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>

@@ -38,7 +38,27 @@ const Card = React.forwardRef<HTMLDivElement, TaskCardProps>(
                   <TooltipTrigger asChild>
                     <Network className="w-5 h-5" />
                   </TooltipTrigger>
-                  <TooltipContent>Subtask</TooltipContent>
+                  <TooltipContent>
+                    {task?.parent?.name ? (
+                      <span>
+                        Subtask of{" "}
+                        <button
+                          type="button"
+                          className="font-semibold hover:underline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(
+                              `/dashboard/tasks/detail/${task?.parent?.id}`,
+                            );
+                          }}
+                        >
+                          {task?.parent?.name}
+                        </button>
+                      </span>
+                    ) : (
+                      <span>Subtask</span>
+                    )}
+                  </TooltipContent>
                 </Tooltip>
               </div>
             )}

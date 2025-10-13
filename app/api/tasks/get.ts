@@ -58,6 +58,7 @@ export async function tasksGet(req: NextRequest) {
           owner: true,
           subtasks: {
             with: {
+              parent: true,
               subtasks: true,
             },
           },
@@ -136,10 +137,6 @@ export async function tasksGet(req: NextRequest) {
     withRelation.owner = true;
   }
 
-  if (includeQueries.includes("parent")) {
-    withRelation.parent = true;
-  }
-
   if (includeQueries.includes("subtasks")) {
     withRelation.subtasks = true;
   }
@@ -170,6 +167,7 @@ export async function tasksGet(req: NextRequest) {
       where: and(...query),
       with: {
         ...withRelation,
+        parent: true,
       },
     });
 
