@@ -49,7 +49,11 @@ export async function tasksGet(req: NextRequest) {
         where: and(eq(tasks.id, id), eq(tasks.ownerId, user.id)),
         with: {
           masterTask: true,
-          parent: true,
+          parent: {
+            with: {
+              parent: true,
+            },
+          },
           project: true,
           owner: true,
           subtasks: {

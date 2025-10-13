@@ -6,19 +6,24 @@ export interface TaskWithSubtasks extends Task {
   subtasks?: TaskWithSubtasks[];
 }
 
+export interface ParentTask extends Task {
+  parent?: ParentTask;
+}
+
 export interface TaskApp extends Task {
   isPending?: boolean;
   subtasks?: TaskWithSubtasks[];
   project?: Project;
+  parent?: ParentTask;
 }
 
 /**
  * A type representing the keys that correspond to the main task "situations" or status buckets.
  */
 export type SituationKey =
-  | keyof Omit<
+  | keyof Pick<
       CategorizedTasks,
-      "lowPriority" | "mediumPriority" | "highPriority" | "urgentPriority"
+      "archived" | "overdueSoon" | "tomorrow" | "overdue" | "ongoing"
     >
   | "all";
 

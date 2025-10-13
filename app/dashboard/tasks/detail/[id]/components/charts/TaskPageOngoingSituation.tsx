@@ -84,14 +84,6 @@ const chartConfig = {
     label: "Archived",
     color: "var(--chart-5)",
   },
-  completed: {
-    label: "Completed",
-    color: "var(--chart-6)",
-  },
-  todos: {
-    label: "Todos",
-    color: "var(--chart-7)",
-  },
 } satisfies ChartConfig;
 
 export interface OngoingSituation {
@@ -112,17 +104,13 @@ export function TaskPageOngoingSituation({
     "overdueSoon",
     "tomorrow",
     "ongoing",
-    "todos",
     "archived",
-    "completed",
   ] as const;
 
   // Ensure activeFilter is narrowed to one of the allowed filter keys (or default to "ongoing")
-  const filter: SituationKey = ((): Exclude<SituationKey, "all"> => {
-    if (!activeFilter || activeFilter === "all") return "ongoing";
-    return filters.includes(activeFilter)
-      ? (activeFilter as Exclude<SituationKey, "all">)
-      : "ongoing";
+  const filter: SituationKey = ((): SituationKey => {
+    if (!activeFilter || activeFilter === "all") return "all";
+    return filters.includes(activeFilter) ? activeFilter : "all";
   })();
 
   const situationData = [
@@ -156,12 +144,6 @@ export function TaskPageOngoingSituation({
       tasks: categorizedTasks.archived?.length,
       fill: "var(--color-archived)",
     },
-    {
-      collection: "todos",
-      label: "Tasks todo",
-      tasks: categorizedTasks.todos?.length,
-      fill: "var(--color-archived)",
-    },
   ];
 
   const descriptions: Record<SituationKey, string> = {
@@ -171,8 +153,6 @@ export function TaskPageOngoingSituation({
     ongoing: "Showing active tasks due later or without a deadline date",
     archived: "Showing tasks that have been archived and stored",
     all: "Showing all tasks",
-    completed: "Showing completed tasks",
-    todos: "Showing tasks todo",
   };
 
   const activeIndex = React.useMemo(
@@ -317,7 +297,11 @@ export function TaskPageOngoingSituation({
                                   y={(viewBox.cy || 0) + 24}
                                   className="fill-muted-foreground"
                                 >
-                                  {chartConfig?.[filter].label}
+                                  {
+                                    chartConfig?.[
+                                      filter === "all" ? "ongoing" : filter
+                                    ].label
+                                  }
                                 </tspan>
                               </text>
                             );
