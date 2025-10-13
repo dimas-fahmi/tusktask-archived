@@ -43,7 +43,7 @@ const Collection = ({
 
 const TaskCollectionsSection = ({ tasks }: { tasks?: Task[] }) => {
   // Catgorize Task
-  const categorizedTasks = categorizeTasks(tasks);
+  const categorizedTasks = categorizeTasks(tasks, { hideSubtasks: true });
   const { archived, completed, ongoing, overdue, overdueSoon, tomorrow } =
     categorizedTasks;
 

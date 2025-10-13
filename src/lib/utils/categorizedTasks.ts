@@ -16,7 +16,14 @@ export interface CategorizedTasks {
   noDeadlines: TaskApp[];
 }
 
-export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
+export interface CategorizeTasksOptions {
+  hideSubtasks?: boolean;
+}
+
+export const categorizeTasks = (
+  tasks?: TaskApp[],
+  options?: CategorizeTasksOptions,
+): CategorizedTasks => {
   const categorizedTasks: CategorizedTasks = {
     archived: [],
     completed: [],
@@ -37,6 +44,11 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
     return categorizedTasks;
   }
 
+  // Filter out subtasks if needed
+  const filteredTasks = options?.hideSubtasks
+    ? tasks.filter((task) => !task.parentTask)
+    : tasks;
+
   const now = new Date();
   const today = new Date(now);
   today.setHours(0, 0, 0, 0);
@@ -48,7 +60,7 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
   dayAfterTomorrow.setDate(today.getDate() + 2);
 
   // Overdue
-  categorizedTasks.overdue = tasks.filter((item) => {
+  categorizedTasks.overdue = filteredTasks.filter((item) => {
     if (
       !item?.deadlineAt ||
       ["completed", "archived"].includes(item?.taskStatus) ||
@@ -61,7 +73,7 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
   });
 
   // Overdue Soon (within the next 23 hours, not overdue)
-  categorizedTasks.overdueSoon = tasks.filter((item) => {
+  categorizedTasks.overdueSoon = filteredTasks.filter((item) => {
     if (
       !item?.deadlineAt ||
       ["completed", "archived"].includes(item?.taskStatus) ||
@@ -77,15 +89,15 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
   });
 
   // Archived
-  categorizedTasks.archived = tasks.filter(
+  categorizedTasks.archived = filteredTasks.filter(
     (item) => item.taskStatus === "archived" && !item?.completedAt,
   );
 
   // Completed
-  categorizedTasks.completed = tasks.filter((item) => item.completedAt);
+  categorizedTasks.completed = filteredTasks.filter((item) => item.completedAt);
 
   // Tomorrow (Deadline falls on tomorrow's date)
-  categorizedTasks.tomorrow = tasks.filter((item) => {
+  categorizedTasks.tomorrow = filteredTasks.filter((item) => {
     if (
       !item?.deadlineAt ||
       ["completed", "archived"].includes(item?.taskStatus) ||
@@ -103,7 +115,7 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
   });
 
   // Ongoing (Not completed, not archived, not overdue, not overdueSoon, not tomorrow)
-  categorizedTasks.ongoing = tasks.filter((item) => {
+  categorizedTasks.ongoing = filteredTasks.filter((item) => {
     const id = item.id;
 
     const isInOtherCategory =
@@ -116,29 +128,29 @@ export const categorizeTasks = (tasks?: TaskApp[]): CategorizedTasks => {
     return !isInOtherCategory;
   });
 
-  categorizedTasks.todos = tasks?.filter((item) => {
+  categorizedTasks.todos = filteredTasks?.filter((item) => {
     return !item?.completedAt && item?.taskStatus !== "archived";
   });
 
-  categorizedTasks.onProcess = tasks?.filter(
+  categorizedTasks.onProcess = filteredTasks?.filter(
     (item) => item?.taskStatus === "on_process" && !item?.completedAt,
   );
 
-  categorizedTasks.noDeadlines = tasks?.filter(
+  categorizedTasks.noDeadlines = filteredTasks?.filter(
     (item) => !item?.completedAt && !item?.deadlineAt,
   );
 
   // Priority
-  categorizedTasks.lowPriority = tasks.filter(
+  categorizedTasks.lowPriority = filteredTasks.filter(
     (item) => item.taskPriority === "low",
   );
-  categorizedTasks.mediumPriority = tasks.filter(
+  categorizedTasks.mediumPriority = filteredTasks.filter(
     (item) => item.taskPriority === "medium",
   );
-  categorizedTasks.highPriority = tasks.filter(
+  categorizedTasks.highPriority = filteredTasks.filter(
     (item) => item.taskPriority === "high",
   );
-  categorizedTasks.urgentPriority = tasks.filter(
+  categorizedTasks.urgentPriority = filteredTasks.filter(
     (item) => item.taskPriority === "urgent",
   );
 
