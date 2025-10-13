@@ -7,6 +7,7 @@ import {
   CirclePlus,
   ExternalLink,
   LoaderCircle,
+  LoaderPinwheel,
   Settings,
   Trash,
   Zap,
@@ -66,6 +67,34 @@ const TaskCardContextMenu = ({ task }: { task: TaskApp }) => {
             Task Detail
           </Link>
         </ContextMenuItem>
+
+        {!task?.completedAt && (
+          <>
+            <ContextMenuSeparator />
+            <ContextMenuItem
+              disabled={task?.isPending}
+              onClick={() => {
+                updateTask({
+                  old: task,
+                  req: {
+                    id: task?.id,
+                    newValues: {
+                      taskStatus:
+                        task?.taskStatus === "on_process"
+                          ? "pending"
+                          : "on_process",
+                    },
+                  },
+                });
+              }}
+            >
+              <LoaderPinwheel
+                className={`${task?.taskStatus === "on_process" ? "animate-spin" : ""}`}
+              />
+              {task?.taskStatus === "on_process" ? "On Process" : "I'm On It!"}
+            </ContextMenuItem>
+          </>
+        )}
 
         <ContextMenuSeparator />
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDate, formatDistance } from "date-fns";
-import { Clock } from "lucide-react";
+import { Clock, LoaderPinwheel } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import {
@@ -31,8 +31,20 @@ const Card = React.forwardRef<HTMLDivElement, TaskCardProps>(
       >
         {/* Priority */}
         <div className="text-xs mb-2 flex items-center justify-between">
-          <div className="px-2 py-1 bg-accent text-accent-foreground rounded-full capitalize">
-            {task?.taskPriority}
+          <div className="flex gap-2">
+            {task?.taskStatus === "on_process" && !task?.completedAt && (
+              <div className="flex items-center justify-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <LoaderPinwheel className="animate-spin w-5 h-5" />
+                  </TooltipTrigger>
+                  <TooltipContent>You are working on this task</TooltipContent>
+                </Tooltip>
+              </div>
+            )}
+            <div className="px-2 py-1 bg-accent text-accent-foreground rounded-full capitalize">
+              {task?.taskPriority}
+            </div>
           </div>
 
           {/* Complete Button */}
