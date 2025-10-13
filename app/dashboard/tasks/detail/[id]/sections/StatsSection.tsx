@@ -20,11 +20,12 @@ const StatsSection = ({
     setOngoingSituationFilter,
     setPrioritySituationFilter,
   } = useTaskPageIndexContext();
+
   const filtered = filterCategorizedTasks(
     categorizedTasks,
     ongoingSituationFilter,
     prioritySituationFilter,
-  );
+  )?.filter((item) => !item?.completedAt);
 
   return (
     <div>
@@ -50,7 +51,9 @@ const StatsSection = ({
               ongoingSituationFilter,
               prioritySituationFilter,
             )}
-            label={`${filtered?.length?.toString().padStart(2, "0") || "No"} Tasks`}
+            label={`${
+              filtered?.length?.toString().padStart(2, "0") || "No"
+            } Tasks`}
           />
           <TaskAccordion.body>
             {!filtered?.length && (
@@ -81,11 +84,9 @@ const StatsSection = ({
               transition={{ duration: 0.3 }}
             >
               <TaskAccordion.itemContainer>
-                {filtered
-                  ?.filter((item) => !item?.completedAt)
-                  ?.map((item) => (
-                    <TaskAccordion.item key={item?.id} task={item} />
-                  ))}
+                {filtered?.map((item) => (
+                  <TaskAccordion.item key={item?.id} task={item} />
+                ))}
               </TaskAccordion.itemContainer>
             </motion.div>
           </TaskAccordion.body>
