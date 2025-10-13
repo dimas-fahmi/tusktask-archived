@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDate, formatDistance } from "date-fns";
-import { Clock } from "lucide-react";
+import { Clock, LoaderPinwheel } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import {
@@ -14,12 +14,12 @@ import CircularProgress from "../CircularProgress";
 import TaskScratchButton from "../TaskScratchButton";
 import type { TaskCardProps } from ".";
 
-const Card = React.forwardRef<HTMLButtonElement, TaskCardProps>(
+const Card = React.forwardRef<HTMLDivElement, TaskCardProps>(
   ({ task, ...props }, ref) => {
     const router = useRouter();
 
     return (
-      <button
+      <div
         ref={ref}
         className={cn(
           `${task?.completedAt ? "bg-primary text-primary-foreground" : ""} group/card border min-h-37 max-h-48 p-4 rounded-md cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-200 flex flex-col`,
@@ -31,8 +31,20 @@ const Card = React.forwardRef<HTMLButtonElement, TaskCardProps>(
       >
         {/* Priority */}
         <div className="text-xs mb-2 flex items-center justify-between">
-          <div className="px-2 py-1 bg-accent text-accent-foreground rounded-full capitalize">
-            {task?.taskPriority}
+          <div className="flex gap-2">
+            {task?.taskStatus === "on_process" && !task?.completedAt && (
+              <div className="flex items-center justify-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <LoaderPinwheel className="animate-spin w-5 h-5" />
+                  </TooltipTrigger>
+                  <TooltipContent>You are working on this task</TooltipContent>
+                </Tooltip>
+              </div>
+            )}
+            <div className="px-2 py-1 bg-accent text-accent-foreground rounded-full capitalize">
+              {task?.taskPriority}
+            </div>
           </div>
 
           {/* Complete Button */}
@@ -128,7 +140,7 @@ const Card = React.forwardRef<HTMLButtonElement, TaskCardProps>(
             />
           </div>
         </div>
-      </button>
+      </div>
     );
   },
 );

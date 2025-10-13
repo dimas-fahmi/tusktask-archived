@@ -2,10 +2,10 @@
 
 import { cva, type VariantProps } from "class-variance-authority";
 import { ChevronUp, CircleAlert, type LucideIcon } from "lucide-react";
+import { motion } from "motion/react";
 import type React from "react";
 import { useState } from "react";
 import { cn } from "../../shadcn/lib/utils";
-import { motion } from "motion/react";
 
 export const staticAlertVariants = cva("p-4 rounded-md", {
   variants: {

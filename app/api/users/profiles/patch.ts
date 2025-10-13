@@ -1,15 +1,15 @@
+import { eq } from "drizzle-orm";
+import type { NextRequest } from "next/server";
+import { prettifyError } from "zod";
+import { db } from "@/src/db";
 import {
   type InsertProfile,
   type Profile,
   profiles,
 } from "@/src/db/schema/profiles";
-import type { NextRequest } from "next/server";
-import { createResponse } from "@/src/lib/utils/createResponse";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
+import { createResponse } from "@/src/lib/utils/createResponse";
 import { profileSchema } from "@/src/lib/zod/schemas/authSchema";
-import { prettifyError } from "zod";
-import { db } from "@/src/db";
-import { eq } from "drizzle-orm";
 
 const PATH = "API_USERS_PROFILES_PATCH";
 

@@ -1,6 +1,6 @@
 import { parseDate } from "chrono-node";
-import { type ReplacementRules, replaceMultiple } from "./replaceMultiple";
 import { NLP_INDONESIAN_RULE } from "../configs/parserReplacer/indonesians";
+import { type ReplacementRules, replaceMultiple } from "./replaceMultiple";
 
 export const REGISTERED_RULES: ReplacementRules = [...NLP_INDONESIAN_RULE];
 

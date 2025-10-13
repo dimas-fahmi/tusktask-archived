@@ -1,7 +1,7 @@
-import { projectsGet } from "./get";
-import { projectsPost } from "./post";
 import { projectsDelete } from "./delete";
+import { projectsGet } from "./get";
 import { projectsPatch } from "./patch";
+import { projectsPost } from "./post";
 
 export { projectsGet as GET };
 export { projectsPost as POST };

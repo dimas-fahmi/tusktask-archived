@@ -1,8 +1,8 @@
 import type { NextRequest } from "next/server";
+import type { PostgresError } from "postgres";
+import { createServiceClient } from "@/src/lib/supabase/instances/service";
 import { createResponse } from "@/src/lib/utils/createResponse";
 import { emailSchema } from "@/src/lib/zod/schemas/authSchema";
-import { createServiceClient } from "@/src/lib/supabase/instances/service";
-import type { PostgresError } from "postgres";
 
 const PATH = "API_USERS_EMAIL_STATUS_GET";
 

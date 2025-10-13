@@ -1,7 +1,7 @@
 import type { TasksGetRequest } from "@/app/api/tasks/get";
+import { APP_URL } from "../../configs";
 import type { StandardizeResponse } from "../createResponse";
 import { objectToQueryString } from "../objectToQueryString";
-import { APP_URL } from "../../configs";
 
 export async function fetchUserTasks<T>(
   req?: TasksGetRequest,

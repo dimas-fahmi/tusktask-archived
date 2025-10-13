@@ -1,14 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { APP_URL, type AuthProvider, OAUTH_PROVIDERS } from "../../configs";
 import {
   type AuthResponse,
   signIn,
   signOut,
   signup,
 } from "../../supabase/auth/actions";
-import { useEffect } from "react";
 import { createBrowserClient } from "../../supabase/instances/client";
-import { useRouter } from "next/navigation";
-import { APP_URL, type AuthProvider, OAUTH_PROVIDERS } from "../../configs";
 import { parseAuthError } from "../../utils/parseAuthError";
 
 // Session

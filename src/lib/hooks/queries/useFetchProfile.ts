@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchProfiles } from "../../utils/fetchers/fetchProfiles";
 import type { UsersProfilesGetRequest } from "@/app/api/users/profiles/get";
 import type { StandardizeResponse } from "../../utils/createResponse";
+import { fetchProfiles } from "../../utils/fetchers/fetchProfiles";
 
 export const useFetchProfile = (
   { id, username, name }: UsersProfilesGetRequest,

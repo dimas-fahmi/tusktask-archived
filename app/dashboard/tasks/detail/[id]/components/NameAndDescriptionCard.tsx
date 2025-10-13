@@ -122,15 +122,14 @@ const NameAndDescriptionCard = ({ task }: { task?: TaskApp }) => {
           <div className="flex flex-col flex-1 overflow-hidden">
             <div className="flex items-center gap-1.5 text-4xl font-header py-2">
               {!editMode ? (
-                <button
-                  type="button"
+                <h1
                   onClick={() => {
                     setEditMode(true);
                   }}
                   className="text-left"
                 >
                   {task?.name || "Untitled"}
-                </button>
+                </h1>
               ) : (
                 <Controller
                   control={control}
@@ -166,15 +165,14 @@ const NameAndDescriptionCard = ({ task }: { task?: TaskApp }) => {
                 )}
               />
             ) : (
-              <button
-                type="button"
-                className="text-sm text-center opacity-70 mt-4 font-body"
+              <p
+                className="text-sm opacity-70 mt-4 font-body"
                 onClick={() => {
                   setEditMode(true);
                 }}
               >
                 {task?.description || "No description"}
-              </button>
+              </p>
             )}
           </div>
 

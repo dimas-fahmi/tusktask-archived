@@ -1,10 +1,10 @@
 "use client";
 
-import type { ProjectsPatchRequest } from "@/app/api/projects/patch";
 import type { QueryClient } from "@tanstack/react-query";
-import { queryKeys } from "../../queryKeys";
-import type { StandardizeResponse } from "../../createResponse";
+import type { ProjectsPatchRequest } from "@/app/api/projects/patch";
 import type { Project } from "@/src/db/schema/projects";
+import type { StandardizeResponse } from "../../createResponse";
+import { queryKeys } from "../../queryKeys";
 
 const update = (req: ProjectsPatchRequest, queryClient: QueryClient) => {
   const queryKey = queryKeys.projects.detail(req?.id);

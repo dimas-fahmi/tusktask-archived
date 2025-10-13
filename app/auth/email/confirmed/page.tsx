@@ -19,7 +19,7 @@ const EmailConfirmedPage = async ({
 }: {
   searchParams: Promise<{ email: string; code: string }>;
 }) => {
-  const { email, code } = await searchParams;
+  const { email } = await searchParams;
 
   return (
     <div className="max-w-md p-4">
@@ -53,9 +53,7 @@ const EmailConfirmedPage = async ({
 
       {/* Login button */}
       <Button className="w-full block text-center mt-6" asChild>
-        <Link href={code ? `/auth/callback?code=${code}` : "/auth"}>
-          Sign In
-        </Link>
+        <Link href={"/auth"}>Sign In</Link>
       </Button>
 
       {/* Helper Bar */}

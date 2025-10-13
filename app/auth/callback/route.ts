@@ -1,11 +1,11 @@
+import { AuthError } from "@supabase/supabase-js";
+import { type NextRequest, NextResponse } from "next/server";
 import { DEFAULT_EMAIL_COOLDOWN } from "@/src/lib/configs";
 import { createServiceClient } from "@/src/lib/supabase/instances/service";
 import {
   constructAuthResponse,
   constructCodeAndMessage,
 } from "@/src/lib/utils/constructErrorParameters";
-import { AuthError } from "@supabase/supabase-js";
-import { type NextRequest, NextResponse } from "next/server";
 // The client you created from the Server-Side Auth instructions
 
 export async function GET(request: NextRequest) {
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const supabase = await createServiceClient();
 
   // Get parameters
-  const { code, next, type, token } = Object.fromEntries(
+  const { code, next, type, token, otp, method } = Object.fromEntries(
     searchParams.entries(),
   );
 
@@ -83,6 +83,25 @@ export async function GET(request: NextRequest) {
       clonedURL.pathname = `/auth/recovery/reset`;
       clonedURL.search = `?${constructAuthResponse(error)}`;
       return NextResponse.redirect(clonedURL);
+    }
+  }
+
+  if (otp) {
+    if (!method || method !== "email") {
+      return NextResponse.redirect(
+        `${origin}/auth?code=missing_auth_method&message=${encodeURIComponent("Something went wrong, please contact developer. Error: Missing Auth Method or Invalid Auth Method")}`,
+      );
+    }
+
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: otp,
+      type: method,
+    });
+
+    if (error) {
+      return NextResponse.redirect(
+        `${origin}/auth?code=${error?.code ?? "unknown_error"}&message=${encodeURIComponent(error?.message ?? "Unknown error")}`,
+      );
     }
   }
 

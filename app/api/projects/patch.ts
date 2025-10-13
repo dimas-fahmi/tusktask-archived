@@ -1,16 +1,16 @@
-import { db } from "@/src/db";
-import {
-  type Project,
-  projects,
-  ProjectSchema,
-} from "@/src/db/schema/projects";
-import { OperationError } from "@/src/lib/errors";
-import { createServerClient } from "@/src/lib/supabase/instances/server";
-import { createResponse } from "@/src/lib/utils/createResponse";
 import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import type { NextRequest } from "next/server";
 import z, { prettifyError } from "zod";
+import { db } from "@/src/db";
+import {
+  type Project,
+  ProjectSchema,
+  projects,
+} from "@/src/db/schema/projects";
+import { OperationError } from "@/src/lib/errors";
+import { createServerClient } from "@/src/lib/supabase/instances/server";
+import { createResponse } from "@/src/lib/utils/createResponse";
 
 const PATH = "API_PROJECTS_PATCH";
 

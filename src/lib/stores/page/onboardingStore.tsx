@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import type React from "react";
+import { create } from "zustand";
 import type { RegistrationPhase, UserMetadata } from "../../types/supabase";
 
 export interface UseOnboardingStore {

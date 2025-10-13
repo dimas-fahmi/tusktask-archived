@@ -1,7 +1,7 @@
+import { cva, type VariantProps } from "class-variance-authority";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { ArrowUpRight } from "lucide-react";
-import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../shadcn/lib/utils";
 
 export const linkButtonVariants = cva(

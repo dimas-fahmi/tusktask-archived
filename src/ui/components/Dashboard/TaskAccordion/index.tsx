@@ -2,9 +2,9 @@
 
 import { ChevronDown } from "lucide-react";
 import { motion } from "motion/react";
-import type React from "react";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import type { Task } from "@/src/db/schema/tasks";
+import { cn } from "@/src/ui/shadcn/lib/utils";
 import TaskCard from "../TaskCard";
 export interface TaskAccordionContextValues {
   open: boolean;
@@ -47,59 +47,68 @@ const root = ({ defaultOpen, children }: TaskAccordionProps) => {
   );
 };
 
-const trigger = ({
-  title,
-  label,
-  variant,
-}: {
+export interface TaskAccordionTriggerProps
+  extends React.HTMLAttributes<HTMLButtonElement> {
   title: string;
   label: string;
   variant?: "default" | "destructive";
-}) => {
-  const { open, setOpen } = useTaskAccordionContext();
-  let activeClass = {
-    positive: "bg-primary text-primary-foreground",
-    negative: "hover:bg-primary hover:text-primary-foreground",
-  };
+}
 
-  switch (variant) {
-    case "destructive":
-      activeClass = {
-        positive: "bg-destructive text-destructive-foreground",
-        negative: "hover:bg-destructive/10 text-destructive",
-      };
-      break;
-    default:
-      activeClass = {
-        positive: "bg-primary text-primary-foreground",
-        negative: "hover:bg-primary hover:text-primary-foreground",
-      };
-      break;
-  }
+const trigger = React.forwardRef<HTMLButtonElement, TaskAccordionTriggerProps>(
+  ({ title, label, variant, className, ...props }, ref) => {
+    const { open, setOpen } = useTaskAccordionContext();
+    let activeClass = {
+      positive: "bg-primary text-primary-foreground",
+      negative: "hover:bg-primary hover:text-primary-foreground",
+    };
 
-  return (
-    <button
-      type="button"
-      className={`flex w-full text-left cursor-pointer group/button items-center gap-4 p-2 border rounded-md ${open ? activeClass.positive : activeClass.negative} shadow-md transition-all duration-200`}
-      onClick={() => setOpen(!open)}
-    >
-      {/* Icon */}
-      <div className="group-active/button:scale-90 transition-all duration-300">
-        <ChevronDown
-          className={`${open ? "" : "-rotate-z-90"} transition-all duration-300`}
-        />
-      </div>
+    switch (variant) {
+      case "destructive":
+        activeClass = {
+          positive: "bg-destructive text-destructive-foreground",
+          negative: "hover:bg-destructive/10 text-destructive",
+        };
+        break;
+      default:
+        activeClass = {
+          positive: "bg-primary text-primary-foreground",
+          negative: "hover:bg-primary hover:text-primary-foreground",
+        };
+        break;
+    }
 
-      {/* Title */}
-      <div className="flex-1">{title}</div>
+    return (
+      <button
+        ref={ref}
+        type="button"
+        onClick={() => setOpen(!open)}
+        {...props}
+        className={cn(
+          `capitalize flex w-full text-left cursor-pointer group/button items-center gap-4 p-2 border rounded-md ${open ? activeClass.positive : activeClass.negative} shadow-md transition-all duration-200`,
+          className,
+        )}
+      >
+        {/* Icon */}
+        <div className="group-active/button:scale-90 transition-all duration-300">
+          <ChevronDown
+            className={`${open ? "" : "-rotate-z-90"} transition-all duration-300`}
+          />
+        </div>
 
-      {/* Label */}
-      <div className="text-sm opacity-70">{label}</div>
-    </button>
-  );
-};
+        {/* Title */}
+        <h1 className="flex-1 font-header">{title}</h1>
 
-const body = ({ children }: { children: React.ReactNode }) => {
+        {/* Label */}
+        <div className="text-sm opacity-70">{label}</div>
+      </button>
+    );
+  },
+);
+
+const body = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ ...props }, ref) => {
   const { open } = useTaskAccordionContext();
 
   return (
@@ -124,12 +133,26 @@ const body = ({ children }: { children: React.ReactNode }) => {
       }
       className="overflow-hidden"
     >
-      <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 md:p-4`}>
-        {children}
-      </div>
+      <div ref={ref} {...props} />
     </motion.div>
   );
-};
+});
+
+const itemContainer = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      {...props}
+      className={cn(
+        `grid grid-cols-1 md:grid-cols-3 gap-4 py-4 md:p-4`,
+        className,
+      )}
+    />
+  );
+});
 
 const item = ({ task }: { task: Task }) => {
   return <TaskCard task={task} />;
@@ -140,6 +163,7 @@ const TaskAccordion = {
   trigger,
   body,
   item,
+  itemContainer,
 };
 
 export default TaskAccordion;

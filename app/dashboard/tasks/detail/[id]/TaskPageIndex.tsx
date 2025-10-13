@@ -2,43 +2,48 @@
 
 import { ChartPie, ListTodo } from "lucide-react";
 import { motion } from "motion/react";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useFetchTasks } from "@/src/lib/hooks/queries/useFetchTasks";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
-import type { TaskApp } from "@/src/lib/types/tasks";
-import {
-  type CategorizedTasks,
-  categorizeTasks,
-} from "@/src/lib/utils/categorizedTasks";
+import type {
+  PriorityLevel,
+  SituationKey,
+  TaskApp,
+} from "@/src/lib/types/tasks";
+import { categorizeTasks } from "@/src/lib/utils/categorizedTasks";
 import { queryKeys } from "@/src/lib/utils/queryKeys";
+import { TaskPageBreadcrumb } from "@/src/ui/components/Dashboard/TaskPageBreadcrumb";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import Countdown from "./components/Countdown";
 import HeaderSection from "./sections/HeaderSection";
+import QuickLists from "./sections/QuickLists";
 import StatsSection from "./sections/StatsSection";
 import TasksSection from "./sections/TasksCollections";
-
-type OngoingSituationFilter = keyof Pick<
-  CategorizedTasks,
-  "archived" | "todos" | "tomorrow" | "overdueSoon" | "ongoing" | "overdue"
->;
-
-type PrioritySituationFilter = keyof Pick<
-  CategorizedTasks,
-  "lowPriority" | "mediumPriority" | "highPriority" | "urgentPriority"
->;
 
 export interface TaskPageIndexContextValues {
   activeTab: "stats" | "tasks";
   setActiveTab: (n: "stats" | "tasks") => void;
-  ongoingSituationFilter?: OngoingSituationFilter;
-  setOngoingSituationFilter: (n?: OngoingSituationFilter) => void;
-  prioritySituationFilter?: PrioritySituationFilter;
-  setPrioritySituationFilter: (n?: PrioritySituationFilter) => void;
+  ongoingSituationFilter?: SituationKey;
+  setOngoingSituationFilter: (n?: SituationKey) => void;
+  prioritySituationFilter?: PriorityLevel;
+  setPrioritySituationFilter: (n?: PriorityLevel) => void;
 }
 
 const TaskPageIndexContext = createContext<TaskPageIndexContextValues | null>(
   null,
 );
+
+export const useTaskPageIndexContext = () => {
+  const context = useContext(TaskPageIndexContext);
+
+  if (!context) {
+    throw new Error(
+      "TaskPageIndexContext can only be used inside TaskPageIndexContextProvider",
+    );
+  }
+
+  return context;
+};
 
 const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
   // Pull setters from task store
@@ -49,11 +54,11 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
 
   // Filter States
   const [ongoingSituationFilter, setOngoingSituationFilter] = useState<
-    OngoingSituationFilter | undefined
+    SituationKey | undefined
   >(undefined);
 
   const [prioritySituationFilter, setPrioritySituationFilter] = useState<
-    PrioritySituationFilter | undefined
+    PriorityLevel | undefined
   >(undefined);
 
   // Query Task
@@ -86,19 +91,25 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
         prioritySituationFilter,
       }}
     >
-      <div className="dashboard-padding space-y-4 min-h-[1300px] pb-8">
+      <div className="dashboard-padding space-y-6 min-h-[1300px] pb-8">
+        <TaskPageBreadcrumb task={task} />
+
         {/* Header */}
         <HeaderSection task={task} />
+
         {/* Countdown */}
         <div>{task?.deadlineAt && <Countdown task={task} />}</div>
 
+        {/* Quick Lists */}
+        <QuickLists categorizedTasks={categorizedTasks} />
+
         {/* Advance Content */}
-        <div className="space-y-4 mt-12">
+        <div className="space-y-6">
           {/* Header */}
           <header className="flex justify-between">
             <h1 className="text-4xl font-header">Ongoing Situations</h1>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <Button
                 variant={activeTab === "stats" ? "default" : "outline"}
                 onClick={() => {

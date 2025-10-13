@@ -1,10 +1,10 @@
-import { db } from "@/src/db";
-import { PRIORITIES, STATUSES } from "@/src/db/schema/configs";
-import { tasks, type TasksRelations } from "@/src/db/schema/tasks";
-import { createServerClient } from "@/src/lib/supabase/instances/server";
-import { createResponse } from "@/src/lib/utils/createResponse";
 import { and, eq, ilike } from "drizzle-orm";
 import type { NextRequest } from "next/server";
+import { db } from "@/src/db";
+import { PRIORITIES, STATUSES } from "@/src/db/schema/configs";
+import { type TasksRelations, tasks } from "@/src/db/schema/tasks";
+import { createServerClient } from "@/src/lib/supabase/instances/server";
+import { createResponse } from "@/src/lib/utils/createResponse";
 
 const PATH = "API_TASKS_GET";
 
@@ -49,7 +49,11 @@ export async function tasksGet(req: NextRequest) {
         where: and(eq(tasks.id, id), eq(tasks.ownerId, user.id)),
         with: {
           masterTask: true,
-          parent: true,
+          parent: {
+            with: {
+              parent: true,
+            },
+          },
           project: true,
           owner: true,
           subtasks: {

@@ -1,10 +1,10 @@
-import { createServerClient } from "@/src/lib/supabase/instances/server";
+import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
-import { createResponse } from "@/src/lib/utils/createResponse";
 import { db } from "@/src/db";
 import { type Project, projects } from "@/src/db/schema/projects";
-import { eq } from "drizzle-orm";
 import { OperationError } from "@/src/lib/errors";
+import { createServerClient } from "@/src/lib/supabase/instances/server";
+import { createResponse } from "@/src/lib/utils/createResponse";
 
 const PATH = "API_PROJECTS_DELETE";
 
