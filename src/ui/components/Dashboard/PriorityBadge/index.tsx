@@ -1,6 +1,6 @@
-import { cn } from "@/src/ui/shadcn/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
+import { cn } from "@/src/ui/shadcn/lib/utils";
 
 const PriorityBadgeVariants = cva("flex items-center rounded-md w-fit", {
   variants: {

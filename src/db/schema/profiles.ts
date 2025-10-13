@@ -1,12 +1,12 @@
+import { relations, sql } from "drizzle-orm";
 import { index, pgPolicy, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
-import { userSchema } from "./configs";
 import {
   authenticatedRole,
   authUsers,
   serviceRole,
 } from "drizzle-orm/supabase";
-import { relations, sql } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { userSchema } from "./configs";
 import { projects } from "./projects";
 import { masterTasks, tasks } from "./tasks";
 

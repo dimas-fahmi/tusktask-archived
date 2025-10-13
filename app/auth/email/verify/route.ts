@@ -1,5 +1,5 @@
-import { APP_URL } from "@/src/lib/configs";
 import { type NextRequest, NextResponse } from "next/server";
+import { APP_URL } from "@/src/lib/configs";
 
 export async function GET(req: NextRequest) {
   // Extract Parameters

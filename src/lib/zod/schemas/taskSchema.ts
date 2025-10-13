@@ -1,5 +1,5 @@
-import { TaskInsertSchema } from "@/src/db/schema/tasks";
 import { z } from "zod";
+import { TaskInsertSchema } from "@/src/db/schema/tasks";
 
 export const newTaskFormSchema = TaskInsertSchema.omit({
   id: true,

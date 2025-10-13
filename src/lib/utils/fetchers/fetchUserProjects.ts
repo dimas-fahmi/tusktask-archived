@@ -1,7 +1,7 @@
 import type { ProjectsGetRequest } from "@/app/api/projects/get";
+import { APP_URL } from "../../configs";
 import type { StandardizeResponse } from "../createResponse";
 import { objectToQueryString } from "../objectToQueryString";
-import { APP_URL } from "../../configs";
 
 export async function fetchUserProjects<T>(
   req?: ProjectsGetRequest,

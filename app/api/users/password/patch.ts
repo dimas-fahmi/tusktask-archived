@@ -1,9 +1,9 @@
+import type { AuthError } from "@supabase/supabase-js";
 import type { NextRequest } from "next/server";
-import { createResponse } from "@/src/lib/utils/createResponse";
-import { passwordResetSchema } from "@/src/lib/zod/schemas/authSchema";
 import { prettifyError } from "zod";
 import { createServiceClient } from "@/src/lib/supabase/instances/service";
-import type { AuthError } from "@supabase/supabase-js";
+import { createResponse } from "@/src/lib/utils/createResponse";
+import { passwordResetSchema } from "@/src/lib/zod/schemas/authSchema";
 
 export interface UsersPasswordPathRequest {
   password: string;

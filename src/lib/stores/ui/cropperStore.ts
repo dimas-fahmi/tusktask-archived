@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import type { Area } from "react-easy-crop";
+import { create } from "zustand";
 import { DEFAULT_AVATARS } from "../../configs";
 
 export type Crop = { x: number; y: number };

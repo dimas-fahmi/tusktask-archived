@@ -1,10 +1,10 @@
 "use server";
 
-import { createServerClient } from "../instances/server";
-import { registrationSchema, signInSchema } from "../../zod/schemas/authSchema";
 import type { Session } from "@supabase/supabase-js";
 import { prettifyError } from "zod";
 import { parseAuthError } from "../../utils/parseAuthError";
+import { registrationSchema, signInSchema } from "../../zod/schemas/authSchema";
+import { createServerClient } from "../instances/server";
 
 export interface AuthResponse {
   success: boolean;

@@ -1,16 +1,16 @@
+import { relations, sql } from "drizzle-orm";
 import { index, pgPolicy, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { DEFAULT_ICON } from "@/src/lib/configs";
 import {
   priorityEnum,
   projectSchema,
   projectTypeEnum,
   statusEnum,
 } from "./configs";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { relations, sql } from "drizzle-orm";
 import { profiles } from "./profiles";
-import { authenticatedRole, serviceRole } from "drizzle-orm/supabase";
 import { tasks } from "./tasks";
-import { DEFAULT_ICON } from "@/src/lib/configs";
 
 // Project Schema
 export const projects = projectSchema

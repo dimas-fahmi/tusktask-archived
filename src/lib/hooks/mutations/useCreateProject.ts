@@ -1,9 +1,9 @@
-import type { ProjectsPostRequest } from "@/app/api/projects/post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { StandardizeResponse } from "../../utils/createResponse";
+import type { ProjectsPostRequest } from "@/app/api/projects/post";
 import type { Project } from "@/src/db/schema/projects";
-import type { ProjectApp } from "../../types/projects";
 import { DEFAULT_ICON } from "../../configs";
+import type { ProjectApp } from "../../types/projects";
+import type { StandardizeResponse } from "../../utils/createResponse";
 
 export const useCreateProject = () => {
   const queryClient = useQueryClient();

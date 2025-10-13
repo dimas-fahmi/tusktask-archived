@@ -1,25 +1,25 @@
-/** biome-ignore-all lint/correctness/useExhaustiveDependencies: NEEDED NEEDED NEEDED */
 "use client";
 
-import { ChartBar, PieChartIcon } from "lucide-react";
+import { ChartBar, Diamond } from "lucide-react";
 import { motion, type Variants } from "motion/react";
 import * as React from "react";
 import {
   Bar,
   BarChart,
   CartesianGrid,
-  Label,
   LabelList,
-  Pie,
-  PieChart,
+  PolarAngleAxis,
+  PolarGrid,
+  Radar,
+  RadarChart,
   Rectangle,
-  Sector,
   XAxis,
   YAxis,
 } from "recharts";
-import type { PieSectorDataItem } from "recharts/types/polar/Pie";
-import type { SituationKey } from "@/src/lib/types/tasks";
+import { PRIORITIES } from "@/src/db/schema/configs";
+import type { PriorityLevel } from "@/src/lib/types/tasks";
 import type { CategorizedTasks } from "@/src/lib/utils/categorizedTasks";
+import { CustomRadarDot } from "@/src/ui/components/Charts/Customs/CustomRadarDot";
 import {
   Card,
   CardContent,
@@ -30,6 +30,8 @@ import {
 import {
   type ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartStyle,
   ChartTooltip,
   ChartTooltipContent,
@@ -59,136 +61,101 @@ const containerVariants: Variants = {
 
 const chartConfig = {
   tasks: {
-    label: "Tasks",
+    label: "Active Tasks",
+    color: "var(--primary)",
   },
   collection: {
     label: "Collection",
   },
-  overdue: {
-    label: "Overdue",
+  low: {
+    label: "Low",
     color: "var(--chart-1)",
   },
-  overdueSoon: {
-    label: "Soon",
+  medium: {
+    label: "Medium",
     color: "var(--chart-2)",
   },
-  tomorrow: {
-    label: "Tomorrow",
+  high: {
+    label: "High",
     color: "var(--chart-3)",
   },
-  ongoing: {
-    label: "Ongoing",
+  urgent: {
+    label: "Urgent",
     color: "var(--chart-4)",
-  },
-  archived: {
-    label: "Archived",
-    color: "var(--chart-5)",
-  },
-  completed: {
-    label: "Completed",
-    color: "var(--chart-6)",
-  },
-  todos: {
-    label: "Todos",
-    color: "var(--chart-7)",
   },
 } satisfies ChartConfig;
 
-export interface OngoingSituation {
-  activeFilter?: SituationKey | undefined;
-  setActiveFilter?: (n?: SituationKey) => void;
+export interface PrioritySituationProps {
+  activeFilter?: PriorityLevel;
+  setActiveFilter?: (n?: PriorityLevel) => void;
   categorizedTasks: CategorizedTasks;
 }
 
-export function TaskPageOngoingSituation({
+export function TaskPagePrioritySituation({
   activeFilter,
   setActiveFilter,
   categorizedTasks,
-}: OngoingSituation) {
-  const id = "ongoing-situation-chart";
+}: PrioritySituationProps) {
+  const id = "priority-situation-chart";
   const [mode, setMode] = React.useState<"pie" | "bar">("pie");
-  const filters = [
-    "overdue",
-    "overdueSoon",
-    "tomorrow",
-    "ongoing",
-    "todos",
-    "archived",
-    "completed",
-  ] as const;
+  const filter: PriorityLevel = ((): PriorityLevel => {
+    if (!activeFilter) return "medium";
+    if (PRIORITIES.includes(activeFilter as (typeof PRIORITIES)[number])) {
+      return activeFilter as PriorityLevel;
+    }
 
-  // Ensure activeFilter is narrowed to one of the allowed filter keys (or default to "ongoing")
-  const filter: SituationKey = ((): Exclude<SituationKey, "all"> => {
-    if (!activeFilter || activeFilter === "all") return "ongoing";
-    return filters.includes(activeFilter)
-      ? (activeFilter as Exclude<SituationKey, "all">)
-      : "ongoing";
+    return "all";
   })();
 
   const situationData = [
     {
-      collection: "overdue",
-      label: "Overdue",
-      tasks: categorizedTasks.overdue?.length,
-      fill: "var(--color-overdue)",
+      collection: "low",
+      label: "Low",
+      tasks: categorizedTasks.lowPriority?.filter((item) => !item?.completedAt)
+        ?.length,
+      fill: "var(--color-low)",
     },
     {
-      collection: "overdueSoon",
-      label: "Overdue Soon",
-      tasks: categorizedTasks.overdueSoon?.length,
-      fill: "var(--color-overdueSoon)",
+      collection: "medium",
+      label: "Medium",
+      tasks: categorizedTasks.mediumPriority?.filter(
+        (item) => !item?.completedAt,
+      )?.length,
+      fill: "var(--color-medium)",
     },
     {
-      collection: "tomorrow",
-      label: "Overdue Tomorrow",
-      tasks: categorizedTasks.tomorrow?.length,
-      fill: "var(--color-tomorrow)",
+      collection: "high",
+      label: "High",
+      tasks: categorizedTasks.highPriority?.filter((item) => !item?.completedAt)
+        ?.length,
+      fill: "var(--color-high)",
     },
     {
-      collection: "ongoing",
-      label: "Ongoing Tasks",
-      tasks: categorizedTasks.ongoing?.length,
-      fill: "var(--color-ongoing)",
-    },
-    {
-      collection: "archived",
-      label: "Archived Tasks",
-      tasks: categorizedTasks.archived?.length,
-      fill: "var(--color-archived)",
-    },
-    {
-      collection: "todos",
-      label: "Tasks todo",
-      tasks: categorizedTasks.todos?.length,
-      fill: "var(--color-archived)",
+      collection: "urgent",
+      label: "Urgent",
+      tasks: categorizedTasks.urgentPriority?.filter(
+        (item) => !item?.completedAt,
+      )?.length,
+      fill: "var(--color-urgent)",
     },
   ];
 
-  const descriptions: Record<SituationKey, string> = {
-    overdue: "Showing active tasks that have passed their deadline date",
-    overdueSoon: "Showing active tasks due within the next 23 hours",
-    tomorrow: "Showing active tasks that are due tomorrow",
-    ongoing: "Showing active tasks due later or without a deadline date",
-    archived: "Showing tasks that have been archived and stored",
-    all: "Showing all tasks",
-    completed: "Showing completed tasks",
-    todos: "Showing tasks todo",
+  const descriptions: Record<PriorityLevel, string> = {
+    low: "Showing tasks flagged with low priority",
+    medium: "Showing tasks flagged with medium priority",
+    high: "Showing tasks flagged with high priority",
+    urgent: "Showing tasks flagged with urgent priority",
+    all: "Showing all priorities",
   };
 
   const activeIndex = React.useMemo(
-    () => situationData.findIndex((item) => item.collection === filter),
-    [activeFilter, categorizedTasks, filter, situationData.findIndex],
+    () => situationData.findIndex((item) => item.collection === activeFilter),
+    [activeFilter, situationData.findIndex],
   );
   const collections = React.useMemo(
     () => situationData.map((item) => item.collection),
-    [],
+    [situationData.map],
   );
-
-  const isNotRenderable =
-    categorizedTasks?.ongoing.length < 1 &&
-    categorizedTasks?.overdue.length < 1 &&
-    categorizedTasks?.overdueSoon.length < 1 &&
-    categorizedTasks?.tomorrow.length < 1;
 
   return (
     <Card data-chart={id} className="flex flex-col justify-between">
@@ -196,10 +163,10 @@ export function TaskPageOngoingSituation({
       <CardHeader className="flex-row items-start space-y-0 pb-0">
         <div className="grid gap-1">
           <CardTitle className="text-2xl font-header">
-            Ongoing Situation
+            Priority Situation
           </CardTitle>
           <CardDescription>
-            Here is your ongoing tasks report as of today
+            This is your priority report for ongoing tasks.
           </CardDescription>
         </div>
       </CardHeader>
@@ -208,7 +175,7 @@ export function TaskPageOngoingSituation({
         <div className="flex justify-end mb-2">
           <div className="relative inline-flex border rounded-full w-42 justify-between">
             {["pie", "bar"].map((value) => {
-              const Icon = value === "bar" ? ChartBar : PieChartIcon;
+              const Icon = value === "bar" ? ChartBar : Diamond;
 
               return (
                 <button
@@ -246,87 +213,44 @@ export function TaskPageOngoingSituation({
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="flex flex-1 justify-center min-h-72 max-h-72 pb-0">
+            <div className="grid flex-1 min-h-72 max-h-72 pb-0">
               <ChartContainer
-                id={id}
                 config={chartConfig}
-                className="mx-auto aspect-square w-full max-w-[300px]"
+                className="mx-auto aspect-square h-full"
               >
-                {isNotRenderable ? (
-                  <div className="w-full h-full text-center flex items-center justify-center">
-                    Not enough data, report will be shown here once data is
-                    sufficient.
-                  </div>
-                ) : (
-                  <PieChart>
-                    <ChartTooltip
-                      cursor={false}
-                      content={
-                        <ChartTooltipContent
-                          className="min-w-38 max-w-38"
-                          hideLabel
-                        />
-                      }
-                    />
-                    <Pie
-                      data={situationData}
-                      dataKey="tasks"
-                      nameKey="collection"
-                      innerRadius={60}
-                      strokeWidth={5}
-                      activeIndex={activeIndex}
-                      className="cursor-pointer"
-                      onClick={(e) => {
-                        setActiveFilter?.(e?.payload?.collection);
-                      }}
-                      activeShape={({
-                        outerRadius = 0,
-                        ...props
-                      }: PieSectorDataItem) => (
-                        <g>
-                          <Sector {...props} outerRadius={outerRadius + 5} />
-                          <Sector
-                            {...props}
-                            outerRadius={outerRadius + 20}
-                            innerRadius={outerRadius + 10}
-                          />
-                        </g>
-                      )}
-                    >
-                      <Label
-                        content={({ viewBox }) => {
-                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                            return (
-                              <text
-                                x={viewBox.cx}
-                                y={viewBox.cy}
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                              >
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={viewBox.cy}
-                                  className="fill-foreground text-3xl font-bold"
-                                >
-                                  {situationData[
-                                    activeIndex
-                                  ]?.tasks?.toLocaleString() || "0"}
-                                </tspan>
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={(viewBox.cy || 0) + 24}
-                                  className="fill-muted-foreground"
-                                >
-                                  {chartConfig?.[filter].label}
-                                </tspan>
-                              </text>
-                            );
-                          }
+                <RadarChart data={situationData}>
+                  <ChartTooltip
+                    content={<ChartTooltipContent indicator="line" />}
+                  />
+                  <PolarAngleAxis
+                    onClickCapture={(data) => {
+                      console.log(data);
+                    }}
+                    dataKey="collection"
+                  />
+                  <PolarGrid />
+                  <Radar
+                    dataKey="tasks"
+                    fill="var(--color-tasks)"
+                    fillOpacity={0.6}
+                    dot={
+                      <CustomRadarDot
+                        cx={0}
+                        cy={0}
+                        onClick={(data) => {
+                          setActiveFilter?.(
+                            (data?.payload?.name as PriorityLevel) || "low",
+                          );
                         }}
+                        activeFilter={activeFilter}
                       />
-                    </Pie>
-                  </PieChart>
-                )}
+                    }
+                  />
+                  <ChartLegend
+                    className="mt-8"
+                    content={<ChartLegendContent />}
+                  />
+                </RadarChart>
               </ChartContainer>
             </div>
           </motion.div>
@@ -380,7 +304,8 @@ export function TaskPageOngoingSituation({
                         <Rectangle
                           {...props}
                           fillOpacity={0.8}
-                          stroke={props.payload.fill}
+                          // eslint-disable-next-line react/prop-types
+                          stroke={props?.payload?.fill}
                           strokeDasharray={4}
                           strokeDashoffset={4}
                         />
@@ -419,14 +344,14 @@ export function TaskPageOngoingSituation({
         <Select
           value={filter}
           onValueChange={(e) => {
-            setActiveFilter?.(e as SituationKey);
+            setActiveFilter?.(e as PriorityLevel);
           }}
         >
           <SelectTrigger
             className="h-7 w-full border border-card-foreground/20 shadow-md"
             aria-label="Select a value"
           >
-            <SelectValue placeholder="Select month" />
+            <SelectValue placeholder="Select Priority" />
           </SelectTrigger>
           <SelectContent align="end" className="rounded-xl">
             <SelectItem value={"all"} className="rounded-lg [&_span]:flex">

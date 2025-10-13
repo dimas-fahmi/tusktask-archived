@@ -1,5 +1,7 @@
 "use client";
 
+import { Circle, CircleCheckBig } from "lucide-react";
+import React from "react";
 import { useUpdateTask } from "@/src/lib/hooks/mutations/useUpdateTasks";
 import type { TaskApp } from "@/src/lib/types/tasks";
 import {
@@ -8,8 +10,6 @@ import {
   TooltipTrigger,
 } from "@/src/ui/shadcn/components/ui/tooltip";
 import { cn } from "@/src/ui/shadcn/lib/utils";
-import { Circle, CircleCheckBig } from "lucide-react";
-import React from "react";
 
 export interface TaskScratchButtonClasses {
   buttonClassNames?: string;

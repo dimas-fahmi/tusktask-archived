@@ -1,6 +1,6 @@
-import { parseCookies } from "../parseCookies";
-import { fetchUserTasks } from "../fetchers/fetchUserTasks";
 import type { Task } from "@/src/db/schema/tasks";
+import { fetchUserTasks } from "../fetchers/fetchUserTasks";
+import { parseCookies } from "../parseCookies";
 
 export async function getTask(id: string) {
   const cookieString = await parseCookies();

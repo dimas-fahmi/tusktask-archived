@@ -1,6 +1,6 @@
 import React from "react";
-import Heading from "./Heading";
 import { cn } from "../shadcn/lib/utils";
+import Heading from "./Heading";
 
 export interface SectionHeaderProps
   extends React.HTMLAttributes<HTMLDivElement> {

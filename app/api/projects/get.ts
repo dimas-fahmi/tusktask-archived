@@ -1,10 +1,10 @@
-import type { NextRequest } from "next/server";
-import { createResponse } from "@/src/lib/utils/createResponse";
 import { and, eq, ilike } from "drizzle-orm";
-import { projects } from "@/src/db/schema/projects";
-import { createServerClient } from "@/src/lib/supabase/instances/server";
+import type { NextRequest } from "next/server";
 import { db } from "@/src/db";
+import { projects } from "@/src/db/schema/projects";
 import type { OperationError } from "@/src/lib/errors";
+import { createServerClient } from "@/src/lib/supabase/instances/server";
+import { createResponse } from "@/src/lib/utils/createResponse";
 
 const PATH = "API_PROJECTS_GET";
 

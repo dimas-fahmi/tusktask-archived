@@ -1,5 +1,5 @@
-import type { UsersProfilesPatchRequest } from "@/app/api/users/profiles/patch";
 import { useMutation } from "@tanstack/react-query";
+import type { UsersProfilesPatchRequest } from "@/app/api/users/profiles/patch";
 
 export const useMutateUserProfile = () => {
   return useMutation({

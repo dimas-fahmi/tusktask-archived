@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { eagerUpdaterTasksProject } from "../../utils/eagerUpdater/tasks/project";
 import { eagerUpdaterTaskDetail } from "../../utils/eagerUpdater/tasks/detail";
+import { eagerUpdaterTasksProject } from "../../utils/eagerUpdater/tasks/project";
 
 export const useDeleteTask = () => {
   const queryClient = useQueryClient();

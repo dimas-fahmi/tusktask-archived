@@ -1,16 +1,16 @@
 "use client";
 
 import {
-  useMutation,
   type UseMutationOptions,
+  useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { StandardizeResponse } from "../../utils/createResponse";
+import type { ProjectsPatchRequest } from "@/app/api/projects/patch";
 import type { Project } from "@/src/db/schema/projects";
 import type { OperationError } from "../../errors";
-import type { ProjectsPatchRequest } from "@/app/api/projects/patch";
-import { eagerUpdaterProjectsDetail } from "../../utils/eagerUpdater/projects/detail";
 import type { EagerUpdaterResult } from "../../types/eagerUpdate";
+import type { StandardizeResponse } from "../../utils/createResponse";
+import { eagerUpdaterProjectsDetail } from "../../utils/eagerUpdater/projects/detail";
 
 export interface UseUpdateProjectContext {
   projectDetail?: EagerUpdaterResult<Project[]>;
