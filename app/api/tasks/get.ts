@@ -20,6 +20,9 @@ export type TasksGetRequestDateFields = keyof Pick<
   "completedAt" | "deadlineAt" | "createdAt" | "reminderAt"
 >;
 
+export const VALID_TASKS_GET_REQUEST_DATE_FIELDS: TasksGetRequestDateFields[] =
+  ["completedAt", "deadlineAt", "reminderAt", "createdAt"];
+
 export interface TasksGetRequest extends Task {
   include?: string;
   limit?: number;
@@ -79,7 +82,7 @@ export async function tasksGet(req: NextRequest) {
     // Parse ordering
     const orderDirection =
       parameters?.orderDirection === "asc" ? "asc" : "desc";
-    const validOrderFields = ["name", "createdAt", "completedAt", "deadlineAt"];
+    const validOrderFields = [...VALID_TASKS_GET_REQUEST_DATE_FIELDS, "name"];
 
     const orderField =
       parameters?.orderBy &&
@@ -175,15 +178,9 @@ export async function tasksGet(req: NextRequest) {
 
     // Date range filter
     if (parameters?.date && parameters?.from && parameters?.to) {
-      const validColumns: TasksGetRequestDateFields[] = [
-        "createdAt",
-        "completedAt",
-        "deadlineAt",
-        "reminderAt",
-      ];
       const dateField = parameters.date;
 
-      if (validColumns.includes(dateField)) {
+      if (VALID_TASKS_GET_REQUEST_DATE_FIELDS.includes(dateField)) {
         const fromDate = new Date(parameters.from);
         const toDate = new Date(parameters.to);
 
