@@ -116,7 +116,7 @@ include=owner,masterTask,subtasks-2
         "name": "Complete project proposal",
         "description": "Write and submit Q4 proposal",
         "taskPriority": "high",
-        "taskStatus": "in_progress",
+        "taskStatus": "on_process",
         "createdAt": "2025-01-15T10:30:00Z",
         "deadlineAt": "2025-01-20T17:00:00Z",
         "completedAt": null,
@@ -138,7 +138,7 @@ include=owner,masterTask,subtasks-2
           {
             "id": "task-124",
             "name": "Review team feedback",
-            "taskStatus": "todo"
+            "taskStatus": "pending"
           }
         ]
       }
@@ -242,7 +242,7 @@ GET /api/tasks?date=createdAt&from=2025-01-01T00:00:00Z&to=2025-01-31T23:59:59Z
 Fetch overdue tasks with parent hierarchy and nested subtasks:
 
 ```
-GET /api/tasks?isOverdue=true&include=parent:3,subtasks:2
+GET /api/tasks?isOverdue=true&include=parent-3,subtasks-2
 ```
 
 <br>
@@ -260,7 +260,7 @@ GET /api/tasks?isCompleted=true&limit=50&offset=50&orderBy=completedAt&orderDire
 Fetch high-priority incomplete tasks due tomorrow with full relations:
 
 ```
-GET /api/tasks?taskPriority=high&isTomorrow=true&include=owner,project,parent:2,subtasks:2
+GET /api/tasks?taskPriority=high&isTomorrow=true&include=owner,project,parent-2,subtasks-2
 ```
 
 ---
