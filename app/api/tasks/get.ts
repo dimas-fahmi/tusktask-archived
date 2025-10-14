@@ -33,7 +33,7 @@ export type TasksGetRequestDateFields = keyof Pick<
 export const VALID_TASKS_GET_REQUEST_DATE_FIELDS: TasksGetRequestDateFields[] =
   ["completedAt", "deadlineAt", "reminderAt", "createdAt"];
 
-export interface TasksGetRequest extends Task {
+export interface TasksGetRequest extends Partial<Task> {
   include?: string;
   limit?: number;
   offset?: number;
