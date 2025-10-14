@@ -206,6 +206,19 @@ export async function tasksGet(req: NextRequest) {
           });
         }
 
+        if (fromDate.getTime() > toDate.getTime()) {
+          throw new OperationError(
+            "bad_request",
+            "`from` must be <= `to`",
+            400,
+            {
+              date: parameters.date,
+              from: parameters.from,
+              to: parameters.to,
+            },
+          );
+        }
+
         where.push(
           and(gte(tasks[dateField], fromDate), lte(tasks[dateField], toDate)),
         );
