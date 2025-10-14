@@ -1,4 +1,4 @@
-export interface StandaradizedError {
+export interface StandardizedError {
   code: string;
   message: string;
   status?: number;

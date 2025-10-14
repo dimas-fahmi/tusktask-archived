@@ -13,7 +13,7 @@ import type { NextRequest } from "next/server";
 import type { PostgresError } from "postgres";
 import { db } from "@/src/db";
 import { type Task, tasks } from "@/src/db/schema/tasks";
-import { OperationError, type StandaradizedError } from "@/src/lib/errors";
+import { OperationError, type StandardizedError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import type { Pagination, Sorting } from "@/src/lib/types/app";
 import { createLog } from "@/src/lib/utils/createLog";
@@ -311,7 +311,7 @@ export async function tasksGet(req: NextRequest) {
     // Return Errors
   } catch (error) {
     // Create Error
-    const err: StandaradizedError = {
+    const err: StandardizedError = {
       code: (error as OperationError)?.code ?? "unknown_error",
       message: (error as OperationError)?.message ?? "Unknown error",
       status: (error as OperationError)?.status || 500,

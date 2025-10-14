@@ -1,4 +1,4 @@
-import type { StandaradizedError } from "../errors";
+import type { StandardizedError } from "../errors";
 
 export type LogType = "warn" | "info" | "error";
 
@@ -52,7 +52,7 @@ export type LogType = "warn" | "info" | "error";
  */
 export const createLog = (
   path: string,
-  error: StandaradizedError,
+  error: StandardizedError,
   type?: LogType,
 ) => {
   const log = `${path} -> ${error?.code} -> ${error?.message}`;
