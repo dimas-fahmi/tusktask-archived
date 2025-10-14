@@ -56,3 +56,10 @@ export const createResponse = <T>(
 
   return NextResponse.json(response, { status });
 };
+
+export const UNKNOWN_ERROR = createResponse(
+  500,
+  "unknown_error",
+  "Unknown error",
+  undefined,
+);
