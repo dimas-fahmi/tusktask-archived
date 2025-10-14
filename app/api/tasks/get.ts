@@ -156,6 +156,7 @@ export async function tasksGet(req: NextRequest) {
     if (
       parameters?.isSoon &&
       !Number.isNaN(soonWindow) &&
+      soonWindow > 0 &&
       parameters?.isCompleted !== "true"
     ) {
       const now = new Date();
