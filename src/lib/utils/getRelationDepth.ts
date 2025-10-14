@@ -4,5 +4,5 @@ export const getRelationDepth = (array: string[], find: string) => {
   if (!match) return 0;
 
   const depth = match.split("-")[1];
-  return depth ? Number(depth) : 1;
+  return depth ? (Number(depth) > 5 ? 5 : Number(depth)) : 1;
 };
