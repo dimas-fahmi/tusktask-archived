@@ -146,7 +146,8 @@ include=owner,masterTask,subtasks-2
     "pagination": {
       "limit": 20,
       "offset": 0,
-      "total": 45
+      "total": 45,
+      "hasMore":true
     },
     "sorting": {
       "orderBy": "deadlineAt",

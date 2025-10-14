@@ -298,7 +298,7 @@ export async function tasksGet(req: NextRequest) {
       return createResponse(
         isFound ? 200 : 404,
         isFound ? "success_fetched_tasks" : "not_found",
-        isFound ? "Tasks found and fetched" : "No tasks is found",
+        isFound ? "Tasks found and fetched" : "No tasks found",
         {
           data: response,
           pagination: {
