@@ -1,8 +1,8 @@
 export const getRelationDepth = (array: string[], find: string) => {
-  const regex = new RegExp(`^${find}(-\\d+)?$`);
-  const match = array.find((param) => regex.test(param));
+  if (array.includes(find)) return 1;
+  const prefix = `${find}-`;
+  const match = array.find((p) => p.startsWith(prefix));
   if (!match) return 0;
-
-  const depth = match.split("-")[1];
-  return depth ? (Number(depth) > 5 ? 5 : Number(depth)) : 1;
+  const d = parseInt(match.slice(prefix.length), 10);
+  return Number.isFinite(d) && d > 0 ? d : 1;
 };
