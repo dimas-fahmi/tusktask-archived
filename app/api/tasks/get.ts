@@ -1,4 +1,14 @@
-import { and, eq, gte, ilike, isNotNull, isNull, lt, lte } from "drizzle-orm";
+import {
+  and,
+  count,
+  eq,
+  gte,
+  ilike,
+  isNotNull,
+  isNull,
+  lt,
+  lte,
+} from "drizzle-orm";
 import type { NextRequest } from "next/server";
 import type { PostgresError } from "postgres";
 import { db } from "@/src/db";
@@ -226,42 +236,47 @@ export async function tasksGet(req: NextRequest) {
 
     // Executions
     try {
-      const response = await db.query.tasks.findMany({
-        where: and(...where),
-        with: {
-          // Parents
-          ...(getRelationDepth(includeParameters, "parent") > 0 &&
-            buildParentWith(getRelationDepth(includeParameters, "parent"))),
+      const [response, totalCount] = await Promise.all([
+        db.query.tasks.findMany({
+          where: and(...where),
+          with: {
+            // Parents
+            ...(getRelationDepth(includeParameters, "parent") > 0 &&
+              buildParentWith(getRelationDepth(includeParameters, "parent"))),
 
-          // Subtasks
-          ...(getRelationDepth(includeParameters, "subtasks") > 0 &&
-            buildSubtasksWith(getRelationDepth(includeParameters, "subtasks"))),
+            // Subtasks
+            ...(getRelationDepth(includeParameters, "subtasks") > 0 &&
+              buildSubtasksWith(
+                getRelationDepth(includeParameters, "subtasks"),
+              )),
 
-          // Project
-          ...(includeParameters?.includes("project") && {
-            project: true,
-          }),
+            // Project
+            ...(includeParameters?.includes("project") && {
+              project: true,
+            }),
 
-          // Master Task
-          ...(includeParameters?.includes("masterTask") && {
-            masterTask: true,
-          }),
+            // Master Task
+            ...(includeParameters?.includes("masterTask") && {
+              masterTask: true,
+            }),
 
-          // Owner
-          ...(includeParameters?.includes("owner") && {
-            owner: true,
-          }),
-        },
-        orderBy: (tasks, { asc, desc }) => {
-          if (orderDirection === "asc") {
-            return asc(tasks[orderField]);
-          }
-
-          return desc(tasks[orderField]);
-        },
-        limit,
-        offset,
-      });
+            // Owner
+            ...(includeParameters?.includes("owner") && {
+              owner: true,
+            }),
+          },
+          orderBy: (tasks, { asc, desc }) =>
+            orderDirection === "asc"
+              ? asc(tasks[orderField])
+              : desc(tasks[orderField]),
+          limit,
+          offset,
+        }),
+        db
+          .select({ count: count() })
+          .from(tasks)
+          .where(and(...where)),
+      ]);
 
       const isFound = !!response?.length;
 
@@ -275,7 +290,8 @@ export async function tasksGet(req: NextRequest) {
           pagination: {
             limit,
             offset,
-            total: response.length,
+            total: totalCount[0]?.count,
+            hasMore: offset + limit < totalCount[0].count,
           },
           sorting: {
             orderBy: orderField,
