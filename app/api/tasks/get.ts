@@ -184,6 +184,17 @@ export async function tasksGet(req: NextRequest) {
         const fromDate = new Date(parameters.from);
         const toDate = new Date(parameters.to);
 
+        if (
+          Number.isNaN(fromDate.getTime()) ||
+          Number.isNaN(toDate.getTime())
+        ) {
+          throw new OperationError("bad_request", "Invalid date range", 400, {
+            date: parameters.date,
+            from: parameters.from,
+            to: parameters.to,
+          });
+        }
+
         where.push(
           and(gte(tasks[dateField], fromDate), lte(tasks[dateField], toDate)),
         );
@@ -299,6 +310,7 @@ export async function tasksGet(req: NextRequest) {
       message:
         ((error as OperationError)?.context as PostgresError)?.message ||
         "Unknown error",
+      context: (error as OperationError)?.context,
     });
 
     // Response To Client

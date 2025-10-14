@@ -2,6 +2,7 @@ export interface StandaradizedError {
   code: string;
   message: string;
   status?: number;
+  context?: unknown;
 }
 
 export class OperationError extends Error {
