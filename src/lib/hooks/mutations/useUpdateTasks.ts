@@ -3,9 +3,12 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import type { TasksGetResponse } from "@/app/api/tasks/get";
 import type { TasksPatchRequest } from "@/app/api/tasks/patch";
 import type { Task } from "@/src/db/schema/tasks";
 import type { OperationError } from "../../errors";
+import { queries } from "../../queries";
+import type { OptimisticUpdateResult } from "../../types/app";
 import type { EagerUpdaterResult } from "../../types/eagerUpdate";
 import type { TaskApp } from "../../types/tasks";
 import type { StandardizeResponse } from "../../utils/createResponse";
@@ -17,8 +20,10 @@ import {
 
 export interface UseUpdateTaskDefaultContext {
   euTasksProject?: EagerUpdateTasksProjectResult;
-  euTasksDetail?: EagerUpdaterResult<Task>;
   euSubtasksList?: EagerUpdaterResult<TaskApp>;
+
+  // New Version
+  ouTasksDetail?: OptimisticUpdateResult<TasksGetResponse>;
 }
 
 export interface UseUpdateTaskVariables {
@@ -120,17 +125,22 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
 
       // Assume anything on the context is nullable!
       return {
-        // Update Project tasks list eager update
+        // Update Project tasks list eager update [deprecated]
         euTasksProject: eagerUpdaterTasksProject.update(
           data.req,
           data.old.projectId,
           queryClient,
         ),
-        euTasksDetail: eagerUpdaterTaskDetail.update(data.req, queryClient),
         euSubtasksList: eagerUpdaterTaskDetail.updateSubtasksList(
           data.req,
           queryClient,
           data?.old?.parentTask,
+        ),
+
+        // Newer Version
+        ouTasksDetail: queries.optimisticUpdates.tasks.detail.update(
+          data.req,
+          queryClient,
         ),
 
         // More eager update here...
@@ -151,10 +161,10 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         );
       }
 
-      if (onMutateResult?.euTasksDetail) {
+      if (onMutateResult?.ouTasksDetail) {
         queryClient.setQueryData(
-          onMutateResult?.euTasksDetail?.queryKey,
-          onMutateResult?.euTasksDetail?.oldData,
+          onMutateResult?.ouTasksDetail?.queryKey,
+          onMutateResult?.ouTasksDetail?.oldData,
         );
       }
 
@@ -179,9 +189,9 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         });
       }
 
-      if (onMutateResult?.euTasksDetail) {
+      if (onMutateResult?.ouTasksDetail) {
         queryClient.invalidateQueries({
-          queryKey: onMutateResult?.euTasksDetail?.queryKey,
+          queryKey: onMutateResult?.ouTasksDetail?.queryKey,
         });
       }
 

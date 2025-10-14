@@ -4,6 +4,7 @@ import { ChartPie, ListTodo } from "lucide-react";
 import { motion } from "motion/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useFetchUserTasks } from "@/src/lib/hooks/queries/useFetchUserTasks";
+import { queries } from "@/src/lib/queries";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import type {
   PriorityLevel,
@@ -11,7 +12,6 @@ import type {
   TaskApp,
 } from "@/src/lib/types/tasks";
 import { categorizeTasks } from "@/src/lib/utils/categorizedTasks";
-import { queryKeys } from "@/src/lib/utils/queryKeys";
 import { TaskPageBreadcrumb } from "@/src/ui/components/Dashboard/TaskPageBreadcrumb";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import Countdown from "./components/Countdown";
@@ -62,15 +62,20 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
   >(undefined);
 
   // Query Task
+  const taskQuery = queries.tasks.detail(taskFromServer.id);
   const { data: taskResponse, isPending: _isLoadingTask } = useFetchUserTasks(
-    queryKeys.tasks.detail(taskFromServer?.id),
-    {
-      id: taskFromServer?.id,
-      include: "subtasks-2,project,parent,subtask>parent",
-    },
+    taskQuery.queryKey,
+    taskQuery?.context?.request,
   );
 
   const task = taskResponse?.result?.data?.[0] || taskFromServer;
+
+  // Query Subtasks
+  const subtasksQuery = queries.tasks.detailSubtasks(taskFromServer.id);
+  const { data: subtasksResponse, isPending: _isLoadingSubtasks } =
+    useFetchUserTasks(subtasksQuery.queryKey, subtasksQuery?.context?.request);
+
+  const subtasks = subtasksResponse?.result?.data;
 
   // Update task store on mount
   useEffect(() => {
@@ -79,8 +84,8 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
     }
   }, [setActiveTask, task]);
 
-  // CategorizedTasks
-  const categorizedTasks = categorizeTasks(task?.subtasks);
+  // CategorizedTasks (subtasks)
+  const categorizedTasks = categorizeTasks(subtasks);
 
   return (
     <TaskPageIndexContext.Provider
