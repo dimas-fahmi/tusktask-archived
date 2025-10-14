@@ -47,7 +47,7 @@ Retrieve tasks with advanced filtering, sorting, pagination, and relation loadin
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `orderBy` | string | `createdAt` | Sort field: `name`, `createdAt`, `completedAt`, `deadlineAt`, |
+| `orderBy` | string | `createdAt` | Sort field: `name`, `createdAt`, `completedAt`, `deadlineAt`, `reminderAt`|
 | `orderDirection` | string | `desc` | Sort order: `asc` or `desc` |
 
 #### Status Filters
@@ -109,7 +109,7 @@ include=owner,masterTask,subtasks-2
   "status": 200,
   "code": "success_fetched_tasks",
   "message": "Tasks found and fetched",
-  "data": {
+  "result": {
     "data": [
       {
         "id": "task-123",
@@ -163,7 +163,7 @@ include=owner,masterTask,subtasks-2
   "status": 404,
   "code": "not_found",
   "message": "No tasks is found",
-  "data": {
+  "result": {
     "data": [],
     "pagination": {
       "limit": 20,
@@ -185,7 +185,7 @@ include=owner,masterTask,subtasks-2
   "status": 500,
   "code": "database_error",
   "message": "Failed when fetching tasks",
-  "data": null
+  "result": null
 }
 ```
 
