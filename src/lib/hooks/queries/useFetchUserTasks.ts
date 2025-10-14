@@ -3,19 +3,19 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { TasksGetRequest } from "@/app/api/tasks/get";
+import type { TasksGetRequest, TasksGetResponse } from "@/app/api/tasks/get";
 import type { StandardizeResponse } from "../../utils/createResponse";
-import { fetchTasks } from "../../utils/fetchers/fetchTasks";
+import { fetchUserTasks } from "../../utils/fetchers/fetchUserTasks";
 
-export const useFetchTasks = <T>(
+export const useFetchUserTasks = (
   queryKey: string[],
   req?: TasksGetRequest,
-  options?: UseQueryOptions<StandardizeResponse<T>>,
+  options?: UseQueryOptions<TasksGetResponse>,
 ) => {
   const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: queryKey,
-    queryFn: () => fetchTasks<T>(req),
+    queryFn: () => fetchUserTasks(req),
     retry: (count, data) => {
       const error = data as unknown as StandardizeResponse<unknown>;
       const status = error?.status;

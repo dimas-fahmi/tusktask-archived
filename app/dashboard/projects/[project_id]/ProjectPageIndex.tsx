@@ -2,9 +2,8 @@
 
 import { useEffect } from "react";
 import type { Project } from "@/src/db/schema/projects";
-import type { Task } from "@/src/db/schema/tasks";
-import { useFetchTasks } from "@/src/lib/hooks/queries/useFetchTasks";
 import { useFetchUserProjects } from "@/src/lib/hooks/queries/useFetchUserProjects";
+import { useFetchUserTasks } from "@/src/lib/hooks/queries/useFetchUserTasks";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import { queryKeys } from "@/src/lib/utils/queryKeys";
 import HeaderSection from "./sections/Header";
@@ -38,14 +37,14 @@ const ProjectPageIndex = ({
   }, [activeProject?.id, project, setActiveProject]);
 
   // Query Tasks
-  const { data: tasksResult } = useFetchTasks<Task[]>(
+  const { data: tasksResult } = useFetchUserTasks(
     queryKeys.tasks.project(projectFromServer.id),
     {
       projectId: projectFromServer.id,
     },
   );
 
-  const tasks = tasksResult?.result;
+  const tasks = tasksResult?.result?.data;
 
   return (
     <div className="dashboard-padding grid grid-cols-1">

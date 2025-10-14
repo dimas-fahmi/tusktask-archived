@@ -3,7 +3,7 @@
 import { ChartPie, ListTodo } from "lucide-react";
 import { motion } from "motion/react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useFetchTasks } from "@/src/lib/hooks/queries/useFetchTasks";
+import { useFetchUserTasks } from "@/src/lib/hooks/queries/useFetchUserTasks";
 import { useTaskStore } from "@/src/lib/stores/ui/taskStore";
 import type {
   PriorityLevel,
@@ -62,13 +62,15 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
   >(undefined);
 
   // Query Task
-  const { data: taskResponse, isPending: _isLoadingTask } =
-    useFetchTasks<TaskApp>(queryKeys.tasks.detail(taskFromServer?.id), {
+  const { data: taskResponse, isPending: _isLoadingTask } = useFetchUserTasks(
+    queryKeys.tasks.detail(taskFromServer?.id),
+    {
       id: taskFromServer?.id,
-      include: "subtasks,project",
-    });
+      include: "subtasks-2,project,parent,subtask>parent",
+    },
+  );
 
-  const task = taskResponse?.result || taskFromServer;
+  const task = taskResponse?.result?.data?.[0] || taskFromServer;
 
   // Update task store on mount
   useEffect(() => {

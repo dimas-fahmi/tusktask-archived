@@ -11,7 +11,7 @@ export async function generateMetadata({
   const { id } = await params;
 
   const response = await getTask(id);
-  const task = response?.result;
+  const task = response?.result?.data?.[0];
 
   if (!task) {
     return gm({ title: "Task Not Found" });
@@ -25,7 +25,7 @@ export async function generateMetadata({
 const TaskPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const response = await getTask(id);
-  const task = response?.result;
+  const task = response?.result?.data?.[0];
 
   return (
     <Suspense>

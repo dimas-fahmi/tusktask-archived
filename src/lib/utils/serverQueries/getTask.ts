@@ -1,4 +1,3 @@
-import type { Task } from "@/src/db/schema/tasks";
 import { fetchUserTasks } from "../fetchers/fetchUserTasks";
 import { parseCookies } from "../parseCookies";
 
@@ -7,7 +6,7 @@ export async function getTask(id: string) {
   const headers = new Headers();
   headers.set("Cookie", cookieString);
   // Need to forward cookie for authentication to validate project ownership
-  const response = await fetchUserTasks<Task>(
+  const response = await fetchUserTasks(
     { id },
     {
       headers: headers,
