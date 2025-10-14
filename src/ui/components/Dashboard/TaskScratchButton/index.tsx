@@ -18,7 +18,7 @@ export interface TaskScratchButtonClasses {
 
 export interface TaskScratchButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
-  task: TaskApp;
+  task?: TaskApp;
   classes?: TaskScratchButtonClasses;
   disabled?: string;
 }
@@ -42,6 +42,8 @@ const TaskScratchButton = React.forwardRef<
           onClick={(e) => {
             e.stopPropagation();
             props?.onClick?.(e);
+
+            if (!task) return;
 
             updateTask({
               req: {

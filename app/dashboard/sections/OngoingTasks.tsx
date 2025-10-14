@@ -1,15 +1,16 @@
 "use client";
 
 import { CirclePlus } from "lucide-react";
-import type { Task } from "@/src/db/schema/tasks";
-import { useFetchTasks } from "@/src/lib/hooks/queries/useFetchTasks";
+import { useFetchUserTasks } from "@/src/lib/hooks/queries/useFetchUserTasks";
 import TaskCard from "@/src/ui/components/Dashboard/TaskCard";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 
 const OngoingTasks = () => {
   // Fetch Tasks
-  const { data: tasksResult } = useFetchTasks<Task[]>(["tasks"]);
-  const tasks = tasksResult?.result;
+  const { data: tasksResult } = useFetchUserTasks(["tasks"], {
+    include: "parent",
+  });
+  const tasks = tasksResult?.result?.data;
 
   return (
     <section className="mt-6 pb-[1000px]">

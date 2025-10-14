@@ -35,6 +35,7 @@ Retrieve tasks with advanced filtering, sorting, pagination, and relation loadin
 | `parentTask` | string | Filter by parent task ID | `946e7533-f686-4f93-981e-88cacbe06bf5` |
 | `taskPriority` | string | Filter by priority level | `high`, `medium`, `low`,`urgent` |
 | `taskStatus` | string | Filter by status | `pending`, `on_process`, `archived` |
+| `hideSubtask` | `"true"` | Filter tasks without `parentTask` id if provided with `"true"` | `true`
 
 #### Pagination
 
@@ -91,12 +92,48 @@ Supports depth for fetching nested relations like _parent_ and _subtasks_.
 
 <br>
 
+**Depth Relations:**
+Supports joining relations for nested relation with `>`
+
+```
+[relation]>[relation]
+```
+
+
+
+---
+<br>
+
 **Examples:**
+
+Include owner, project and subtasks (1 level deep)
 ```
-include=owner,project
-include=parent-2,subtasks-3
-include=owner,masterTask,subtasks-2
+include=owner,project,subtasks
 ```
+
+<br>
+Fetch subtasks (2 levels deep)
+
+```
+include=subtasks-2
+```
+
+<br>
+Fetch subtasks (2 levels deep) along with its parents
+
+```
+include=subtasks-2, subtask>parent
+```
+
+<br>
+Fetch tasks with parent's subtasks (2 levels deep)
+
+```
+include=parent-2, parent>subtasks-2
+```
+
+_note that parent is singular while subtasks is plural_ as parent will return an `object` while subtasks will return an `array` as a list of `tasks`
+
 
 ---
 
@@ -293,6 +330,13 @@ GET /api/tasks?taskPriority=high&isTomorrow=true&include=owner,project,parent-2,
 - Minimum limit: 1
 - Maximum limit: 100
 - Offset cannot be negative
+
+---
+
+## Recurrences
+Not yet implemented, as of right now include for nested parent is not supporting `masterTask` as limitation might be introduce to prevent recurring tasks to have subtasks.
+
+
 
 ---
 

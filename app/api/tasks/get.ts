@@ -16,6 +16,7 @@ import { type Task, tasks } from "@/src/db/schema/tasks";
 import { OperationError, type StandardizedError } from "@/src/lib/errors";
 import { createServerClient } from "@/src/lib/supabase/instances/server";
 import type { Pagination, Sorting } from "@/src/lib/types/app";
+import type { TaskApp } from "@/src/lib/types/tasks";
 import { createLog } from "@/src/lib/utils/createLog";
 import {
   createResponse,
@@ -40,6 +41,9 @@ export interface TasksGetRequest extends Partial<Task> {
   orderBy?: TasksGetRequestDateFields | "name";
   orderDirection?: "asc" | "desc";
 
+  // by relation
+  hideSubtask?: "true";
+
   // By Status
   isOverdue?: "true";
   isCompleted?: "true";
@@ -52,8 +56,8 @@ export interface TasksGetRequest extends Partial<Task> {
   to?: Date | string;
 }
 
-export type TasksGetResponse<TData> = StandardizeResponse<{
-  data: TData;
+export type TasksGetResponse = StandardizeResponse<{
+  data: TaskApp[];
   pagination: Pagination;
   sorting: Sorting;
 }>;
@@ -133,6 +137,11 @@ export async function tasksGet(req: NextRequest) {
     // Search by status
     if (parameters?.taskStatus) {
       where.push(eq(tasks.taskStatus, parameters?.taskStatus));
+    }
+
+    // Filter tasks without parentTask id if provided with "true"
+    if (parameters?.hideSubtask === "true") {
+      where.push(isNull(tasks.parentTask));
     }
 
     // Always return active tasks, except if parameters "isCompleted" set to true
@@ -233,7 +242,25 @@ export async function tasksGet(req: NextRequest) {
       if (depth <= 0) return undefined;
       return {
         parent: {
-          with: buildParentWith(depth - 1),
+          with: {
+            ...buildParentWith(depth - 1)?.subtasks?.with,
+
+            // Subtasks
+            ...(getRelationDepth(includeParameters, "parent>subtasks") &&
+              buildSubtasksWith(
+                getRelationDepth(includeParameters, "parent>subtasks"),
+              )),
+
+            // owner
+            ...(includeParameters?.includes("parent>owner") && {
+              owner: true,
+            }),
+
+            // Project
+            ...(includeParameters?.includes("parent>project") && {
+              project: true,
+            }),
+          },
         },
       };
     }
@@ -243,7 +270,29 @@ export async function tasksGet(req: NextRequest) {
       if (depth <= 0) return undefined;
       return {
         subtasks: {
-          with: buildSubtasksWith(depth - 1),
+          with: {
+            ...buildSubtasksWith(depth - 1)?.subtasks?.with,
+
+            // SubtTasks Parent
+            ...(includeParameters?.includes("subtask>parent") && {
+              parent: true,
+            }),
+
+            // Subtasks owner
+            ...(includeParameters?.includes("subtask>owner") && {
+              owner: true,
+            }),
+
+            // Master Task
+            ...(includeParameters?.includes("subtask>masterTask") && {
+              masterTask: true,
+            }),
+
+            // Project
+            ...(includeParameters?.includes("subtask>project") && {
+              project: true,
+            }),
+          },
         },
       };
     }

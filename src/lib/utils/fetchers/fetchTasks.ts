@@ -3,6 +3,11 @@ import { APP_URL } from "../../configs";
 import type { StandardizeResponse } from "../createResponse";
 import { objectToQueryString } from "../objectToQueryString";
 
+/**
+ *
+ * @deprecated prefer `fetchUserTasks` no longer compatible with the new API
+ *
+ */
 export async function fetchTasks<T>(
   req?: TasksGetRequest,
 ): Promise<StandardizeResponse<T>> {

@@ -8,6 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useUpdateTask } from "@/src/lib/hooks/mutations/useUpdateTasks";
 import type { TaskApp } from "@/src/lib/types/tasks";
 import { newTaskFormSchema } from "@/src/lib/zod/schemas/taskSchema";
+import TaskScratchButton from "@/src/ui/components/Dashboard/TaskScratchButton";
 import { Button } from "@/src/ui/shadcn/components/ui/button";
 import { Card, CardContent } from "@/src/ui/shadcn/components/ui/card";
 
@@ -120,7 +121,15 @@ const NameAndDescriptionCard = ({ task }: { task?: TaskApp }) => {
           className="flex flex-col justify-between h-full gap-4"
         >
           <div className="flex flex-col flex-1 overflow-hidden">
-            <div className="flex items-center gap-1.5 text-4xl font-header py-2">
+            <div className="flex gap-1.5 text-4xl font-header py-2">
+              <div className="flex items-center justify-center w-10 h-10">
+                <TaskScratchButton
+                  task={task}
+                  classes={{
+                    iconClassNames: "w-7 h-7",
+                  }}
+                />
+              </div>
               {!editMode ? (
                 <h1
                   onClick={() => {
