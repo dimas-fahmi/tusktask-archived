@@ -10,7 +10,7 @@ export const update = (
   queryClient: QueryClient,
 ): OptimisticUpdateResult<TasksGetResponse> => {
   // 1. QueryKey
-  const queryKey = queries.tasks?.detail(request?.id)?.queryKey;
+  const queryKey = queries.tasks.detail(request.id).queryKey;
 
   // 2. Get Old Data
   const oldData = queryClient.getQueryData(queryKey) as
@@ -35,7 +35,9 @@ export const update = (
     };
 
     // 5. Update Document Title
-    document.title = `${request?.newValues?.name || oldTask?.name} | TuskTask`;
+    if (typeof document?.title !== "undefined") {
+      document.title = `${request?.newValues?.name || oldTask?.name} | TuskTask`;
+    }
 
     // 6. return new data
     return {
