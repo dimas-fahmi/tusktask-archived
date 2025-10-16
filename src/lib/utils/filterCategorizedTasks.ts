@@ -94,7 +94,7 @@ export const getFilteredCTsDescription = (
 
   if (!situationKey && !priorityLevel) {
     // Case 1: No filters applied
-    return "Showing all active tasks";
+    return "Showing all tasks";
   }
 
   let description = "Showing ";
