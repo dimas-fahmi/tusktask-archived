@@ -90,7 +90,7 @@ export const getFilteredCTsDescription = (
 
   if (!situationKey && !priorityLevel) {
     // Case 1: No filters applied
-    return "Showing all tasks";
+    return "Showing all active tasks";
   }
 
   let description = "Showing ";
@@ -98,16 +98,16 @@ export const getFilteredCTsDescription = (
   if (situationKey && priorityLevel) {
     // Case 2: Both filters applied
     // e.g., "Filtering overdue tasks with high priority"
-    description += `${situationKey} tasks with ${priorityLevel} priority`;
+    description += `active ${situationKey} tasks with ${priorityLevel} priority`;
   } else if (situationKey) {
     // Case 3: Only situation applied
     // e.g., "Filtering archived tasks"
-    description += `${situationKey} tasks`;
+    description += `active ${situationKey} tasks`;
   } else if (priorityLevel) {
     // Case 4: Only priority applied
     // e.g., "Filtering tasks with urgent priority"
 
-    description += `tasks with ${priorityLevel} priority`;
+    description += `active tasks with ${priorityLevel} priority`;
   }
 
   // Capitalize the first letter of the sentence for better readability

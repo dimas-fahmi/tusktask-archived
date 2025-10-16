@@ -1,19 +1,55 @@
 import type { TaskApp } from "../types/tasks";
 
 export interface CategorizedTasks {
+  /**
+   * Tasks that have exceeded their deadline date
+   */
   overdue: TaskApp[];
+
+  /**
+   * Tasks overdue within 12 hours
+   */
   overdueSoon: TaskApp[];
+
+  /**
+   * Tasks overdue within the next 24 hours
+   */
   tomorrow: TaskApp[];
+
+  /**
+   * Ongoing (Not completed, not archived, not overdue, not overdueSoon, not tomorrow)
+   *
+   * Confusing - Prefer todos instead
+   *
+   */
   ongoing: TaskApp[];
+
+  /**
+   * All active tasks (not completed and not archived)
+   */
+  todos: TaskApp[];
+
+  /**
+   * Archived tasks
+   */
   archived: TaskApp[];
+
+  /**
+   * Completed tasks, not determined by status only by completedAt either null (not completed) or exist (completed)
+   */
   completed: TaskApp[];
+
+  /**
+   * Tasks without deadlines
+   */
+  noDeadlines: TaskApp[];
+
+  // Priorities
   lowPriority: TaskApp[];
   mediumPriority: TaskApp[];
   highPriority: TaskApp[];
   urgentPriority: TaskApp[];
-  todos: TaskApp[];
   onProcess: TaskApp[];
-  noDeadlines: TaskApp[];
 }
 
 export interface CategorizeTasksOptions {
@@ -84,7 +120,7 @@ export const categorizeTasks = (
 
     const deadlineAt = new Date(item.deadlineAt);
     const diff = deadlineAt.getTime() - now.getTime();
-    const day = 1000 * 60 * 60 * 23; // replace to within 23 hours
+    const day = 1000 * 60 * 60 * 12; // replace to within 12 hours
     return diff > 0 && diff < day;
   });
 

@@ -1,7 +1,5 @@
 "use client";
 
-import { ChartPie, ListTodo } from "lucide-react";
-import { motion } from "motion/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useFetchUserTasks } from "@/src/lib/hooks/queries/useFetchUserTasks";
 import { queries } from "@/src/lib/queries";
@@ -11,22 +9,27 @@ import type {
   SituationKey,
   TaskApp,
 } from "@/src/lib/types/tasks";
-import { categorizeTasks } from "@/src/lib/utils/categorizedTasks";
+import {
+  type CategorizedTasks,
+  categorizeTasks,
+} from "@/src/lib/utils/categorizedTasks";
+import { filterCategorizedTasks } from "@/src/lib/utils/filterCategorizedTasks";
 import { TaskPageBreadcrumb } from "@/src/ui/components/Dashboard/TaskPageBreadcrumb";
-import { Button } from "@/src/ui/shadcn/components/ui/button";
-import Countdown from "./components/Countdown";
+import FilteredResult from "./components/FilteredResult";
+import Sidebar from "./components/Sidebar";
 import HeaderSection from "./sections/HeaderSection";
-import QuickLists from "./sections/QuickLists";
-import StatsSection from "./sections/StatsSection";
-import TasksSection from "./sections/TasksCollections";
+import TasksCollections from "./sections/TasksCollections";
 
 export interface TaskPageIndexContextValues {
-  activeTab: "stats" | "tasks";
-  setActiveTab: (n: "stats" | "tasks") => void;
   ongoingSituationFilter?: SituationKey;
   setOngoingSituationFilter: (n?: SituationKey) => void;
   prioritySituationFilter?: PriorityLevel;
   setPrioritySituationFilter: (n?: PriorityLevel) => void;
+  task?: TaskApp;
+  categorizedTasks: CategorizedTasks;
+  filtered?: TaskApp[];
+  subtasks?: TaskApp[];
+  completedSubtasks?: TaskApp[];
 }
 
 const TaskPageIndexContext = createContext<TaskPageIndexContextValues | null>(
@@ -49,9 +52,6 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
   // Pull setters from task store
   const { setActiveTask } = useTaskStore();
 
-  // Tabs
-  const [activeTab, setActiveTab] = useState<"stats" | "tasks">("stats");
-
   // Filter States
   const [ongoingSituationFilter, setOngoingSituationFilter] = useState<
     SituationKey | undefined
@@ -71,11 +71,24 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
   const task = taskResponse?.result?.data?.[0] || taskFromServer;
 
   // Query Subtasks
-  const subtasksQuery = queries.tasks.detailSubtasks(taskFromServer.id);
+  const subtasksQuery = queries.tasks.detailSubtasks(taskFromServer.id, 100);
   const { data: subtasksResponse, isPending: _isLoadingSubtasks } =
     useFetchUserTasks(subtasksQuery.queryKey, subtasksQuery?.context?.request);
 
   const subtasks = subtasksResponse?.result?.data;
+
+  // Query Completed tasks
+  const completedSubtasksQuery = queries.tasks.completedDetailSubtasks(
+    taskFromServer.id,
+  );
+  const { data: completedDetailSubtasksResponse } = useFetchUserTasks(
+    completedSubtasksQuery.queryKey,
+    completedSubtasksQuery?.context?.request,
+  );
+
+  const completedSubtasks = (
+    completedDetailSubtasksResponse?.result?.data || []
+  ).filter((item) => item?.completedAt);
 
   // Update task store on mount
   useEffect(() => {
@@ -87,83 +100,44 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
   // CategorizedTasks (subtasks)
   const categorizedTasks = categorizeTasks(subtasks);
 
+  const filtered = filterCategorizedTasks(
+    categorizedTasks,
+    ongoingSituationFilter,
+    prioritySituationFilter,
+  )?.filter((item) => !item?.completedAt);
+
   return (
     <TaskPageIndexContext.Provider
       value={{
-        activeTab,
-        setActiveTab,
         setOngoingSituationFilter,
         setPrioritySituationFilter,
         ongoingSituationFilter,
         prioritySituationFilter,
+        task,
+        categorizedTasks,
+        filtered,
+        completedSubtasks,
       }}
     >
-      <div className="dashboard-padding space-y-6 min-h-[1300px] pb-8">
+      <div className="dashboard-padding space-y-6 md:flex md:flex-col min-h-[1500px] max-h-[1500px]">
         <TaskPageBreadcrumb task={task} />
 
         {/* Header */}
         <HeaderSection task={task} />
 
-        {/* Countdown */}
-        <div>{task?.deadlineAt && <Countdown task={task} />}</div>
-
-        {/* Quick Lists */}
-        <QuickLists categorizedTasks={categorizedTasks} />
-
         {/* Advance Content */}
-        <div className="space-y-6">
-          {/* Header */}
-          <header className="flex justify-between">
-            <h1 className="text-4xl font-header">Ongoing Situations</h1>
-
-            <div className="flex gap-2 items-center">
-              <Button
-                variant={activeTab === "stats" ? "default" : "outline"}
-                onClick={() => {
-                  setActiveTab("stats");
-                }}
-              >
-                <ChartPie />
-              </Button>
-              <Button
-                variant={activeTab === "tasks" ? "default" : "outline"}
-                onClick={() => {
-                  setActiveTab("tasks");
-                }}
-              >
-                <ListTodo />
-              </Button>
-            </div>
-          </header>
-
-          {/* Content */}
-          <div className="relative">
-            {/* Statistics */}
-            {activeTab === "stats" && (
-              <motion.div
-                key="stats"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-              >
-                <StatsSection categorizedTasks={categorizedTasks} />
-              </motion.div>
-            )}
+        <div className="md:h-full md:flex-1 flex flex-col-reverse md:grid md:grid-cols-[auto_380px] gap-4">
+          {/* Main Content */}
+          <div className="space-y-6">
+            {/* Filter Result */}
+            <FilteredResult />
 
             {/* Tasks Collections */}
-            {activeTab === "tasks" && (
-              <motion.div
-                key="tasks"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-              >
-                <TasksSection categorizedTasks={categorizedTasks} />
-              </motion.div>
-            )}
+            <TasksCollections />
           </div>
+
+          {/* Sidebar */}
+          <Sidebar />
         </div>
       </div>
     </TaskPageIndexContext.Provider>
