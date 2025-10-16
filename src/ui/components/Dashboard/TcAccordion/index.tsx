@@ -211,7 +211,7 @@ const body = React.forwardRef<HTMLDivElement, TcAccordionBodyProps>(
   },
 );
 
-trigger.displayName = "TcAccordion.body";
+body.displayName = "TcAccordion.body";
 
 export interface TcAccordionItemClasses {
   rootContainer?: string;
