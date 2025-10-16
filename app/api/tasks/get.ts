@@ -144,11 +144,13 @@ export async function tasksGet(req: NextRequest) {
       where.push(isNull(tasks.parentTask));
     }
 
-    // Always return active tasks, except if parameters "isCompleted" set to true
-    if (parameters?.isCompleted === "true") {
-      where.push(isNotNull(tasks?.completedAt));
-    } else {
-      where.push(isNull(tasks?.completedAt));
+    // Always return active tasks, except if parameters "isCompleted" set to true only if parameters.id is not provided
+    if (!parameters?.id) {
+      if (parameters?.isCompleted === "true") {
+        where.push(isNotNull(tasks?.completedAt));
+      } else {
+        where.push(isNull(tasks?.completedAt));
+      }
     }
 
     // Filter overdue tasks (won't be applied if `isCompleted=true`)

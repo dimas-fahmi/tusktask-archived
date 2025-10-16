@@ -308,7 +308,7 @@ GET /api/tasks?taskPriority=high&isTomorrow=true&include=owner,project,parent-2,
 ### Status Filters (Mutually Exclusive Behavior)
 
 - **Default**: Returns only incomplete tasks (`isCompleted` is implicit `false`)
-- **isCompleted=true**: Overrides default, returns only completed tasks
+- **isCompleted=true**: Overrides default, returns only completed tasks only applies when `parameters.id` is not provided
 - **isOverdue=true**: Only applies when `isCompleted` is NOT `true`
 - **isSoon**: Only applies when `isCompleted` is NOT `true`
 - **isTomorrow**: Ignored if `isSoon` or `isCompleted` is set
