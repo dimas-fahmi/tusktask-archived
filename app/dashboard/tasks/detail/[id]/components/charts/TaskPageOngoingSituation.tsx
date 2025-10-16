@@ -76,13 +76,21 @@ const chartConfig = {
     label: "Tomorrow",
     color: "var(--chart-3)",
   },
-  ongoing: {
-    label: "Ongoing",
+  noDeadlines: {
+    label: "No Deadline",
     color: "var(--chart-4)",
+  },
+  todos: {
+    label: "Tasks Todo",
+    color: "var(--chart-5)",
+  },
+  onProcess: {
+    label: "On Process",
+    color: "var(--chart-6)",
   },
   archived: {
     label: "Archived",
-    color: "var(--chart-5)",
+    color: "var(--chart-7)",
   },
 } satisfies ChartConfig;
 
@@ -103,8 +111,10 @@ export function TaskPageOngoingSituation({
     "overdue",
     "overdueSoon",
     "tomorrow",
-    "ongoing",
     "archived",
+    "onProcess",
+    "todos",
+    "noDeadlines",
   ] as const;
 
   // Ensure activeFilter is narrowed to one of the allowed filter keys (or default to "ongoing")
@@ -133,10 +143,22 @@ export function TaskPageOngoingSituation({
       fill: "var(--color-tomorrow)",
     },
     {
-      collection: "ongoing",
-      label: "Ongoing Tasks",
-      tasks: categorizedTasks.ongoing?.length,
-      fill: "var(--color-ongoing)",
+      collection: "onProcess",
+      label: "On Process Tasks",
+      tasks: categorizedTasks.onProcess?.length,
+      fill: "var(--color-onProcess)",
+    },
+    {
+      collection: "todos",
+      label: "Tasks Todos",
+      tasks: categorizedTasks.todos?.length,
+      fill: "var(--color-todos)",
+    },
+    {
+      collection: "noDeadlines",
+      label: "No Deadline",
+      tasks: categorizedTasks.noDeadlines?.length,
+      fill: "var(--color-noDeadlines)",
     },
     {
       collection: "archived",
@@ -150,13 +172,25 @@ export function TaskPageOngoingSituation({
     overdue: "Showing active tasks that have passed their deadline date",
     overdueSoon: "Showing active tasks due within the next 23 hours",
     tomorrow: "Showing active tasks that are due tomorrow",
-    ongoing: "Showing active tasks due later or without a deadline date",
     archived: "Showing tasks that have been archived and stored",
+    noDeadlines: "Showing tasks without deadline date",
+    onProcess: "Showing tasks that is marked as on process",
+    todos: "Showing tasks that you have to complete",
     all: "Showing all tasks",
   };
 
+  const availableSubtitute = situationData?.filter((item) => item?.tasks > 0);
+  const availableFilter: keyof typeof chartConfig = availableSubtitute.length
+    ? (availableSubtitute?.[0].collection as keyof typeof chartConfig)
+    : "overdue";
+
   const activeIndex = React.useMemo(
-    () => situationData.findIndex((item) => item.collection === filter),
+    () =>
+      situationData.findIndex((item) =>
+        filter === "all"
+          ? item.collection === availableFilter
+          : item.collection === filter,
+      ),
     [activeFilter, categorizedTasks, filter, situationData.findIndex],
   );
   const collections = React.useMemo(
@@ -299,7 +333,9 @@ export function TaskPageOngoingSituation({
                                 >
                                   {
                                     chartConfig?.[
-                                      filter === "all" ? "ongoing" : filter
+                                      filter === "all"
+                                        ? availableFilter
+                                        : filter
                                     ].label
                                   }
                                 </tspan>

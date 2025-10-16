@@ -16,8 +16,8 @@ import {
 import { filterCategorizedTasks } from "@/src/lib/utils/filterCategorizedTasks";
 import { TaskPageBreadcrumb } from "@/src/ui/components/Dashboard/TaskPageBreadcrumb";
 import FilteredResult from "./components/FilteredResult";
-import Sidebar from "./components/Sidebar";
 import HeaderSection from "./sections/HeaderSection";
+import StatsSection from "./sections/StatsSection";
 import TasksCollections from "./sections/TasksCollections";
 
 export interface TaskPageIndexContextValues {
@@ -119,25 +119,21 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
         completedSubtasks,
       }}
     >
-      <div className="dashboard-padding space-y-6 md:flex md:flex-col min-h-[1500px] max-h-[1500px]">
+      <div className="dashboard-padding space-y-6 md:flex md:flex-col">
         <TaskPageBreadcrumb task={task} />
 
         {/* Header */}
         <HeaderSection task={task} />
 
-        {/* Advance Content */}
-        <div className="md:h-full md:flex-1 flex flex-col-reverse md:grid md:grid-cols-[auto_380px] gap-4">
-          {/* Main Content */}
-          <div className="space-y-6">
-            {/* Filter Result */}
-            <FilteredResult />
+        <StatsSection categorizedTasks={categorizedTasks} />
 
-            {/* Tasks Collections */}
-            <TasksCollections />
-          </div>
+        {/* Main Content */}
+        <div className="space-y-6">
+          {/* Filter Result */}
+          <FilteredResult />
 
-          {/* Sidebar */}
-          <Sidebar />
+          {/* Tasks Collections */}
+          <TasksCollections />
         </div>
       </div>
     </TaskPageIndexContext.Provider>

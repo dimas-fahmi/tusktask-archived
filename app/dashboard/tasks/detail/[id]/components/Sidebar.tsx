@@ -1,12 +1,11 @@
 "use client";
 
 import TaskAccordion from "@/src/ui/components/Dashboard/TaskAccordion";
-import StatsSection from "../sections/StatsSection";
 import { useTaskPageIndexContext } from "../TaskPageIndex";
 import Countdown from "./Countdown";
 
 const Sidebar = () => {
-  const { categorizedTasks, task } = useTaskPageIndexContext();
+  const { task } = useTaskPageIndexContext();
 
   return (
     <aside className="">
@@ -20,9 +19,6 @@ const Sidebar = () => {
             </TaskAccordion.body>
           </TaskAccordion.root>
         )}
-
-        {/* Content */}
-        <StatsSection categorizedTasks={categorizedTasks} />
       </div>
     </aside>
   );

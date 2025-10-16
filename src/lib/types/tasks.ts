@@ -23,7 +23,13 @@ export interface TaskApp extends Task {
 export type SituationKey =
   | keyof Pick<
       CategorizedTasks,
-      "archived" | "overdueSoon" | "tomorrow" | "overdue" | "ongoing"
+      | "archived"
+      | "overdueSoon"
+      | "tomorrow"
+      | "overdue"
+      | "todos"
+      | "noDeadlines"
+      | "onProcess"
     >
   | "all";
 

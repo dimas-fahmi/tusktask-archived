@@ -12,7 +12,7 @@ const TasksCollections = () => {
     completedSubtasks,
   } = useTaskPageIndexContext();
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-h-[480px]">
       {/* Overdue */}
       {!!categorizedTasks?.overdue?.length && (
         <TcAccordion.root defaultOpen>
@@ -81,6 +81,31 @@ const TasksCollections = () => {
             {sortTask({
               tasks: categorizedTasks?.tomorrow,
               sortBy: "deadlineAt",
+              sortDirection: "asc",
+            }).map((item) => (
+              <TcAccordion.item key={item?.id} task={item} />
+            ))}
+          </TcAccordion.body>
+        </TcAccordion.root>
+      )}
+
+      {/* Todos */}
+      {!!categorizedTasks?.onProcess.length && (
+        <TcAccordion.root defaultOpen>
+          <TcAccordion.trigger
+            title="You Are Working On This"
+            titleTooltip="You are working on these tasks, get to work and complete these tasks first."
+            action={<button type="button">More</button>}
+            actionTooltip="Click to open more comprehensive list."
+          />
+          <TcAccordion.body
+            classes={{
+              bodyContainer: "space-y-4",
+            }}
+          >
+            {sortTask({
+              tasks: categorizedTasks?.onProcess,
+              sortBy: "createdAt",
               sortDirection: "asc",
             }).map((item) => (
               <TcAccordion.item key={item?.id} task={item} />

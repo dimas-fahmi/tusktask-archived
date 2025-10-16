@@ -44,12 +44,16 @@ export interface CategorizedTasks {
    */
   noDeadlines: TaskApp[];
 
+  /**
+   * Tasks
+   */
+  onProcess: TaskApp[];
+
   // Priorities
   lowPriority: TaskApp[];
   mediumPriority: TaskApp[];
   highPriority: TaskApp[];
   urgentPriority: TaskApp[];
-  onProcess: TaskApp[];
 }
 
 export interface CategorizeTasksOptions {
@@ -165,7 +169,11 @@ export const categorizeTasks = (
   });
 
   categorizedTasks.todos = filteredTasks?.filter((item) => {
-    return !item?.completedAt && item?.taskStatus !== "archived";
+    return (
+      !item?.completedAt &&
+      item?.taskStatus !== "archived" &&
+      item?.taskStatus !== "on_process"
+    );
   });
 
   categorizedTasks.onProcess = filteredTasks?.filter(
