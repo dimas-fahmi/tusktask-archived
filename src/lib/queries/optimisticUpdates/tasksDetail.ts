@@ -35,7 +35,7 @@ export const update = (
     };
 
     // 5. Update Document Title
-    if (typeof document?.title !== "undefined") {
+    if (document) {
       document.title = `${request?.newValues?.name || oldTask?.name} | TuskTask`;
     }
 
