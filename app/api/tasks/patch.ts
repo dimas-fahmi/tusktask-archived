@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import type { NextRequest } from "next/server";
 import z, { prettifyError } from "zod";
 import { db } from "@/src/db";
@@ -141,6 +142,7 @@ export async function tasksPatch(req: NextRequest) {
       }
     });
 
+    revalidateTag(`task-${id}`);
     return createResponse(200, "success_update_task", "Task updated", response);
   } catch (error) {
     if (error instanceof OperationError) {
