@@ -50,6 +50,25 @@ export const queries = {
         },
       };
     },
+    completedDetailSubtasks: (
+      taskId: string,
+      limit?: number,
+      offset?: number,
+    ): AppQuery<TasksGetRequest> => {
+      const request: TasksGetRequest = {
+        parentTask: taskId,
+        isCompleted: "true",
+        limit,
+        offset,
+        orderBy: "completedAt",
+        orderDirection: "desc",
+      };
+
+      return {
+        queryKey: ["tasks", "detail", "subtasks", "completed", taskId],
+        context: { request },
+      };
+    },
   },
   optimisticUpdates,
 };
