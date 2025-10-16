@@ -144,18 +144,21 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
           data.req,
           queryClient,
         ),
-        ouTasksDetailSubtasks: queries.optimisticUpdates.tasks.lists.update(
-          queries.tasks.detailSubtasks(data.old?.parentTask || "").queryKey,
-          data.req,
-          queryClient,
-        ),
-        ouCompletedTasksDetailSubtasks:
-          queries.optimisticUpdates.tasks.lists.update(
-            queries.tasks.completedDetailSubtasks(data?.old?.parentTask || "")
-              .queryKey,
-            data.req,
-            queryClient,
-          ),
+        ouTasksDetailSubtasks: data?.old?.parentTask
+          ? queries.optimisticUpdates.tasks.lists.update(
+              queries.tasks.detailSubtasks(data.old.parentTask).queryKey,
+              data.req,
+              queryClient,
+            )
+          : undefined,
+        ouCompletedTasksDetailSubtasks: data?.old?.parentTask
+          ? queries.optimisticUpdates.tasks.lists.update(
+              queries.tasks.completedDetailSubtasks(data.old.parentTask || "")
+                .queryKey,
+              data.req,
+              queryClient,
+            )
+          : undefined,
 
         // More eager update here...
 
