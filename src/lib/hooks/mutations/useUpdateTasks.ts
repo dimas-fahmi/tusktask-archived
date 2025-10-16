@@ -24,6 +24,8 @@ export interface UseUpdateTaskDefaultContext {
 
   // New Version
   ouTasksDetail?: OptimisticUpdateResult<TasksGetResponse>;
+  ouTasksDetailSubtasks?: OptimisticUpdateResult<TasksGetResponse>;
+  ouCompletedTasksDetailSubtasks?: OptimisticUpdateResult<TasksGetResponse>;
 }
 
 export interface UseUpdateTaskVariables {
@@ -142,6 +144,18 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
           data.req,
           queryClient,
         ),
+        ouTasksDetailSubtasks: queries.optimisticUpdates.tasks.lists.update(
+          queries.tasks.detailSubtasks(data.old?.parentTask || "").queryKey,
+          data.req,
+          queryClient,
+        ),
+        ouCompletedTasksDetailSubtasks:
+          queries.optimisticUpdates.tasks.lists.update(
+            queries.tasks.completedDetailSubtasks(data?.old?.parentTask || "")
+              .queryKey,
+            data.req,
+            queryClient,
+          ),
 
         // More eager update here...
 
@@ -151,6 +165,7 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
     },
     onError: (error, variables, onMutateResult, context) => {
       // Extending
+      console.log(error);
       options?.onError?.(error, variables, onMutateResult, context);
 
       // Roll Backs
@@ -161,6 +176,13 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         );
       }
 
+      if (onMutateResult?.euSubtasksList) {
+        queryClient.setQueryData(
+          onMutateResult?.euSubtasksList?.queryKey,
+          onMutateResult?.euSubtasksList?.oldData,
+        );
+      }
+
       if (onMutateResult?.ouTasksDetail) {
         queryClient.setQueryData(
           onMutateResult?.ouTasksDetail?.queryKey,
@@ -168,10 +190,17 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         );
       }
 
-      if (onMutateResult?.euSubtasksList) {
+      if (onMutateResult?.ouTasksDetailSubtasks) {
         queryClient.setQueryData(
-          onMutateResult?.euSubtasksList?.queryKey,
-          onMutateResult?.euSubtasksList?.oldData,
+          onMutateResult?.ouTasksDetailSubtasks?.queryKey,
+          onMutateResult?.ouTasksDetailSubtasks?.oldData,
+        );
+      }
+
+      if (onMutateResult?.ouCompletedTasksDetailSubtasks) {
+        queryClient.setQueryData(
+          onMutateResult?.ouCompletedTasksDetailSubtasks?.queryKey,
+          onMutateResult?.ouCompletedTasksDetailSubtasks?.oldData,
         );
       }
     },
@@ -189,15 +218,27 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         });
       }
 
+      if (onMutateResult?.euSubtasksList) {
+        queryClient.invalidateQueries({
+          queryKey: onMutateResult?.euSubtasksList?.queryKey,
+        });
+      }
+
       if (onMutateResult?.ouTasksDetail) {
         queryClient.invalidateQueries({
           queryKey: onMutateResult?.ouTasksDetail?.queryKey,
         });
       }
 
-      if (onMutateResult?.euSubtasksList) {
+      if (onMutateResult?.ouTasksDetailSubtasks) {
         queryClient.invalidateQueries({
-          queryKey: onMutateResult?.euSubtasksList?.queryKey,
+          queryKey: onMutateResult?.ouTasksDetailSubtasks?.queryKey,
+        });
+      }
+
+      if (onMutateResult?.ouCompletedTasksDetailSubtasks) {
+        queryClient.invalidateQueries({
+          queryKey: onMutateResult?.ouCompletedTasksDetailSubtasks?.queryKey,
         });
       }
     },

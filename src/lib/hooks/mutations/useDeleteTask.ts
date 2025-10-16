@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queries } from "../../queries";
 import { eagerUpdaterTaskDetail } from "../../utils/eagerUpdater/tasks/detail";
 import { eagerUpdaterTasksProject } from "../../utils/eagerUpdater/tasks/project";
 
@@ -36,6 +37,20 @@ export const useDeleteTask = () => {
           queryClient,
           data?.parentTaskId,
         ),
+
+        // New Version
+        ouTaskDetailSubtasks: queries.optimisticUpdates.tasks.lists.del(
+          queries.tasks.detailSubtasks(data?.parentTaskId || "").queryKey,
+          { id: data?.id },
+          queryClient,
+        ),
+        outTaskDetailCompletedSubtasks:
+          queries.optimisticUpdates.tasks.lists.del(
+            queries.tasks.completedDetailSubtasks(data?.parentTaskId || "")
+              .queryKey,
+            { id: data?.id },
+            queryClient,
+          ),
       };
     },
     onError: (_err, _var, onMutateResult) => {
@@ -53,6 +68,20 @@ export const useDeleteTask = () => {
           onMutateResult?.deleteSubtasksFromList?.oldData,
         );
       }
+
+      if (onMutateResult?.ouTaskDetailSubtasks?.oldData) {
+        queryClient.setQueryData(
+          onMutateResult?.ouTaskDetailSubtasks?.queryKey,
+          onMutateResult?.ouTaskDetailSubtasks?.oldData,
+        );
+      }
+
+      if (onMutateResult?.outTaskDetailCompletedSubtasks?.oldData) {
+        queryClient.setQueryData(
+          onMutateResult?.outTaskDetailCompletedSubtasks?.queryKey,
+          onMutateResult?.outTaskDetailCompletedSubtasks?.oldData,
+        );
+      }
     },
     onSuccess: (_data, _variables, onMutateResult) => {
       if (onMutateResult?.tasksProject?.queryKey) {
@@ -64,6 +93,18 @@ export const useDeleteTask = () => {
       if (onMutateResult?.deleteSubtasksFromList?.queryKey) {
         queryClient.invalidateQueries({
           queryKey: onMutateResult?.deleteSubtasksFromList?.queryKey,
+        });
+      }
+
+      if (onMutateResult?.ouTaskDetailSubtasks?.queryKey) {
+        queryClient.invalidateQueries({
+          queryKey: onMutateResult?.ouTaskDetailSubtasks?.queryKey,
+        });
+      }
+
+      if (onMutateResult?.outTaskDetailCompletedSubtasks?.queryKey) {
+        queryClient.invalidateQueries({
+          queryKey: onMutateResult?.outTaskDetailCompletedSubtasks?.queryKey,
         });
       }
     },
