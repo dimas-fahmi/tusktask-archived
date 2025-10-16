@@ -26,9 +26,9 @@ const DashboardLayout = ({
     >
       <SidebarProvider>
         <DashboardSidebar />
-        <SidebarInset className="w-full overflow-hidden">
+        <SidebarInset className="w-full">
           <DashboardNavbar />
-          <div className="w-full overflow-hidden">{children}</div>
+          <div className="w-full">{children}</div>
         </SidebarInset>
 
         {/* Drawers */}
