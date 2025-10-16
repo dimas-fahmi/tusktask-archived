@@ -23,7 +23,7 @@ export const sortTask = ({
   sortBy,
   sortDirection,
 }: SortTaskInput): TaskApp[] => {
-  return tasks?.sort((a, b) => {
+  return [...tasks].sort((a, b) => {
     if (sortBy) {
       if (!SORT_TASK_VALID_FIELD.includes(sortBy)) {
         throw new Error("Invalid sort field value");
@@ -38,7 +38,9 @@ export const sortTask = ({
     const aDate = aValue ? new Date(aValue) : undefined;
     const bDate = bValue ? new Date(bValue) : undefined;
 
-    if (!aDate || !bDate) return 0; // or handle nulls differently if needed
+    if (!aDate && !bDate) return 0;
+    if (!aDate) return 1;
+    if (!bDate) return -1;
 
     const diff = aDate.getTime() - bDate.getTime();
 
