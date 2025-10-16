@@ -46,12 +46,14 @@ const Countdown = ({ task }: { task: TaskApp }) => {
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col justify-center items-center gap-4">
       <div
-        className={`text-4xl md:text-6xl font-header font-bold ${timeLeft.isPast ? "text-destructive" : "text-primary"}`}
+        className={`text-4xl font-header font-bold ${timeLeft.isPast ? "text-destructive" : "text-primary"}`}
         suppressHydrationWarning
       >
         {value.toString().padStart(2, "0")}
       </div>
-      <div className="text-xs text-muted-foreground uppercase tracking-wide">
+      <div
+        className={`text-xs uppercase ${timeLeft.isPast ? "text-destructive" : "text-muted-foreground"} tracking-wide`}
+      >
         {label}
       </div>
     </div>
@@ -59,7 +61,7 @@ const Countdown = ({ task }: { task: TaskApp }) => {
 
   return (
     <Card
-      className={`border-2 ${timeLeft.isPast ? "border-destructive" : "border-border"}`}
+      className={`border-2 ${timeLeft.isPast ? "border-destructive/20 bg-destructive/20 text-destructive" : "border-border"}`}
     >
       <CardContent
         className="flex flex-col justify-between h-full gap-4"
@@ -93,6 +95,7 @@ const Countdown = ({ task }: { task: TaskApp }) => {
         </div>
 
         <Button
+          variant={timeLeft.isPast ? "destructive" : "default"}
           className="block w-full"
           onClick={() => openRescheduleDialog(task)}
         >
