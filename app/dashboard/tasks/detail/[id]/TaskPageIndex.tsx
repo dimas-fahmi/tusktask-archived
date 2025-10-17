@@ -116,6 +116,7 @@ const TaskPageIndex = ({ taskFromServer }: { taskFromServer: TaskApp }) => {
         task,
         categorizedTasks,
         filtered,
+        subtasks,
         completedSubtasks,
       }}
     >
