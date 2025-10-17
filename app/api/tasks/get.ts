@@ -49,6 +49,7 @@ export interface TasksGetRequest extends Partial<Task> {
   isCompleted?: "true";
   isTomorrow?: "true";
   isNoDeadline?: "true";
+  isRecurrent?: "true";
 
   // By Millisecond
   isSoon?: number;
@@ -154,6 +155,13 @@ export async function tasksGet(req: NextRequest) {
       } else {
         where.push(isNull(tasks?.completedAt));
       }
+    }
+
+    // Filter reccurent tasks
+    if (parameters?.isRecurrent === "true") {
+      where.push(isNotNull(tasks.masterTasks));
+    } else {
+      where.push(isNull(tasks.masterTasks));
     }
 
     // Filter tasks without deadlines
