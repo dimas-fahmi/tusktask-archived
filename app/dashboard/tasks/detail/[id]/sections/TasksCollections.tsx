@@ -49,7 +49,7 @@ const TasksCollections = () => {
         )}
 
         {/* Overdue Soon */}
-        {!!categorizedTasks?.overdueSoon.length && (
+        {!!categorizedTasks?.overdueSoon?.length && (
           <TcAccordion.root defaultOpen>
             <TcAccordion.trigger
               title="Overdue Soon"
@@ -84,7 +84,7 @@ const TasksCollections = () => {
         )}
 
         {/* Tomorrow */}
-        {!!categorizedTasks?.tomorrow.length && (
+        {!!categorizedTasks?.tomorrow?.length && (
           <TcAccordion.root defaultOpen>
             <TcAccordion.trigger
               title="Tomorrow"
@@ -119,7 +119,7 @@ const TasksCollections = () => {
         )}
 
         {/* Todos */}
-        {!!categorizedTasks?.onProcess.length && (
+        {!!categorizedTasks?.onProcess?.length && (
           <TcAccordion.root defaultOpen>
             <TcAccordion.trigger
               title="You Are Working On This"
@@ -154,7 +154,7 @@ const TasksCollections = () => {
         )}
 
         {/* Todos */}
-        {!!categorizedTasks?.todos.length && (
+        {!!categorizedTasks?.todos?.length && (
           <TcAccordion.root defaultOpen>
             <TcAccordion.trigger
               title="Tasks To Do"
@@ -189,7 +189,7 @@ const TasksCollections = () => {
         )}
 
         {/* Without Deadline */}
-        {!!categorizedTasks?.noDeadlines.length && (
+        {!!categorizedTasks?.noDeadlines?.length && (
           <TcAccordion.root>
             <TcAccordion.trigger
               title="Tasks Without Deadlines"
