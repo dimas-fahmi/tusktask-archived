@@ -129,7 +129,7 @@ const TasksCollections = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
-                  href={constructTPLU("task", "todos", task.id)}
+                  href={constructTPLU("task", "onProcess", task.id)}
                   prefetch
                 >
                   More
