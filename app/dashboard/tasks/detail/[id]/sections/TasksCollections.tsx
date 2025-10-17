@@ -53,7 +53,7 @@ const TasksCollections = () => {
           <TcAccordion.root defaultOpen>
             <TcAccordion.trigger
               title="Overdue Soon"
-              titleTooltip="Tasks overdue within 12 hours"
+              titleTooltip="Tasks will overdue within 12 hours"
               action={
                 <Link
                   onClick={(e) => {
