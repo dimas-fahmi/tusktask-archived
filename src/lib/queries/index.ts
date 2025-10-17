@@ -1,4 +1,8 @@
 import type { TasksGetRequest } from "@/app/api/tasks/get";
+import {
+  categoriesRequest,
+  type TaskCategory,
+} from "../utils/categorizedTasks";
 import { optimisticUpdates } from "./optimisticUpdates";
 
 export interface QueryContext<TRequest> {
@@ -67,6 +71,18 @@ export const queries = {
       return {
         queryKey: ["tasks", "detail", "subtasks", "completed", taskId],
         context: { request },
+      };
+    },
+    categoryList: (
+      category: TaskCategory,
+      context: "task" | "project",
+      id: string,
+    ): AppQuery<TasksGetRequest> => {
+      return {
+        queryKey: ["tasks", "list", category, context, id],
+        context: {
+          request: categoriesRequest[category],
+        },
       };
     },
   },
