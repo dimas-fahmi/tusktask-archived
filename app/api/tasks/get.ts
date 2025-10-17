@@ -47,8 +47,11 @@ export interface TasksGetRequest extends Partial<Task> {
   // By Status
   isOverdue?: "true";
   isCompleted?: "true";
-  isSoon?: number;
   isTomorrow?: "true";
+  isNoDeadline?: "true";
+
+  // By Millisecond
+  isSoon?: number;
 
   // Filter by date
   date?: TasksGetRequestDateFields;
@@ -151,6 +154,11 @@ export async function tasksGet(req: NextRequest) {
       } else {
         where.push(isNull(tasks?.completedAt));
       }
+    }
+
+    // Filter tasks without deadlines
+    if (parameters?.isNoDeadline === "true") {
+      where.push(isNull(tasks.deadlineAt));
     }
 
     // Filter overdue tasks (won't be applied if `isCompleted=true`)

@@ -35,7 +35,9 @@ Retrieve tasks with advanced filtering, sorting, pagination, and relation loadin
 | `parentTask` | string | Filter by parent task ID | `946e7533-f686-4f93-981e-88cacbe06bf5` |
 | `taskPriority` | string | Filter by priority level | `high`, `medium`, `low`,`urgent` |
 | `taskStatus` | string | Filter by status | `pending`, `on_process`, `archived` |
-| `hideSubtask` | `"true"` | Filter tasks without `parentTask` id if provided with `"true"` | `true` |
+| `hideSubtask` | `"true"` | Filter tasks without `parentTask` if provided with `"true"` | `true` as string |
+| `isRecurrent` | `"true"` | Only filter recurrent tasks; if not provided, all recurrent tasks will be hidden. | `true` as string |
+| `isNoDeadline` | `"true"` | Filter tasks without deadline | `true` as string |
 
 #### Pagination
 
