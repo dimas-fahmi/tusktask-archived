@@ -4,6 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { formatDistance, isPast } from "date-fns";
 import { ChevronRight, Clock } from "lucide-react";
 import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useState } from "react";
 import { DEFAULT_ICON } from "@/src/lib/configs";
 import type { TaskApp } from "@/src/lib/types/tasks";
@@ -246,11 +247,15 @@ const item = ({
   ...props
 }: TcAccordionItemProps) => {
   const isOverdue = task?.deadlineAt ? isPast(task?.deadlineAt) : false;
+  const router = useRouter();
 
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
         <div
+          onClick={() => {
+            router.push(`/dashboard/tasks/detail/${task.id}`);
+          }}
           {...props}
           className={cn(
             "flex cursor-pointer border-b pb-2 border-transparent hover:border-border ",
