@@ -1,4 +1,3 @@
-import { APP_URL } from "../configs";
 import type { TaskCategory } from "./categorizedTasks";
 
 /**
@@ -15,5 +14,5 @@ export const constructTPLU = (
   category: TaskCategory,
   id: string,
 ) => {
-  return `${APP_URL}/dashboard/tasks/list/${context}/${category}/${id}`;
+  return `/dashboard/tasks/list/${context}/${category}/${id}`;
 };
