@@ -89,8 +89,8 @@ export const categorizedTasksInformation: Record<
   },
   overdueSoon: {
     short: "Due Soon",
-    long: "Tasks Overdue Within 12 Hours",
-    description: "Tasks that are overdue within the past 12 hours.",
+    long: "Tasks Due in 12 Hours",
+    description: "Tasks that are due within the next 12 hours.",
   },
   tomorrow: {
     short: "Due Tomorrow",
