@@ -1,3 +1,4 @@
+import type { TasksGetRequest } from "@/app/api/tasks/get";
 import type { TaskApp } from "../types/tasks";
 
 export interface CategorizedTasks {
@@ -17,9 +18,14 @@ export interface CategorizedTasks {
   tomorrow: TaskApp[];
 
   /**
-   * Ongoing (Not completed, not archived, not overdue, not overdueSoon, not tomorrow)
+   *
+   * @deprecated
+   * DO NOT USE THIS, WILL BE DELETED SOON!
    *
    * Confusing - Prefer todos instead
+   *
+   * Ongoing (Not completed, not archived, not overdue, not overdueSoon, not tomorrow)
+   *
    *
    */
   ongoing: TaskApp[];
@@ -59,6 +65,125 @@ export interface CategorizedTasks {
 export interface CategorizeTasksOptions {
   hideSubtasks?: boolean;
 }
+
+export type TaskCategory = keyof CategorizedTasks;
+
+export const categorizedTasksInformation: Record<
+  keyof CategorizedTasks,
+  { short: string; long: string; description: string }
+> = {
+  archived: {
+    short: "Archived",
+    long: "Archived Tasks",
+    description: "Tasks that have been archived and are no longer active.",
+  },
+  completed: {
+    short: "Completed",
+    long: "Completed Tasks",
+    description: "Tasks that have been marked as completed.",
+  },
+  overdue: {
+    short: "Overdue",
+    long: "Overdue Tasks",
+    description: "Tasks with deadlines that have already passed.",
+  },
+  overdueSoon: {
+    short: "Due Soon",
+    long: "Tasks Overdue Within 12 Hours",
+    description: "Tasks that are overdue within the past 12 hours.",
+  },
+  tomorrow: {
+    short: "Due Tomorrow",
+    long: "Tasks Due in 24 Hours",
+    description: "Tasks that are due within the next 24 hours.",
+  },
+  noDeadlines: {
+    short: "No Deadlines",
+    long: "Tasks Without Deadlines",
+    description: "Tasks that do not have a set deadline.",
+  },
+  ongoing: {
+    short: "Ongoing",
+    long: "Ongoing Tasks (Deprecated)",
+    description:
+      "Deprecated: Tasks that are active but do not fit into other categories. Avoid using this.",
+  },
+  todos: {
+    short: "Todos",
+    long: "Active Tasks",
+    description: "All active tasks that are not completed or archived.",
+  },
+  onProcess: {
+    short: "In Progress",
+    long: "Tasks In Progress",
+    description: "Tasks currently being worked on.",
+  },
+  lowPriority: {
+    short: "Low",
+    long: "Low Priority Tasks",
+    description: "Tasks marked with low priority.",
+  },
+  mediumPriority: {
+    short: "Medium",
+    long: "Medium Priority Tasks",
+    description: "Tasks marked with medium priority.",
+  },
+  highPriority: {
+    short: "High",
+    long: "High Priority Tasks",
+    description: "Tasks marked with high priority.",
+  },
+  urgentPriority: {
+    short: "Urgent",
+    long: "Urgent Priority Tasks",
+    description: "Tasks marked as urgent and need immediate attention.",
+  },
+};
+
+export const categoriesRequest: Record<
+  keyof CategorizedTasks,
+  TasksGetRequest
+> = {
+  overdue: {
+    isOverdue: "true",
+  },
+  overdueSoon: {
+    isSoon: 1000 * 60 * 60 * 12, // 12 hour
+  },
+  archived: {
+    taskStatus: "archived",
+  },
+  completed: {
+    isCompleted: "true",
+  },
+  noDeadlines: {
+    isNoDeadline: "true",
+  },
+  ongoing: {},
+  onProcess: {
+    taskStatus: "on_process",
+  },
+  todos: {
+    taskStatus: "pending",
+  },
+  tomorrow: {
+    isTomorrow: "true",
+  },
+
+  // Priorities
+  lowPriority: {
+    taskPriority: "low",
+  },
+  mediumPriority: {
+    taskPriority: "medium",
+  },
+  highPriority: {
+    taskPriority: "high",
+  },
+  urgentPriority: {
+    taskPriority: "urgent",
+  },
+};
 
 export const categorizeTasks = (
   tasks?: TaskApp[],
@@ -200,3 +325,5 @@ export const categorizeTasks = (
 
   return categorizedTasks;
 };
+
+export const categories = Object.keys(categorizedTasksInformation);
