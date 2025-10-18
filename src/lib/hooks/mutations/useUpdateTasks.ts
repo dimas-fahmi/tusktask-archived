@@ -3,9 +3,12 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import type { TasksGetResponse } from "@/app/api/tasks/get";
 import type { TasksPatchRequest } from "@/app/api/tasks/patch";
 import type { Task } from "@/src/db/schema/tasks";
 import type { OperationError } from "../../errors";
+import { queries } from "../../queries";
+import type { OptimisticUpdateResult } from "../../types/app";
 import type { EagerUpdaterResult } from "../../types/eagerUpdate";
 import type { TaskApp } from "../../types/tasks";
 import type { StandardizeResponse } from "../../utils/createResponse";
@@ -17,8 +20,12 @@ import {
 
 export interface UseUpdateTaskDefaultContext {
   euTasksProject?: EagerUpdateTasksProjectResult;
-  euTasksDetail?: EagerUpdaterResult<Task>;
   euSubtasksList?: EagerUpdaterResult<TaskApp>;
+
+  // New Version
+  ouTasksDetail?: OptimisticUpdateResult<TasksGetResponse>;
+  ouTasksDetailSubtasks?: OptimisticUpdateResult<TasksGetResponse>;
+  ouCompletedTasksDetailSubtasks?: OptimisticUpdateResult<TasksGetResponse>;
 }
 
 export interface UseUpdateTaskVariables {
@@ -120,18 +127,38 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
 
       // Assume anything on the context is nullable!
       return {
-        // Update Project tasks list eager update
+        // Update Project tasks list eager update [deprecated]
         euTasksProject: eagerUpdaterTasksProject.update(
           data.req,
           data.old.projectId,
           queryClient,
         ),
-        euTasksDetail: eagerUpdaterTaskDetail.update(data.req, queryClient),
         euSubtasksList: eagerUpdaterTaskDetail.updateSubtasksList(
           data.req,
           queryClient,
           data?.old?.parentTask,
         ),
+
+        // Newer Version
+        ouTasksDetail: queries.optimisticUpdates.tasks.detail.update(
+          data.req,
+          queryClient,
+        ),
+        ouTasksDetailSubtasks: data?.old?.parentTask
+          ? queries.optimisticUpdates.tasks.lists.update(
+              queries.tasks.detailSubtasks(data.old.parentTask).queryKey,
+              data.req,
+              queryClient,
+            )
+          : undefined,
+        ouCompletedTasksDetailSubtasks: data?.old?.parentTask
+          ? queries.optimisticUpdates.tasks.lists.update(
+              queries.tasks.completedDetailSubtasks(data.old.parentTask || "")
+                .queryKey,
+              data.req,
+              queryClient,
+            )
+          : undefined,
 
         // More eager update here...
 
@@ -141,6 +168,7 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
     },
     onError: (error, variables, onMutateResult, context) => {
       // Extending
+      console.log(error);
       options?.onError?.(error, variables, onMutateResult, context);
 
       // Roll Backs
@@ -151,17 +179,31 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         );
       }
 
-      if (onMutateResult?.euTasksDetail) {
-        queryClient.setQueryData(
-          onMutateResult?.euTasksDetail?.queryKey,
-          onMutateResult?.euTasksDetail?.oldData,
-        );
-      }
-
       if (onMutateResult?.euSubtasksList) {
         queryClient.setQueryData(
           onMutateResult?.euSubtasksList?.queryKey,
           onMutateResult?.euSubtasksList?.oldData,
+        );
+      }
+
+      if (onMutateResult?.ouTasksDetail) {
+        queryClient.setQueryData(
+          onMutateResult?.ouTasksDetail?.queryKey,
+          onMutateResult?.ouTasksDetail?.oldData,
+        );
+      }
+
+      if (onMutateResult?.ouTasksDetailSubtasks) {
+        queryClient.setQueryData(
+          onMutateResult?.ouTasksDetailSubtasks?.queryKey,
+          onMutateResult?.ouTasksDetailSubtasks?.oldData,
+        );
+      }
+
+      if (onMutateResult?.ouCompletedTasksDetailSubtasks) {
+        queryClient.setQueryData(
+          onMutateResult?.ouCompletedTasksDetailSubtasks?.queryKey,
+          onMutateResult?.ouCompletedTasksDetailSubtasks?.oldData,
         );
       }
     },
@@ -179,15 +221,27 @@ export const useUpdateTask = <TContext extends UseUpdateTaskDefaultContext>(
         });
       }
 
-      if (onMutateResult?.euTasksDetail) {
-        queryClient.invalidateQueries({
-          queryKey: onMutateResult?.euTasksDetail?.queryKey,
-        });
-      }
-
       if (onMutateResult?.euSubtasksList) {
         queryClient.invalidateQueries({
           queryKey: onMutateResult?.euSubtasksList?.queryKey,
+        });
+      }
+
+      if (onMutateResult?.ouTasksDetail) {
+        queryClient.invalidateQueries({
+          queryKey: onMutateResult?.ouTasksDetail?.queryKey,
+        });
+      }
+
+      if (onMutateResult?.ouTasksDetailSubtasks) {
+        queryClient.invalidateQueries({
+          queryKey: onMutateResult?.ouTasksDetailSubtasks?.queryKey,
+        });
+      }
+
+      if (onMutateResult?.ouCompletedTasksDetailSubtasks) {
+        queryClient.invalidateQueries({
+          queryKey: onMutateResult?.ouCompletedTasksDetailSubtasks?.queryKey,
         });
       }
     },

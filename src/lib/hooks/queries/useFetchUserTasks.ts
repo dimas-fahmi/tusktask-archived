@@ -8,7 +8,7 @@ import type { StandardizeResponse } from "../../utils/createResponse";
 import { fetchUserTasks } from "../../utils/fetchers/fetchUserTasks";
 
 export const useFetchUserTasks = (
-  queryKey: string[],
+  queryKey: Readonly<string[]>,
   req?: TasksGetRequest,
   options?: UseQueryOptions<TasksGetResponse>,
 ) => {

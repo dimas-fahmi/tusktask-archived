@@ -35,7 +35,9 @@ Retrieve tasks with advanced filtering, sorting, pagination, and relation loadin
 | `parentTask` | string | Filter by parent task ID | `946e7533-f686-4f93-981e-88cacbe06bf5` |
 | `taskPriority` | string | Filter by priority level | `high`, `medium`, `low`,`urgent` |
 | `taskStatus` | string | Filter by status | `pending`, `on_process`, `archived` |
-| `hideSubtask` | `"true"` | Filter tasks without `parentTask` id if provided with `"true"` | `true` |
+| `hideSubtask` | `"true"` | Filter tasks without `parentTask` if provided with `"true"` | `true` as string |
+| `isRecurrent` | `"true"` | Only filter recurrent tasks; if not provided, all recurrent tasks will be hidden. | `true` as string |
+| `isNoDeadline` | `"true"` | Filter tasks without deadline | `true` as string |
 
 #### Pagination
 
@@ -308,7 +310,7 @@ GET /api/tasks?taskPriority=high&isTomorrow=true&include=owner,project,parent-2,
 ### Status Filters (Mutually Exclusive Behavior)
 
 - **Default**: Returns only incomplete tasks (`isCompleted` is implicit `false`)
-- **isCompleted=true**: Overrides default, returns only completed tasks
+- **isCompleted=true**: Overrides default, returns only completed tasks only applies when `parameters.id` is not provided
 - **isOverdue=true**: Only applies when `isCompleted` is NOT `true`
 - **isSoon**: Only applies when `isCompleted` is NOT `true`
 - **isTomorrow**: Ignored if `isSoon` or `isCompleted` is set

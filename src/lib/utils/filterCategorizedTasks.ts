@@ -88,6 +88,10 @@ export const getFilteredCTsDescription = (
     situationKey = "Overdue Soon";
   }
 
+  if (situationKey === "noDeadlines") {
+    situationKey = "No Deadline";
+  }
+
   if (!situationKey && !priorityLevel) {
     // Case 1: No filters applied
     return "Showing all tasks";

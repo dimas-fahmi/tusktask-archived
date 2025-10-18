@@ -14,7 +14,7 @@ const HeaderSection = ({ task }: { task?: TaskApp }) => {
   const { openNewTaskDialog } = useTaskStore();
 
   return (
-    <header className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <header className="grid grid-cols-1 md:grid-cols-[auto_380px] gap-4">
       {/* Name & Description */}
       <NameAndDescriptionCard task={task} />
 
